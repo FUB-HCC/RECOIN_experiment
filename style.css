@@ -107,6 +107,7 @@ html, body {
   border-right: 0;
   display: block;
   border-right: 1px solid #c8ccd1;
+  min-height: 85px;
 }
 
 .propertyBox {
@@ -126,6 +127,7 @@ html, body {
 	  position: relative;
     margin-left: 18em;
     margin-right: 18em;
+    margin-bottom: 1em;
     width: 20em;
     word-wrap: break-word;
     background-color: #ffffff;
@@ -137,8 +139,9 @@ html, body {
 	background-color: #eaecf0;
   display: block;
   float: left;
-  position: relative;
+  position: absolute;
   width: 100%;
+  bottom: 0;
 }
 
 .addValue {

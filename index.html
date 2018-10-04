@@ -8,20 +8,24 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 
-			// Gets all addValue divs and inserts an Input-Submit-field before it
+			// Gets all addValue divs 
 			var allAddValues = $(".addValue");
+			// Inserts an Input-Submit-field before clicked addValue-Div
 			for(var i = 0; i <allAddValues.length; i++) {
 				$(allAddValues[i]).click(function() {
 					var newValue = document.createElement("div");
 					$(newValue).addClass("valueBox").html("<input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'>");
 					$(newValue).insertBefore($(this).parent(".toolbarBox"));
-					$(newValue).trigger("focus");
+					//$(newValue).trigger("focus");
 				});
 			}
 
+			// Creates a new statementBox before the addStatement div
 			var addStatement = $("#addStatement");
 			$(addStatement).click(function(){
-				$(this).before($(".box.statementBox"));
+				var newStatement = document.createElement("div");
+				$(newStatement).addClass("box").addClass("statementBox").html("<div class='propertyBox'><input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>");
+				$(this).before(newStatement);
 			})
 
 		});
