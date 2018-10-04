@@ -96,7 +96,7 @@ html, body {
 	max-width: 65em;
 }
 
-#statementBox {
+.statementBox {
 	float: left;
   margin-bottom: 2em;
   position: relative;
@@ -109,7 +109,7 @@ html, body {
   border-right: 1px solid #c8ccd1;
 }
 
-#propertyBox {
+.propertyBox {
 		width: 15em;
 		padding: 10px;
     background: #eaecf0;
@@ -122,18 +122,18 @@ html, body {
     color: #0645ad;
 }
 
-#valueBox {
+.valueBox {
 	  position: relative;
-    margin-left: 15em;
+    margin-left: 18em;
     margin-right: 18em;
     width: 20em;
     word-wrap: break-word;
     background-color: #ffffff;
     padding: 10px 5px 5px 10px;
-    font-size: 1.2em;
+    font-size: 1em;
 }
 
-#toolbarBox {
+.toolbarBox {
 	background-color: #eaecf0;
   display: block;
   float: left;
@@ -141,7 +141,7 @@ html, body {
   width: 100%;
 }
 
-#addValue {
+.addValue {
 	float: right;
 	line-height: 2em;
 	padding: 10px;
@@ -149,7 +149,7 @@ html, body {
 	cursor: pointer;
 }
 
-#addStatementBox {
+.addStatementBox {
 	background-color: #ffffff;
   display: block;
   float: left;

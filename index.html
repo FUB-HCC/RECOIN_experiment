@@ -4,6 +4,28 @@
 	<title>Chris Hadfield - Wikidata</title>
 	<link rel="stylesheet" type="text/css" href="./style.css">
 	<link rel="shortcut icon" type="image/png" href="./assets/Wikidata-favicon.png"/>
+	<script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			// Gets all addValue divs and inserts an Input-Submit-field before it
+			var allAddValues = $(".addValue");
+			for(var i = 0; i <allAddValues.length; i++) {
+				$(allAddValues[i]).click(function() {
+					var newValue = document.createElement("div");
+					$(newValue).addClass("valueBox").html("<input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'>");
+					$(newValue).insertBefore($(this).parent(".toolbarBox"));
+					$(newValue).trigger("focus");
+				});
+			}
+
+			var addStatement = $("#addStatement");
+			$(addStatement).click(function(){
+				$(this).before($(".box.statementBox"));
+			})
+
+		});
+	</script>
 </head>
 <body>
 	<div id="header">
@@ -41,26 +63,26 @@
 			<span style="color:#72777d;">Chris Austin Hadfield | Christopher Austin Hadfield | Chris A. Hadfield</span>
 			</div>
 		<!--	Recoin goes here -->
-		<!--	Recoin goes here -->
-		<!--	Recoin goes here -->
-		<!--	Recoin goes here -->
 		<h2 id="secondHeading">Statements</h2>
+
 		<!--	Statements from Wikidata -->
-		<div class="box" id="statementBox">
-			<div id="propertyBox">instance of</div>
-			<div id="valueBox">human</div>
-			<div id="toolbarBox"><div id="addValue">+ add value</div></div>
+		<div class="box statementBox">
+			<div class="propertyBox">instance of</div>
+			<div class="valueBox">human</div>
+			<div class="toolbarBox"><div class="addValue">+ add value</div></div>
 		</div>
-		<div class="box" id="statementBox">
-			<div id="propertyBox">image</div>
-			<div id="valueBox"><img src="./assets/chadfield.jpg" width="140px"></div>
-			<div id="valueBox">Chris Hadfield 2011.jpg</div>
-			<div id="toolbarBox"><div id="addValue">+ add value</div></div>
+
+		<div class="box statementBox">
+			<div class="propertyBox">image</div>
+			<div class="valueBox"><img src="./assets/chadfield.jpg" width="140px"></div>
+			<div class="valueBox">Chris Hadfield 2011.jpg</div>
+			<div class="toolbarBox"><div class="addValue">+ add value</div></div>
 		</div>
-		<div class="box" id="statementBox">
-			<div id="propertyBox">sex or gender</div>
-			<div id="valueBox">male</div>
-			<div id="toolbarBox"><div id="addValue">+ add value</div></div>
+
+		<div class="box statementBox">
+			<div class="propertyBox">sex or gender</div>
+			<div class="valueBox">male</div>
+			<div class="toolbarBox"><div class="addValue">+ add value</div></div>
 		</div>
 		<div class="box" id="addStatementBox"><div id="addStatement">+ add statement</div></div>
 	</div>
