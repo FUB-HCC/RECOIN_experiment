@@ -139,9 +139,7 @@ html, body {
 	background-color: #eaecf0;
   display: block;
   float: left;
-  position: absolute;
   width: 100%;
-  bottom: 0;
 }
 
 .addValue {
