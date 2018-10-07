@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="./style.css">
 	<link rel="shortcut icon" type="image/png" href="./assets/Wikidata-favicon.png"/>
 	<script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-ui.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 
@@ -24,7 +25,7 @@
 			var addStatement = $("#addStatement");
 			$(addStatement).click(function(){
 				var newStatement = document.createElement("div");
-				$(newStatement).addClass("box").addClass("statementBox").html("<div class='propertyBox'><input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>");
+				$(newStatement).addClass("box").addClass("statementBox").html("<div class='propertyBox'><input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>");
 				$(this).before(newStatement);
 			})
 
@@ -61,12 +62,59 @@
 			</div>
 	</div>
 	<div id="content">
-		<h1 id="firstHeading">Chris Hadfield<span id="wikidataID">(Q1076962)</span></h1>
+		<!--	TITLE, RECOIN ICONS GET TRIGGERED HERE -->
+		<h1 id="firstHeading">Chris Hadfield
+			<span id="wikidataID">(Q1076962)</span>
+			<!--	Recoin v1 Icon-->
+			<span id="rv1-Icon" style="display: none;"><img src="./assets/1.png" title="This page provides basic information."></span>
+		</h1>
 			<div id="basicInfo" style="line-height: 1.3; font-size: 0.8em;">
 			Canadian astronaut </br>
 			<span style="color:#72777d;">Chris Austin Hadfield | Christopher Austin Hadfield | Chris A. Hadfield</span>
 			</div>
-		<!--	Recoin goes here -->
+		<!--	Recoin v1  -->
+		<div class="box" id="rv1-Toggle" style="display: none;">&rarr; Most relevant properties which are absent</div>
+		<!--	Recoin v1X -->
+		<!--	Recoin v2 -->
+
+		<!--	Language Box -->
+		<div class="box">
+			<table class="languageBox">
+				<thead>
+					<th scope="col">Language</th>
+					<th scope="col">Label</th>
+					<th scope="col">Description</th>
+					<th scope="col">Also Known As</th>
+				</thead>
+				<tbody>
+					<tr>
+						<th>English</th>
+						<td>Chris Hadfield</td>
+						<td>Canadian Astronaut</td>
+						<td>Chris Austin Hadfield<br/>Christopher Austin Hadfield<br/>Chris A. Hadfield</td>
+					</tr>
+					<tr>
+						<th>German</th>
+						<td>Chris Austin Hadfield</td>
+						<td>kanadischer Astronaut</td>
+						<td>Chris Hadfield</td>
+					</tr>
+					<tr>
+						<th>French</th>
+						<td>Chris Hadfield</td>
+						<td>astronaute canadien</td>
+						<td>Chris A. Hadfield</td>
+					</tr>
+					<tr>
+						<th>Bavarian</th>
+						<td style="color:#a2a9b1;">No label defined</td>
+						<td style="color:#a2a9b1;">No label defined</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 		<h2 id="secondHeading">Statements</h2>
 
 		<!--	Statements from Wikidata -->
@@ -88,6 +136,8 @@
 			<div class="valueBox">male</div>
 			<div class="toolbarBox"><div class="addValue">+ add value</div></div>
 		</div>
+
+		<!--	Here statements are added -->
 		<div class="box" id="addStatementBox"><div id="addStatement">+ add statement</div></div>
 	</div>
 </body>
