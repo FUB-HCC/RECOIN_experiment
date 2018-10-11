@@ -1,212 +1,144 @@
-/**
- * Recoin: Relative Completeness Indicator
- * 
- * Explanations module: Lists the most important missing attributes, which are used for computing the relative completeness indicator and adds a relative completeness indicator symbol to the page status indicators
- * 
- * Developers  : Vevake Balaraman (vevake.balaraman@gmail.com), Simon Razniewski (razniewski@inf.unibz.it), Albin Ahmeti (albin.ahmeti@gmail.com)
- * Inspired by : COOL-WD: COmpleteness toOL for WikiData (Fariz Darari)
- */
- function loadentityselector(){
-		try {
-			$( ".value_input input" ).entityselector( {
-				    url: 'https://www.wikidata.org/w/api.php',
-				    language: mw.config.get( 'wgUserLanguage' ),
-				} );
-		}
-		catch(err) {
-			setTimeout(loadentityselector, 100);
-		}
-	}
+var list_entity_original, list_entity_edited;
 
-function addstatement(qid, pid, snak) {
-	var api = new mw.Api();
-	api.get( { action: 'query', meta: 'tokens'}).then(
-	    function(aw) {
-	        token = aw.query.tokens.csrftoken;
-	        api.post( { 
-	            action: 'wbcreateclaim',
-	            entity: qid,
-	            property: pid,
-	            snaktype: 'value',
-	            value: snak,
-	            summary : "[Edited with Recoin]",
-	            token: token
-	            }).then(
-	                   function(aw){
-	                   		console.log(aw);
-	                   		if(aw.success == 1)
-	                             location.reload();
-	                        else
-	                        	alert("Request failed. Please Check again.");
-	                   });       
-	            });
-}	
-function addtosuggestions(result, labelsUL, entityID) {
-	var add = '';
-	if (result.data_type=='wikibase-item')
-	{
-		add = '<span class="wikibase-toolbarbutton wikibase-toolbar-item wikibase-toolbar-button wikibase-toolbar-button-add add_button"><a href=\"#\"><span class="wb-icon"/></a></span><span id="add" class="value_input" style="display:none"><input/>&nbsp;' + '<a href=\"#\">Publish</a></span>';
-	}
-	
-    var $insertElem = $('<tr><td> ' +
-            '<label><a href="https://www.wikidata.org/wiki/Property:'+ result.property + '">' + 
-            result.property + '</a></td><td>' + result.label + '</td><td>' + result.base_frequency + ' '+ 
-            '</label></td><td>' + add +'</td></tr>');
-    labelsUL.append($insertElem);
+//Initialisierung von Recoin mit JSON von Properties
+function recoinInit() {
+    console.log("init");
+    list_entity_original = JSON.parse($("#recoin-init").val());
 
-    $insertElem.find('.add_button a').on('click', function(e) {
-    	e.stopPropagation();
-    	e.preventDefault(); 
-    	$insertElem.find('#add').slideToggle("fast");
-    	$insertElem.find('.add_button a').hide();
-    	$insertElem.find('.input').focus();
-    });
-    
-	$(document).click(function(e) {
-    		// e.stopPropagation();
-			$insertElem.find('.add_button a').show();
-        	$insertElem.find("#add").hide();
-	});
-	
-	$insertElem.find("#add").click(function(e) {
-	  e.stopPropagation();
-	});
-	
-    $insertElem.find('#add a').on('click', function(e) {
-	e.stopPropagation();
-    e.preventDefault();
-    
-    if (result.data_type=='wikibase-item')
-    {
-	    var selection = $(this).prev('input').data('entityselector').selectedEntity();
-	    var snak = JSON.stringify({ "entity-type": 'item', "numeric-id": selection.id.substring(1) });
-		addstatement(entityID, result.property, snak);
-    }
-	});
+    list_entity_edited = list_entity_original;
+    console.log(list_entity_original);
+    let completenessLevel = determine_completeness_level(list_entity_original);
+    console.log("Found completenessLevel of " + completenessLevel);
 }
-( function( mw, $ ) {
-	
-    'use strict';
-    
-	console.log('recoin-plugin loaded');
-	/**
-	 * Check if we're viewing an item
-	 */
-	var entityID = mw.config.get( 'wbEntityId' );
-	var lang = mw.config.get( 'wgUserLanguage' );
-	var pageid = "48139757";
-	var infoText ='';
-	var title = "Most relevant properties which are absent";
-	
-	if ( !entityID ) 
-	{
-		return;
-	}
-    
-    /**
-	 * holds the DOM input element for the label
-	 */
-    var labelsParent;
 
-	function init() 
-	{
-        
-        // Element into which to add the missing attributes
-		labelsParent = $('#wb-item-' + entityID + ' div.wikibase-entitytermsview-heading');
-		if (labelsParent.length < 1) 
-		{
-			return;
-		}	
-		
-		var labelsDOM = $('<div id="recoin-property" style="display:none"></div>');
-		var labelsUL = $('<table id="props" frame="box" style="margin-left:30px"></table>');
-		var tablehead = '<thead align="left"><tr bgcolor="#DCDCDC"><td>Property ID</td><td>Label</td><td>Relative</td><td>Add Claim</td></tr></thead>';
-		labelsUL.append(tablehead);
-        var labelsText = $('<div class="wikibase-entitytermsview-recoinproperty-toggler ui-toggler ui-toggler-toggle ui-state-default" id = "recoin-title" style="display:inline;"></div>');
-		var translate_help = $('<span class="wikibase-entitytermsview-entitytermsforlanguagelistview-configure" id="translate"><a href="https://www.wikidata.org/wiki/Wikidata:Recoin/translation"> [Help with translations]</a></span>');
-		var help = true;
-		$.getJSON( 'https://www.wikidata.org/w/api.php?action=query&prop=extracts&titles=Wikidata:Recoin/translation&format=json', 
-		   function ( result )
-		   {
-		   	var desc = result.query.pages[pageid].extract;
-		   	desc = desc.replace(/<p>/g, "");
-		   	desc = desc.replace(/<\/p>/g, "");
-		   	desc = desc.split("\n");
-		   	for (var i=0; i< desc.length; i++)
-		   	{
-		   		var s = desc[i].split(";");
-		   		if (s[0]===lang && s.length>=7)
-		   		{
-					infoText = s.slice(2,7).reverse();
-					title = s[1];
-					help = false;
-					break;
-		   		}
-		   	}
-   			var toggleSlider = $('<span class = "ui-toggler-icon ui-icon ui-icon-triangle-1-e" id = "status"></span>\
-			<span class="ui-toggler-label">'+ title +'</span>');
-			labelsText.append(toggleSlider);
-			labelsParent.append(labelsText);
-		   	if (help==1)
-		   	{
-		   		labelsParent.append(translate_help);
-		   	}
-		   });
-        
-        $.getJSON( 'https://tools.wmflabs.org/recoin/getmissingattributes.php?callback=?', 'subject=' + entityID + '&lang=' + lang,
-			   function ( result ) 
-			   {
-			    for (var i=0; i< result.missing_properties.length; i++) 
-			    {
-					addtosuggestions(result.missing_properties[i], labelsUL, entityID);
-					setTimeout(loadentityselector, 100);
-                }
-                labelsDOM.append(labelsUL);
-				labelsParent.append(labelsDOM);
-			$("#recoin-title" ).click(function() {
-			$( "#recoin-property" ).slideToggle();
-			$("#status").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s ui-toggler-icon3dtrans");
-			});
-			
-			var complete = result.completeness_level;
-			var $link = $( '<a href="https://www.wikidata.org/wiki/Wikidata:Recoin">' ),
-				$img = $( '<img>' ).css('margin-bottom',12+'px');
-			
-			if (infoText === '')
-			{
-				switch( complete ){
-					case '5':
-						infoText = 'This page provides very detailed information.';
-					break;
-					case '4':
-						infoText = 'This page provides detailed information.';
-					break;
-					case '3':
-						infoText = 'This page provides a fair amount of information.';
-					break;
-					case '2':
-						infoText = 'This page provides basic information.';
-					break;
-					case '1':
-						infoText = 'This page provides very basic information.';
-					break;
-				}
-			}
-			else
-			{
-				infoText = infoText[parseInt(complete)-1];
-			}
-			$img.attr( 'src', 'https://tools.wmflabs.org/recoin/progressbar/' + complete + '.png' );				
-			$img.attr( 'title',  infoText);
-			$img.attr( 'alt',  infoText);
-			$link.append( $img ).prependTo( 'div.mw-indicators' )
-				
-		});
-	}
-	
-	$( function () {
-		// init();
-		mw.hook( 'wikipage.content' ).add( init );
-	});
+//Aktuelles Completeness level
+function determine_completeness_level(list_of_props) {
+    var i = 0;
+    var sumAbsences = 0;
+    for (let currentProp of list_of_props) {
+        //console.log(currentProp);
+        //console.log(currentProp.presence == false);
+        if (i >= 5) {
+            break;
+        }
+        if (currentProp.presence == false) {
+            sumAbsences = sumAbsences + currentProp.relevance;
+            i++;
+        }
+    }
+    return sumAbsences / 5;
+}
 
-	} ( mediaWiki, jQuery) );
+//statistiken für aktuell angezeigte props
+function getStats(list_of_props) {
+    var i = 0;
+    var stats = [];
+    while (list.hasNext()) {
+        var le = list_of_props.next();
+        if (le.presence = false) {
+            var statForProperty = '{amount:' + le.amount
+            ', relevance: ' + le.relevance + '}';
+            stats.push(statForProperty);
+            i++;
+        }
+    }
+    return stats;
+}
+
+//DOM manipulation
+function recoinRender(condition) {
+    var html = '<span id="rv1-Icon" style="display: inline-block;"><img src="./assets/1.png" title="This page provides basic information."></span>';
+    switch (condition) {
+        case 1:
+            return
+            break;
+        case 2:
+            $('#basicInfo').before(html);
+            $('#languageBox').before(html);
+            break;
+        case 3:
+            var icon = '';
+            $('#languageBox').before(html);
+            break;
+        case 4:
+            var icon = '';
+            $('#languageBox').before(html);
+            break;
+        case 5:
+            var icon = '';
+            $('#languageBox').before(html);
+            break;
+        case 6:
+            $('#languageBox').before(html);
+    }
+}
+
+
+//Impact der Edits berechnen:
+function impact_of_edits(list_entity_original, list_entity_edited) {
+    return determine_completeness_level(list_entity_edited) - determine_completeness_level(list_entity_original);
+}
+
+/*
+//Benotung der Edits berechnen:
+function grade_edits(list_entity_original, list_entity_edited) {
+  var percentage_contribution = impact_of_edits(list_entity_original, list_entity_edited);
+  switch(percentage_contribution) {
+    case >50 : 
+      return "A"
+      break;
+    case >30 : 
+      return "B"
+      break;
+    case >20 : 
+      return "C"
+      break;
+    case >10 : 
+      return "D"
+      break; 
+    default:
+     return "F"
+    }
+  }
+*/
+
+//Hax0r function
+function findWithAttribute(array, attr, value) {
+    for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function callPropertyAutocompletion(e) {
+    //TODO autocomplete
+    console.log("local autocomplete with:" + e.value);
+}
+
+function callWikidataApi(e) {
+    console.log("wikidata auotocomplete wiht:" + e.value);
+}
+
+
+function recoinAddStatement(newStatement) {
+    var oldStatementKey = findWithAttribute(list_entity_edited, 'name', newStatement.name);
+    if (list_entity_edited[oldStatementKey].presence == false) {
+        list_entity_edited.setAttribute('presence', true);
+    }
+    determine_completeness_level(list_entity_edited);
+}
+
+
+function addStatementContainer() {
+    let newStatementProperty = 'newStatementPropertyInput';
+    let newStatementValueId = 'newStatementValueInput';
+    return "<div class='propertyBox'>" +
+        "<input type='text' id=" + newStatementProperty + " oninput='callPropertyAutocompletion(this)'>" +
+        "</div>" +
+        "<div class='valueBox'>" +
+        "<input type='text' id=" + newStatementValueId + " oninput='callWikidataApi(this)'>" +
+        "</div>" +
+        "<div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
+}
