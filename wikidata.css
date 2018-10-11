@@ -45,9 +45,9 @@
     font-weight: 400;
     font-family: sans-serif;
     font: #0645ad;
-    padding-left: 20%;
-
+    text-align: left
 }
+
 
 .ui.top.attached.tabular.menu{
     margin-bottom: -14px;
@@ -123,7 +123,7 @@
     border: 1px solid #c8ccd1;
     display: table;
     table-layout: auto;
-    width: auto;
+    width: 100%;
     min-width: 65em;
   }
   
@@ -227,7 +227,7 @@
     margin-left: 18em;
     margin-right: 18em;
     margin-bottom: 1em;
-    width: 20em;
+    width: 70%;
     word-wrap: break-word;
     background-color: #ffffff;
     padding: 10px 5px 5px 10px;
@@ -264,3 +264,94 @@
   color: #0645ad;
 	cursor: pointer;
 }
+
+#accordiontitle{
+    color: #0645ad;
+    font-family: sans-serif;
+}
+
+.no-drop {cursor: no-drop;}
+
+.addStatementBox {
+	background-color: #ffffff;
+    display: block;
+    width: 100%;
+}
+
+#addStatement {
+	padding: 10px;
+    color: #0645ad;
+    cursor: pointer;
+    font-family: sans-serif;
+    size: 13px;
+    line-height: 21px;
+    font-weight: 400;
+
+}
+
+.box {
+	max-width: 70%;
+}
+/*Recoin v1 Tabelle*/
+  .recoinv1Box {
+    font-size: 0.875em;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #c8ccd1;
+    display: table;
+    table-layout: auto;
+    width: 60%;
+    
+  }
+  
+  .recoinv1Box thead {
+      display: table-header-group;
+      vertical-align: middle;
+      background-color: #eaecf0;
+      border-right: 1px solid #fff;
+      vertical-align: top;
+      border-color: inherit;
+  }
+  
+  .recoinv1Box th {
+      font-weight: normal;
+      vertical-align: top;
+      padding-left: 0.4em;
+      padding-right: 0.4em;
+      padding-top: 0.8em;
+      padding-bottom: 0.8em;
+      border-right: #FFFFFF;
+  }
+  
+  .recoinv1Box tr {
+    padding-left: 0.4em;
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+  }
+  
+  .recoinv1Box tbody {
+      display: table-row-group;
+      vertical-align: middle;
+      border-color: inherit;
+  }
+  
+  .recoinv1Box td {
+      line-height: 136%;
+      overflow: hidden;
+      padding-left: 0.4em;
+      padding-right: 0.4em;
+      padding-top: 0.8em;
+      text-overflow: ellipsis;
+      vertical-align: top;
+      width: auto;
+  }
+
+  #recoinv1Text{
+    color: #222222;
+    font-size: 14px;
+    unicode-bidi: embed;
+    line-height: 19px;
+    font-family: sans-serif;
+    font-weight: 400;
+  }
