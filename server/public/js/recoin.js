@@ -4,22 +4,22 @@ var list_entity_original, list_entity_edited;
 function recoinInit() {
     console.log("init");
     //TODO jquery.ajax (https://ikon-research.imp.fu-berlin.de/data/astronaut-stats.json)
-    list_entity_original = JSON.parse($("#recoin-init").val());
-
-    list_entity_edited = list_entity_original;
-    console.log(list_entity_original);
-    let completenessLevel = determine_completeness_level(list_entity_original);
-    console.log("Found completenessLevel of " + completenessLevel);
+    $.getJSON('/data/astronaut-stats.json', function(data){
+        list_entity_original = data;
+        list_entity_edited = list_entity_original;
+        let completenessLevel = determineCompletenessLevel(list_entity_original, 5);
+        console.log("Found completenessLevel of " + completenessLevel);
+    });
 }
 
 //Aktuelles Completeness level
-function determine_completeness_level(list_of_props) {
+function determineCompletenessLevel(list_of_props, threshold) {
     var i = 0;
     var sumAbsences = 0;
     for (let currentProp of list_of_props) {
         //console.log(currentProp);
         //console.log(currentProp.presence == false);
-        if (i >= 5) {
+        if (i >= threshold) {
             break;
         }
         if (currentProp.presence == false) {
@@ -27,7 +27,7 @@ function determine_completeness_level(list_of_props) {
             i++;
         }
     }
-    return sumAbsences / 5;
+    return 100 - (sumAbsences / threshold);
 }
 
 //DOM manipulation
@@ -60,14 +60,14 @@ function recoinRender(condition) {
 
 
 //Impact der Edits berechnen:
-function impact_of_edits(list_entity_original, list_entity_edited) {
-    return determine_completeness_level(list_entity_edited) - determine_completeness_level(list_entity_original);
+function impactOfEdits(list_entity_original, list_entity_edited) {
+    return determineCompletenessLevel(list_entity_edited) - determineCompletenessLevel(list_entity_original);
 }
 
 
 //Benotung der Edits berechnen:
-function grade_edits(list_entity_original, list_entity_edited) {
-    var percentage_contribution = impact_of_edits(list_entity_original, list_entity_edited);
+function gradeEdits(list_entity_original, list_entity_edited) {
+    var percentage_contribution = impactOfEdits(list_entity_original, list_entity_edited);
     if (percentage_contribution > 50) {
         return "A";
     } else if (percentage_contribution > 30) {

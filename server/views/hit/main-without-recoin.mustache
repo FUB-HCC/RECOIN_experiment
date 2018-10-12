@@ -11,14 +11,14 @@
     <!--Box Statement Jesse-->
     <script type="text/javascript">
         $(document).ready(function () {
-
+            recoinInit();
             // Gets all addValue divs
             var allAddValues = $(".addValue");
             // Inserts an Input-Submit-field before clicked addValue-Div
             for (var i = 0; i < allAddValues.length; i++) {
                 $(allAddValues[i]).click(function () {
                     var newValue = document.createElement("div");
-                    $(newValue).addClass("valueBox").html("<input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'>");
+                    $(newValue).addClass("valueBox").html("<input type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>");
                     $(newValue).insertBefore($(this).parent(".toolbarBox"));
                     //$(newValue).trigger("focus");
                 });
@@ -28,7 +28,7 @@
             var addStatement = $("#addStatement");
             $(addStatement).click(function () {
                 var newStatement = document.createElement("div");
-                $(newStatement).addClass("box").addClass("statementBox").html("<div class='propertyBox'><input type='text' name='newValue" + i + "'>  <input type='submit' value='Submit'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>");
+                $(newStatement).addClass("box").addClass("statementBox").html("<div class='propertyBox'><input type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>");
                 $(this).before(newStatement);
             })
 
@@ -136,9 +136,12 @@
                             <h1 id="firstHeading">Chris Hadfield <span id="itemID">(Q1076962)</span></h1>
                         </div>
                     </div>
+                    <!--Recoin Progressbar-->
+                    <!--
                     <div class="three wide center aligned column">
                         <div><img src="https://tools.wmflabs.org/recoin/progressbar/2.png"></div>
                     </div>
+                    -->
                 </div>
             </div>
             <div class="row" style="padding-bottom: 0;">
@@ -149,6 +152,7 @@
                 </div>
             </div>
             <!--Recoin-->
+            <!-- 
             <div class="row" style="padding-top: 0;">
                 <div class="ui fluid accordion">
                     <div class="title" id="accordiontitle">
@@ -244,7 +248,8 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </div>  
+        -->
             <!--Language Box-->
             <div class="row">
                 <div class="ui fluid accordion">
@@ -325,6 +330,39 @@
                         <div class="addValue">+ add value</div>
                     </div>
                 </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">occupation</div>
+                    <div class="valueBox">astronaut</div>
+                    <div class="toolbarBox">
+                        <div class="addValue">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">date of birth</div>
+                    <div class="valueBox">August 29, 1959</div>
+                    <div class="toolbarBox">
+                        <div class="addValue">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">place of birth</div>
+                    <div class="valueBox">Toronto, Canada</div>
+                    <div class="toolbarBox">
+                        <div class="addValue">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">time in space</div>
+                    <div class="valueBox">166 days</div>
+                    <div class="toolbarBox">
+                        <div class="addValue">+ add value</div>
+                    </div>
+                </div>
+
                 <!--	Here statements are added -->
                 <div class="box" id="addStatementBox">
                     <div id="addStatement">+ add statement</div>
@@ -364,6 +402,7 @@
                 <a style="padding-right: 10px;">Cookie statement</a>
                 <a style="padding-right: 10px;">Mobile view</a>
                 <a style="padding-right: 10px;">Data access</a>
+                <!--Pass Grade & Average Relevance here-->
                 <a href="/questionnaire?recoinGrade=AWESOME">Finish.</a>
 
                 <div style="text-align: right">

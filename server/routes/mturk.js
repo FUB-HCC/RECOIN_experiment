@@ -8,7 +8,7 @@ let mturk;
 
 /* GET home page. */
 //TODO async/await doesn't work for jesse.
-router.get('/', async function (req, res, next) {
+router.get('/', function (req, res, next) {
 	let region = 'us-east-1';
 
 	let accessKeyId = process.env.accessKeyId;
@@ -32,7 +32,7 @@ router.get('/', async function (req, res, next) {
 	}
 
 	mturk = new AWS.MTurk();
-	let balance = await getBalance(mturk);
+	let balance = getBalance(mturk);
 
 	mongo.connectToServer((response) => {
 		console.log('response from server', response);
