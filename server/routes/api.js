@@ -1,13 +1,18 @@
-const express = require('express');
-const router = express.Router();
+var express = require("express");
+var bodyParser = require("body-parser");
+var app = express();
 
-router.get('/event/', function (req, res, next) {
-	res.setHeader('Content-Type', 'application/json');
-	console.log('req', req);
-	
-	res.send(JSON.stringify({
-		"response": "ok"
-	}));
+app.post('/event', function (req, res) {
+	let property = req.body.property;
+	let value = req.body.value;
+
+	let response = {
+		success: true,
+		property: property,
+		value: value
+	}
+	res.send(response);
+	res.end("hey");
 });
 
-module.exports = router;
+module.exports = app;
