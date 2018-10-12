@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
     let turkSubmitTo = req.query.turkSubmitTo;
     let condition = req.query.condition;
 
-    var preview = false;
+    var preview = true;
     if (assignmentId == null || assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE") {
         preview = true;
     }
@@ -55,14 +55,18 @@ router.get('/main', function (req, res) {
     if (condition == null) {
         //TODO throw a meaningful error
         throw error;
-    } else if (condition === 1) {
+    } else if (condition == 1) {
         res.render('hit/main-without-recoin.mustache', {});
+        console.log("main-without-recoin");
     } else if (condition <= 4) {
         res.render('hit/main-recoin-original.mustache', {});
-    } else if (condition === 5) {
+        console.log("main-recoin-original");
+    } else if (condition == 5) {
         res.render('hit/main-recoin-with-explanation.mustache', {});
-    } else if (condition === 6) {
+        console.log("main-recoin-with-explanation");
+    } else if (condition == 6) {
         res.render('main-recoin-redesign.mustache', {});
+        console.log("main-recoin-redesign");
     }
 });
 
