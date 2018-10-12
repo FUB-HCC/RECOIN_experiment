@@ -34,15 +34,18 @@ router.get('/', async function (req, res, next) {
 	mturk = new AWS.MTurk();
 	let balance = await getBalance(mturk);
 
-	mongo.connectToServer(() => {
-		insertBalance({
-			'balance': balance
-		}, 'balance', (result) => {
-			findBalance({}, 'balance', (res) => {
-				console.log(res);
-				mongo.close();
+	mongo.connectToServer((response) => {
+		console.log('response from server', response);
+		if (response.isConnected) {
+			insertBalance({
+				'balance': balance
+			}, 'balance', (result) => {
+				findBalance({}, 'balance', (res) => {
+					console.log(res);
+					mongo.close();
+				});
 			});
-		});
+		}
 	});
 
 	res.render('mturk/index.mustache', {

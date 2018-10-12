@@ -10,22 +10,27 @@ var _db;
 
 module.exports = {
 	connectToServer: (callback) => {
+		let status = {
+			isConnected: false
+		};
 		client = new MongoClient(new Server('localhost', 27017));
 
 		let connection = new Promise((resolve, reject) => {
 			client.connect((err, mongoClient) => {
-				if (err) {
-					reject(err)
+				try {
+					let db = mongoClient.db("recoin");
+					resolve(db);
+				} catch (e) {
+					reject("Could not connect to database");
 				}
-				let db = mongoClient.db("recoin");
-				resolve(db);
 			});
 		}).then((db) => {
 			_db = db;
-			callback();
+			status.isConnected = true;
+			callback(status);
 		}).catch((err) => {
 			console.log(err);
-			return;
+			callback(status);
 		})
 	},
 	getDb: () => {
