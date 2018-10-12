@@ -45,11 +45,10 @@ router.get('/', async function (req, res, next) {
 		});
 	});
 
-	res.render('index', {
+	res.render('mturk/index.mustache', {
 		title: 'My first aws request ',
 		content: 'I got ' + balance + '€ in my acc'
 	});
-	res.end();
 });
 
 const getBalance = (mturk) => {
