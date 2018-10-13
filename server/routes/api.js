@@ -1,53 +1,93 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const app = express();
 const mongo = require('../services/mongo');
+const csv = require('csv-express');
 
-app.post('/event', function (req, res) {
+const app = express();
+
+app.post('/event', async (req, res) => {
 	let property = req.body.property;
 	let value = req.body.value;
 	let recoin = req.body.recoin;
 	let workerID = 1;
 
 	let response = {
-		success: true,
 		workerID,
 		property,
 		value,
 		recoin
 	}
 
-	mongo.connectToServer((res) => {
-		console.log('res from server', res);
+	/*
+	 * connect to server => insert data to DB => retrieve data from DB
+	 * on success send response with success = true else success = false
+	 */
+	let storedToDB = await mongo.connectToServer()
+		.then(async (res) => {
+			if (res.success) {
+				return await mongo.insertData(response, 'mTurkWorkers');
+			}
 
-		if (res.isConnected) {
-			insertBalance({
-				'workerID': workerID,
-				'res': response
-			}, 'balance', (result) => {
-				let id = result.insertedId;
+			throw res.error;
 
-				findBalance({
-					'_id': String(id)
-				}, 'balance', (res) => {
-					console.log(res);
-					mongo.close();
-				});
-			});
+		}).then(async (res) => {
+			if (res.success) {
+				let id = res.data.insertedId;
+				let toFindData = {
+					'_id': id
+				};
+				let foundData = await mongo.findData(toFindData, 'mTurkWorkers');
 
-		}
-	});
+				console.log('found worker', foundData);
+				mongo.close();
+				return foundData ? true : false;
+			}
 
+			throw res.error;
+
+		}).catch((err) => {
+			console.log(err);
+		});
+
+	response.success = storedToDB;
 	res.send(response);
-	res.end("hey");
 });
 
-const insertBalance = (data, collection, callback) => {
-	mongo.insertData(data, collection, callback);
-}
+app.get('/exportDatabase', async (req, res) => {
+	let filename = "mTurkWorkers_" + getTimestamp() + ".csv";
 
-const findBalance = (data, collection, callback) => {
-	mongo.findData(data, collection, callback);
+	let foundData = await mongo.connectToServer().then(async (res) => {
+		if (res.success) {
+			let foundData = await mongo.findData({}, 'mTurkWorkers');
+			return foundData;
+		}
+		return null;
+	});
+	
+	res.statusCode = 200;
+	res.setHeader('Content-Type', 'text/csv');
+	res.setHeader("Content-Disposition", 'attachment; filename=' + filename);
+	res.csv(foundData, true);
+});
+
+function getTimestamp() {
+	let today = new Date();
+	let seconds = today.getSeconds();
+	let minutes = today.getMinutes();
+	let hours = today.getHours();
+	let day = today.getDate();
+	let month = today.getMonth() + 1; //January is 0!
+	let year = today.getFullYear();
+
+	seconds < 10 ? seconds = '0' + seconds : seconds;
+	minutes < 10 ? minutes = '0' + minutes : minutes;
+	hours < 10 ? hours = '0' + hours : hours;
+	day < 10 ? day = '0' + day : day;
+	month < 10 ? month = '0' + month : month
+
+	today = hours + ":" + minutes + ":" + seconds + "--" + day + "." + month + "." + year;
+
+	return today;
 }
 
 module.exports = app;

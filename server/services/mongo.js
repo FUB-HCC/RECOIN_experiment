@@ -9,57 +9,65 @@ let client;
 var _db;
 
 module.exports = {
-	connectToServer: (callback) => {
-		let status = {
-			isConnected: false
-		};
-		client = new MongoClient(new Server('localhost', 27017));
+	connectToServer: async () => {
+			let status = {};
+			client = new MongoClient(new Server('localhost', 27017));
 
-		let connection = new Promise((resolve, reject) => {
-			client.connect((err, mongoClient) => {
-				try {
-					let db = mongoClient.db("recoin");
-					resolve(db);
-				} catch (e) {
-					reject("Could not connect to database");
-				}
+			let connection = new Promise((resolve, reject) => {
+				client.connect((err, mongoClient) => {
+					try {
+						let db = mongoClient.db("recoin");
+						resolve(db);
+					} catch (e) {
+						reject("Could not connect to database");
+					}
+				});
+			}).then(async (db) => {
+				_db = db;
+				status.success = true;
+				return status;
+			}).catch((err) => {
+				status.success = false;
+				status.error = err;
+				return status;
 			});
-		}).then((db) => {
-			_db = db;
-			status.isConnected = true;
-			callback(status);
-		}).catch((err) => {
-			console.log(err);
-			callback(status);
-		})
-	},
+			return connection;
+		},
 	getDb: () => {
 		return db;
 	},
-	insertData: (mData, mCollection, callback) => {
+	insertData: async (mData, mCollection) => {
+			const collection = _db.collection(mCollection);
+			let response = {};
+		
+			await collection.insertOne(mData).then((result) => {
+				response.success = true;
+				response.data = result;
+				return true;
+			}).catch((err) => {
+				response.success = false;
+				response.error = err;
+				return false
+			});
+			return response;
+		},
+	findData: (data = {}, mCollection) => {
 		const collection = _db.collection(mCollection);
-		// Insert some documents
-		collection.insertOne({
-			data: mData
-		}).then((result) => {
-			callback(result);
-		}).catch((err) => {
-			console.log(err);
-			return err
+		let res = new Promise((resolve, reject) => {
+			collection.find(data).toArray(async (err, result) => {
+				if (err) {
+					reject(err);
+					return err;
+				}
+				resolve(result);
+				return result;
+			});
 		})
+
+		return res;
 	},
-	findData: (data = {}, mCollection, callback) => {
-		// Get the documents collection
-		const collection = _db.collection(mCollection);
-		// Find some documents
-		collection.find(data).toArray((err, docs) => {
-			if (err) {
-				console.log(err);
-				return
-			}
-			callback(docs);
-		});
-	},
+
+
 	removeData: (mCollection, callback) => {
 		_db.collection.remove(mCollection)
 		callback();
