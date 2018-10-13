@@ -18,8 +18,35 @@
             for (var i = 0; i < allAddValues.length; i++) {
                 $(allAddValues[i]).click(function () {
                     var newValue = document.createElement("div");
-                    $(newValue).addClass("valueBox").html("<input type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>");
+                    $(newValue).addClass("valueBox").html("<input type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>")
+  
                     $(newValue).insertBefore($(this).parent(".toolbarBox"));
+                    var property = $(newValue).parents(".statementBox").find(".propertyBox").text();
+                    var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
+                    console.log("property", property) 
+
+                    $(newValue).find('input:submit').click(function () {
+                        var value = $(this).parent().find('input').val();
+                        console.log(value)
+                        $.ajax({
+                           type: 'POST',
+                           url: "./api/event",
+                           data: {
+                                property: property,
+                                value: value
+                           },
+                        success: function (response) {
+                            if (response.success) {
+                                $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                                $(newValue).remove();
+                            }
+                            
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        }
+                    });
+                    });
                     //$(newValue).trigger("focus");
                 });
             }
@@ -403,7 +430,7 @@
                 <a style="padding-right: 10px;">Mobile view</a>
                 <a style="padding-right: 10px;">Data access</a>
                 <!--Pass Grade & Average Relevance here-->
-                <a href="/questionnaire?recoinGrade=AWESOME">Finish.</a>
+                <a href="/questionnaire?recoinGrade=AWESOME&averageRelevance=25">Finish.</a>
 
                 <div style="text-align: right">
                     <img src="https://www.wikidata.org/static/images/wikimedia-button.png">
