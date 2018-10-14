@@ -4,6 +4,7 @@ const assert = require('assert');
 const url = 'mongodb://localhost';
 const port = '27017';
 const dbName = 'recoin';
+const collection = 'mTurkWorkers';
 
 let client;
 var _db;
@@ -11,6 +12,7 @@ var _db;
 module.exports = {
 	connectToServer: async () => {
 			let status = {};
+			status.success = false;
 			client = new MongoClient(new Server('localhost', 27017));
 
 			let connection = new Promise((resolve, reject) => {
@@ -36,8 +38,8 @@ module.exports = {
 	getDb: () => {
 		return db;
 	},
-	insertData: async (mData, mCollection) => {
-			const collection = _db.collection(mCollection);
+	insertData: async (mDatamCollection = collection) => {
+			let collection = _db.collection(mCollection);
 			let response = {};
 		
 			await collection.insertOne(mData).then((result) => {
@@ -49,22 +51,60 @@ module.exports = {
 				response.error = err;
 				return false
 			});
+			client.close();
+
 			return response;
 		},
-	findData: (data = {}, mCollection) => {
-		const collection = _db.collection(mCollection);
-		let res = new Promise((resolve, reject) => {
+	findData: async (data = {}, mCollection = collection) => {
+		let collection = _db.collection(mCollection);
+		let response = {};
+		let result = await new Promise((resolve, reject) => {
 			collection.find(data).toArray(async (err, result) => {
 				if (err) {
 					reject(err);
-					return err;
+					response.error = err;
+					return false;
 				}
 				resolve(result);
+				response.data = result;
 				return result;
 			});
 		})
+		client.close();
+		response.success = result ? true : false;
+		return response;
+	},
 
-		return res;
+	/*
+	 * update if exists otherwise insert 
+	 */
+	updateData: async (findOldValue, newValue, mCollection = collection) => {
+		let collection = _db.collection(mCollection);
+		let response = {};
+		let updateOptions = {
+			upsert: true
+		};
+		let updateQuery = {
+			$set:newValue
+		}
+		let result = await new Promise((resolve, reject) => {
+			collection.updateOne(findOldValue, updateQuery, updateOptions, (err, result) => {
+				if (err){
+					 reject(err);
+					 response.error = err;
+					 return false;
+				}
+				resolve(result);
+				response.data = result;
+				return result;
+			});
+		});
+		
+		client.close();
+		response.success = result ? true : false;
+		
+		console.log('response',response);
+		return response;
 	},
 
 

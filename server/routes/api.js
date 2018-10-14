@@ -8,14 +8,16 @@ const app = express();
 app.post('/event', async (req, res) => {
 	let property = req.body.property;
 	let value = req.body.value;
-	let recoin = req.body.recoin;
-	let workerID = 1;
+	let recoinValue = req.body.recoinValue;
+	let questions = req.body.questions;
+	let workerID = req.body.workerID || 1;
 
 	let response = {
 		workerID,
 		property,
 		value,
-		recoin
+		recoinValue,
+		questions
 	}
 
 	/*
@@ -25,28 +27,21 @@ app.post('/event', async (req, res) => {
 	let storedToDB = await mongo.connectToServer()
 		.then(async (res) => {
 			if (res.success) {
-				return await mongo.insertData(response, 'mTurkWorkers');
-			}
-
-			throw res.error;
-
-		}).then(async (res) => {
-			if (res.success) {
-				let id = res.data.insertedId;
-				let toFindData = {
-					'_id': id
+				let oldValue = {
+					workerID
 				};
-				let foundData = await mongo.findData(toFindData, 'mTurkWorkers');
-
-				console.log('found worker', foundData);
-				mongo.close();
-				return foundData ? true : false;
+				let newValue = response;
+				return await mongo.updateData(oldValue, newValue);
 			}
-
+			response.success = false;
 			throw res.error;
 
-		}).catch((err) => {
+		})
+		.then(async (res) => (res.success))
+		.catch((err) => {
 			console.log(err);
+			response.success = false;
+
 		});
 
 	response.success = storedToDB;
@@ -58,12 +53,12 @@ app.get('/exportDatabase', async (req, res) => {
 
 	let foundData = await mongo.connectToServer().then(async (res) => {
 		if (res.success) {
-			let foundData = await mongo.findData({}, 'mTurkWorkers');
-			return foundData;
+			let foundData = await mongo.findData({});
+			return foundData.data;
 		}
 		return null;
 	});
-	
+
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/csv');
 	res.setHeader("Content-Disposition", 'attachment; filename=' + filename);
