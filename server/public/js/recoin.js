@@ -1,24 +1,29 @@
-var list_entity_original, list_entity_edited;
+var list_entity_original, list_entity_edited, completeness;
 
 //Initialisierung von Recoin mit JSON von Properties
-function recoinInit() {
-    console.log("init");
-    //TODO jquery.ajax (https://ikon-research.imp.fu-berlin.de/data/astronaut-stats.json)
-    $.getJSON('/data/astronaut-stats.json', function(data){
+function recoinInit(c) {
+    //TODO jquery.ajax ()
+    $.ajax({
+      url: './data/astronaut-stats.json',
+      dataType: 'json',
+      async: false,
+      success: function(data) {
         list_entity_original = data;
         list_entity_edited = list_entity_original;
-        let completenessLevel = determineCompletenessLevel(list_entity_original, 5);
-        console.log("Found completenessLevel of " + completenessLevel);
+        completeness = determineCompletenessLevel(list_entity_edited, 5);
+        recoinRender(c);
+      }
     });
 }
 
-//Aktuelles Completeness level
+
+//----------------------------- Recoin Calculations -------------------------------------------------------------------
+
+//Calculate completeness and return percentage, level, and text. 
 function determineCompletenessLevel(list_of_props, threshold) {
     var i = 0;
     var sumAbsences = 0;
     for (let currentProp of list_of_props) {
-        //console.log(currentProp);
-        //console.log(currentProp.presence == false);
         if (i >= threshold) {
             break;
         }
@@ -27,112 +32,35 @@ function determineCompletenessLevel(list_of_props, threshold) {
             i++;
         }
     }
-    return 100 - (sumAbsences / threshold);
-}
+    var completenessPercentage = 100 - (sumAbsences / threshold);
+    var completenessText, completenessLevel;
 
-//DOM manipulation
-function recoinRender(condition) {
-    var html = '<span id="rv1-Icon" style="display: inline-block;"><img src="./assets/1.png" title="This page provides basic information."></span>';
-    switch (condition) {
-        case 1:
-            return
-            break;
-        case 2:
-            renderRecoinOriginal();
-            recoinAddValue();
-            break;
-        case 3:
-            renderRecoinOriginal();
-            break;
-        case 4:
-            renderRecoinOriginal();
-            break;
-        case 5:
-            var icon = '';
-            $('#languageBox').before(html);
-            break;
-        case 6:
-            $('#languageBox').before(html);
+    if (completenessPercentage > 95) {
+        completenessText =  "very detailed";
+        completenessLevel = 5;
+    } else if (completenessPercentage > 90) {
+        completenessText =  "detailed";
+        completenessLevel = 4;
+    } else if (completenessPercentage > 75) {
+        completenessText =  "fairly";
+        completenessLevel = 3;
+    } else if (completenessPercentage > 50) {
+        completenessText =  "basic";
+        completenessLevel = 2;
+    } else {
+        completenessText =  "very basic";
+        completenessLevel = 1;
     }
+    var completenessPackage = {"percentage": completenessPercentage, "level": completenessLevel, "text": completenessText};
+    return completenessPackage;
 }
 
-function renderRecoinOriginal() {
-    $.each(list_entity_edited, function (i, obj) {
-        if (obj.presence === false && i < 10) {
-            $('#recoinTable tbody').append(`<tr>
-                                <td><label><a href="https://www.wikidata.org/wiki/Property:`+ obj.property + `" target="_blank">` + obj.property + `</a></label>
-                                        </td>
-                                    <td>` + obj.name + `</td><td>`
-                + obj.relevance + ` %</td><td><i class="plus icon" onclick="addButton(this, obj)"></i></td></tr >`);
-            i++;
-        }
-    });
-}
-
-function addValueButton(el) = {
-    $(this).html("<input type='text' id=" + obj.name + " oninput='submitValue(this)'>");
-}
-
-
-function recoinAddValue() {
-    $(document).ready(function() {  
-      recoinInit();
-                // Gets all addValue divs
-                var allAddValues = $(".addValue");
-                // Inserts an Input-Submit-field before clicked addValue-Div
-                for (var i = 0; i < allAddValues.length; i++) {
-                    $(allAddValues[i]).click(function() {
-                        console.log("add Value");
-
-                        var newValue = document.createElement("div");
-                        $(newValue).addClass("valueBox").html("<input id=astronaut-stats type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>")
-
-                        $(newValue).insertBefore($(this).parent(".toolbarBox"));
-                        var property = $(newValue).parents(".statementBox").find(".propertyBox").text();
-                        var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
-                        console.log("property", property)
-
-                        $(newValue).find('input:submit').click(function() {
-                            var value = $(this).parent().find('input').val();
-                            $.ajax({
-                                type: 'POST',
-                                url: "./api/event",
-                                data: {
-                                    property: property,
-                                    value: value
-                                },
-                                success: function(response) {
-                                    if (response.success) {
-                                        $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
-                                        $(newValue).remove();
-                                    }
-                                },
-                                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                    console.log(errorThrown);
-                                }
-                            });
-                        });
-                    });
-                }
-    });
-}    
-
-function renderRecoinExplanation() {
-
-}
-
-function renderRecoinRedesign() {
-
-}
-
-
-//Impact der Edits berechnen:
+//Calculate the impact participant contributions have made on completeness:
 function impactOfEdits(list_entity_original, list_entity_edited) {
-    return determineCompletenessLevel(list_entity_edited) - determineCompletenessLevel(list_entity_original);
+    return determineCompletenessLevel(list_entity_edited).percentage - determineCompletenessLevel(list_entity_original).percentage;
 }
 
-
-//Benotung der Edits berechnen:
+//Grade the Edits made by participancts:
 function gradeEdits(list_entity_original, list_entity_edited) {
     var percentage_contribution = impactOfEdits(list_entity_original, list_entity_edited);
     if (percentage_contribution > 50) {
@@ -148,6 +76,148 @@ function gradeEdits(list_entity_original, list_entity_edited) {
     }
 }
 
+//----------------------------- Recoin Renderings -------------------------------------------------------------------
+
+//DOM manipulation
+function recoinRender(condition) {
+    switch (condition) {
+        case 1:
+            return
+            break;
+        case 2:
+            renderRecoinOriginal(condition);
+            break;
+        case 3:
+            renderRecoinOriginal(condition);
+            break;
+        case 4:
+            renderRecoinOriginal(condition);
+            break;
+        case 5:
+            renderRecoinOriginal(condition);
+            break;
+        case 6:
+            renderRecoinRedesign();
+    }
+}
+
+function renderRecoinOriginal(c) {
+    $('.ui.accordion').accordion();
+    var counter = 0;
+
+    $.each(list_entity_edited, function (i, obj) {
+        console.log(obj.presence);
+        if (obj.presence === false && counter < 10) {
+            $('#recoinTable tbody').append('<tr><td><label><a href="https://www.wikidata.org/wiki/Property:'+ obj.property + '" target="_blank">' + obj.property + '</a></label></td><td>' + obj.name + '</td><td>' + obj.relevance + '%</td><td><div><i class="plus icon" id="'+ obj.name + '"onclick="addValue(this)"> </i></div></td></tr >');
+            counter++;
+        }
+    });
+
+    $('#recoinProgressbar').html("<img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png'>");
+
+    if(c == 5) {
+        generateRecoinExplanation(list_entity_edited);
+    }
+}
+
+function generateRecoinExplanation(list_of_props) {
+    var currentCompleteness = determineCompletenessLevel(list_of_props, 5);
+    var i = 0;
+    var arrayExplanation = [];
+    for (let currentProp of list_of_props) {
+      if (i >= 5) {
+          break;
+      }
+      if (currentProp.presence == false) {
+              arrayExplanation.push(currentProp.name);
+          i++;
+      }
+    }
+    var explanation = document.createElement("div");
+    $(explanation).html("<div style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 66%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + currentCompleteness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", " + arrayExplanation[4] + "</span>.</div>" );
+    $(explanation).insertBefore($('#recoinv1Text'));
+}
+
+
+function renderRecoinRedesign() {
+ //redesign!   
+}
+
+//----------------------------- Recoin Functions --------------------------------------------------------------------
+
+//to do track if regular or recoin
+function addValue(el) {
+    var options = {
+      url: function(phrase) {
+        return "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=";
+        //return 'http://localhost:3000/data/astronaut-stats.json';
+      },
+
+      getValue: function(element) {
+        return element.label;
+      },
+
+      ajaxSettings: {
+        dataType: "json",
+        method: "POST",
+        data: {
+          dataType: "json"
+        }
+      },
+
+      preparePostData: function(data) {
+        data.phrase = $(el).val();
+        return data;
+      },
+
+      requestDelay: 400
+    };
+
+    var input = "<input type='text' id='"+ el.id + "'>";
+    $(el).parent().closest('div').html(input).easyAutocomplete(options);
+}
+
+function recoinAddValue() {
+    var allAddValues = $(".addValue");
+    // Inserts an Input-Submit-field before clicked addValue-Div
+    for (var i = 0; i < allAddValues.length; i++) {
+        $(allAddValues[i]).click(function() {
+            console.log("add Value");
+
+            var newValue = document.createElement("div");
+            $(newValue).addClass("valueBox").html("<input id=astronaut-stats type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>")
+
+            $(newValue).insertBefore($(this).parent(".toolbarBox"));
+            var property = $(newValue).parents(".statementBox").find(".propertyBox").text();
+            var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
+            console.log("property", property)
+
+            $(newValue).find('input:submit').click(function() {
+                var value = $(this).parent().find('input').val();
+                $.ajax({
+                    type: 'POST',
+                    url: "./api/event",
+                    data: {
+                        //toDo
+                        property: property,
+                        value: value
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                            $(newValue).remove();
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+            });
+        });
+    }
+}
+
+//----------------------------- General Functions -------------------------------------------------------------------
 
 //Hax0r function
 function findWithAttribute(array, attr, value) {
@@ -160,8 +230,19 @@ function findWithAttribute(array, attr, value) {
 }
 
 function callPropertyAutocompletion(e) {
-    //TODO autocomplete
-    console.log("local autocomplete with:" + e.value);
+    var options = {
+            url: "data/astronaut-stats.json",
+
+            getValue: "name",
+
+            list: {
+                match: {
+                    enabled: true
+                }
+            }
+        };
+
+    $("#astronaut-stats").easyAutocomplete(options);
 }
 
 function callWikidataApi(e) {
@@ -176,39 +257,6 @@ function recoinAddStatement(newStatement) {
     }
     determine_completeness_level(list_entity_edited);
     //TODO render recoin with the new completeness level
-}
-
-function submitValue(e) {
-    var options = {
-        url: "data/astronaut-stats.json",
-
-        getValue: "name",
-
-        list: {
-            match: {
-                enabled: true
-            }
-        }
-    };
-
-    $(el.id).easyAutocomplete(options);
-}
-
-function submitProperty(e) {
-    var options = {
-            url: "data/astronaut-stats.json",
-
-            getValue: "name",
-
-            list: {
-                match: {
-                    enabled: true
-                }
-            }
-        };
-
-    $("#astronaut-stats").easyAutocomplete(options);
-    
 }
 
 

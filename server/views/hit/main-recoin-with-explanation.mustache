@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <link rel="stylesheet" href="/css/wikidata.css">
     <script src="/js/recoin.js"></script>
+    <!-- JS file -->
+    <script src="js/jquery.easy-autocomplete.js"></script>
     <!--Box Statement Jesse-->
     <script type="text/javascript">
-        $(document).ready(function () {
-
+        $(document).ready(function() {
+            recoinInit(5);
             // Gets all addValue divs
             var allAddValues = $(".addValue");
             // Inserts an Input-Submit-field before clicked addValue-Div
@@ -137,7 +139,7 @@
                         </div>
                     </div>
                     <div class="three wide center aligned column">
-                        <div><img src="https://tools.wmflabs.org/recoin/progressbar/2.png"></div>
+                        <div id="recoinProgressbar"></div>
                     </div>
                 </div>
             </div>
@@ -158,7 +160,7 @@
                     <div class="content" style="padding-left:30px;">
                         <p class="transition hidden">
                         <div class="box" id="recoinv1Text">
-                            <table class="recoinv1Box">
+                            <table id="recoinTable" class="recoinv1Box">
                                 <thead>
                                 <tr>
                                     <td>Property ID</td>
@@ -168,76 +170,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P108">P108</a></label>
-                                    </td>
-                                    <td>employer</td>
-                                    <td>46.52%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P410">P410</a></label>
-                                    </td>
-                                    <td>military rank</td>
-                                    <td>42.61%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P241">P241</a></label>
-                                    </td>
-                                    <td>military branch</td>
-                                    <td>34.19%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P1412">P1412</a></label>
-                                    </td>
-                                    <td>languages spoken, written or signed</td>
-                                    <td>14.16%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P1343">P1343</a></label>
-                                    </td>
-                                    <td>described by source</td>
-                                    <td>10.62%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P102">P102</a></label>
-                                    </td>
-                                    <td>member of political party</td>
-                                    <td>10.01%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P103">P103</a></label>
-                                    </td>
-                                    <td>native language</td>
-                                    <td>7.57%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P463">P463</a></label>
-                                    </td>
-                                    <td>member of</td>
-                                    <td>7.57%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P910">P910</a></label>
-                                    </td>
-                                    <td>topic's main category</td>
-                                    <td>7.45%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P935">P935</a></label>
-                                    </td>
-                                    <td>Commons gallery</td>
-                                    <td>6.84%</td>
-                                    <td></td>
-                                </tr>
+                                
+                                
                                 </tbody>
                             </table>
                         </div>

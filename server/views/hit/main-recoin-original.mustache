@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="/css/wikidata.css">
     <!-- <script src="../../public/js/recoin.js"></script> -->
 
-    <script src="/js/main.js"></script>
+    <!--<script src="/js/main.js"></script>-->
     <script src="/js/recoin.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-             //recoinInit();
+             recoinInit(2);
              // Gets all addValue divs
              var allAddValues = $(".addValue");
              // Inserts an Input-Submit-field before clicked addValue-Div
@@ -140,7 +140,7 @@
                         </div>
                     </div>
                     <div class="three wide center aligned column">
-                        <div><img src="https://tools.wmflabs.org/recoin/progressbar/2.png"></div>
+                        <div id="recoin-progressbar"></div>
                     </div>
                 </div>
             </div>

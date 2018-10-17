@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
     let turkSubmitTo = req.query.turkSubmitTo;
     let condition = req.query.condition;
 
-    var preview = true;
+    var preview = false;
     if (assignmentId == null || assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE") {
         preview = true;
     }
