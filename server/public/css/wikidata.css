@@ -297,7 +297,6 @@
 
 .box {
     max-width: 70%;
-    clear: both;
 }
 
 /*Recoin v1 Tabelle*/
@@ -308,7 +307,7 @@
     border: 1px solid #c8ccd1;
     display: table;
     table-layout: auto;
-    width: 60%;
+    width: 70%;
 
 }
 
@@ -364,24 +363,26 @@
     font-weight: 400;
 }
 
-#recoinv2box {
-    max-width: 70%;
-    padding: 0%;
-}
+/*v2 recoin*/
+/*Recoinv2Table*/
+
+#recoinv2table{
+    max-width: 60%;
+    margin-top: 20px;
+
+    }
 
 #recoinv2fn {
-    max-width: 70%;
+    max-width: 60%;
 }
 
+
+
 #propertieName {
-    text-align: left;
+    text-align: center;
     color: #0645ad;
     font-family: sans-serif;
     font-size: 0.875em;
-    background-color: #eaecf0;
-    padding-top: 15px;
-    width: 90%;
-
 }
 
 #rv2addvalue {
@@ -392,19 +393,10 @@
     font-size: 0.875em;
 }
 
-#recoinboxcolumn {
-    box-shadow: -1px 0 0 0 #ffffff;
-    width: 90%;
-}
-
 #recoinv2boxtext {
     font-size: 10px;
     text-align: left;
 }
 
-.ui.basic.button, .ui.basic.buttons .button {
-    border-radius: 0;
-    padding: 5px;
-    font-size: 10px;
-    font-family: sans-serif;
-}
+
+/*multirange slider*/
