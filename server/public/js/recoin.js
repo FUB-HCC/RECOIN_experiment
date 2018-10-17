@@ -38,16 +38,14 @@ function recoinRender(condition) {
             return
             break;
         case 2:
-            $('#basicInfo').before(html);
-            $('#languageBox').before(html);
+            renderRecoinOriginal();
+            recoinAddValue();
             break;
         case 3:
-            var icon = '';
-            $('#languageBox').before(html);
+            renderRecoinOriginal();
             break;
         case 4:
-            var icon = '';
-            $('#languageBox').before(html);
+            renderRecoinOriginal();
             break;
         case 5:
             var icon = '';
@@ -56,6 +54,75 @@ function recoinRender(condition) {
         case 6:
             $('#languageBox').before(html);
     }
+}
+
+function renderRecoinOriginal() {
+    $.each(list_entity_edited, function (i, obj) {
+        if (obj.presence === false && i < 10) {
+            $('#recoinTable tbody').append(`<tr>
+                                <td><label><a href="https://www.wikidata.org/wiki/Property:`+ obj.property + `" target="_blank">` + obj.property + `</a></label>
+                                        </td>
+                                    <td>` + obj.name + `</td><td>`
+                + obj.relevance + ` %</td><td><i class="plus icon" onclick="addButton(this, obj)"></i></td></tr >`);
+            i++;
+        }
+    });
+}
+
+function addValueButton(el) = {
+    $(this).html("<input type='text' id=" + obj.name + " oninput='submitValue(this)'>");
+}
+
+
+function recoinAddValue() {
+    $(document).ready(function() {  
+      recoinInit();
+                // Gets all addValue divs
+                var allAddValues = $(".addValue");
+                // Inserts an Input-Submit-field before clicked addValue-Div
+                for (var i = 0; i < allAddValues.length; i++) {
+                    $(allAddValues[i]).click(function() {
+                        console.log("add Value");
+
+                        var newValue = document.createElement("div");
+                        $(newValue).addClass("valueBox").html("<input id=astronaut-stats type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>")
+
+                        $(newValue).insertBefore($(this).parent(".toolbarBox"));
+                        var property = $(newValue).parents(".statementBox").find(".propertyBox").text();
+                        var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
+                        console.log("property", property)
+
+                        $(newValue).find('input:submit').click(function() {
+                            var value = $(this).parent().find('input').val();
+                            $.ajax({
+                                type: 'POST',
+                                url: "./api/event",
+                                data: {
+                                    property: property,
+                                    value: value
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                                        $(newValue).remove();
+                                    }
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+                        });
+                    });
+                }
+    });
+}    
+
+function renderRecoinExplanation() {
+
+}
+
+function renderRecoinRedesign() {
+
 }
 
 
@@ -109,6 +176,39 @@ function recoinAddStatement(newStatement) {
     }
     determine_completeness_level(list_entity_edited);
     //TODO render recoin with the new completeness level
+}
+
+function submitValue(e) {
+    var options = {
+        url: "data/astronaut-stats.json",
+
+        getValue: "name",
+
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    $(el.id).easyAutocomplete(options);
+}
+
+function submitProperty(e) {
+    var options = {
+            url: "data/astronaut-stats.json",
+
+            getValue: "name",
+
+            list: {
+                match: {
+                    enabled: true
+                }
+            }
+        };
+
+    $("#astronaut-stats").easyAutocomplete(options);
+    
 }
 
 
