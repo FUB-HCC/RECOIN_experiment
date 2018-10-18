@@ -150,7 +150,7 @@ function renderRecoinRedesign() {
 
 function recoinPlus(obj) {
     var newValue;
-    var input = "<input type='text' class='newValue' id='"+ obj.id + "'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
+    var input = "<input type='text' class='newValue' id='"+ obj.id + "'><input type='submit' value='Publish' onclick='recoinAddValue(this)' callWikidataApi()>";
     $(obj).parent().closest("div").append(input);
     newValue = $(obj).parent().closest("div").children(".newValue");
     $(obj).remove();   
@@ -270,8 +270,20 @@ function callPropertyAutocompletion(e) {
 }
 
 function callWikidataApi(e) {
-    console.log("wikidata auotocomplete wiht:" + e.value);
+    var liveInput = $(e).val();
+    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + liveInput;
+    
+    var xhr = createCORSRequest('GET', url);
+    xhr.onload = function () {
+        var responseText = JSON.parse(xhr.responseText);
+        for(let key in responseText.search) {
+            liveAutocompleteOptions.push(responseText.search[key].label);
+        }
+        console.log(liveAutocompleteOptions);
+    };
+    xhr.send();
 }
+
 
 function addStatementContainer() {
     let newStatementProperty = 'newStatementPropertyInput';
