@@ -12,14 +12,14 @@
         } 
 
 
-        document.getElementByID('text1').value = "Insert Text";
+        $("#text1").value = "Insert Text";
 
         function getVal(){
-           var text1 = document.getElementById("text1").value;
-           var text2 = document.getElementById("text2").value;
-           var text3 = document.getElementById("text3").value;
-           var text4 = document.getElementById("text4").value;
-           var text5 = document.getElementById("text5").value;
+           var text1 = $("#text1").value;
+           var text2 = $("#text2").value;
+           var text3 = $("#text3").value;
+           var text4 = $("#text4").value;
+           var text5 = $("#text5").value;
 
 
            alert(text1 + '\n' + text2 + '\n' + text3 + '\n' + text4 + ' \n' + text5);
@@ -47,9 +47,9 @@
         <p>Thank you for adding data to Chris Hadfield’s Wikidata entry! We’ve had a look at the relevance of your
             additions, and give your performance the grade (A-F):</p>
         <br>
-        <p>NOTE {{recoinGrade}}</p>
+        <p style="text-align: center; font-size: 1.2em">{{recoinGrade}}</p>
         <br>
-        <p>On average, your additions were Y relevant.</p>
+        <p>On average, your additions were {{averageRelevance}} % relevant.</p>
         <br>
         <p>To help us improve Wikidata, please answer the following questions. You can use the scales to answer and also
             provide more specific feedback in the textfields.<br> After completion, clicking “Submit” at the bottom of

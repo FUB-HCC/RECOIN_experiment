@@ -59,6 +59,10 @@ router.get('/main', function (req, res) {
         res.render('hit/main-without-recoin.mustache', {});
         console.log("main-without-recoin");
     } else if (condition <= 4) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
         res.render('hit/main-recoin-original.mustache', {});
         console.log("main-recoin-original");
     } else if (condition == 5) {
@@ -73,8 +77,10 @@ router.get('/main', function (req, res) {
 
 router.get('/questionnaire', function (req, res) {
     let recoinGrade = req.query.recoinGrade;
+    let averageRelevance = req.query.averageRelevance;
     let model = {
-        "recoinGrade": recoinGrade
+        "recoinGrade": recoinGrade,
+        "averageRelevance" : averageRelevance
     };
     res.render('hit/questionnaire.mustache', model);
 });
