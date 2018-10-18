@@ -7,19 +7,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
     <link rel="stylesheet" href="/css/wikidata.css">
-    <!-- JS file -->
+    <link rel="stylesheet" href="/css/style.css">
     <script src="js/jquery.easy-autocomplete.js"></script>
 	<script src="js/api-backend.js"></script>
 
     <!-- CSS file -->
     <link rel="stylesheet" href="css/easy-autocomplete.css">
-
-    <!-- Additional CSS Themes file - not required-->
     <link rel="stylesheet" href="css/easy-autocomplete.themes.css">
     <script src="/js/recoin.js"></script>
-    <!--Box Statement Jesse-->
     <script type="text/javascript">
+        var impact, grade;
+
         var options = {
             url: "data/astronaut-stats.json",
 
@@ -33,10 +33,9 @@
         };
 
         $(document).ready(function() {
-            recoinInit();
+            recoinInit(1);
             // Gets all addValue divs
             var allAddValues = $(".addValue");
-            // Inserts an Input-Submit-field before clicked addValue-Div
             for (var i = 0; i < allAddValues.length; i++) {
                 $(allAddValues[i]).click(function() {
 
@@ -44,12 +43,13 @@
                     $(newValue).addClass("valueBox").html("<input id=astronaut-stats type='text' name='newValue" + i + "'>  <input type='submit' value='Publish'>")
 
                     $(newValue).insertBefore($(this).parent(".toolbarBox"));
-                    var property = $(newValue).parents(".statementBox").find(".propertyBox").text();
                     var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
                     console.log("property", property)
 
                     $(newValue).find('input:submit').click(function() {
                         var value = $(this).parent().find('input').val();
+                        var property = $(this).parents(".statementBox").find(".propertyBox").text();
+                        //postToServer(value, property);
                         $.ajax({
                             type: 'POST',
                             url: "./api/event",
@@ -94,84 +94,26 @@
                 });
             }
 
-
         });
-        // TIMEOUT
-        function time_out() {
-            on();
-            //alert('Die Zeit ist um');
-            impactOfEdits();
 
-        }
-        to = setTimeout("time_out()", 600000);
+            // TIMEOUT
+            setTimeout(function() {
+                on();
+                //alert('Die Zeit ist um');
+                impact = impactOfEdits();
+                grade = gradeEdits();
+                $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance="+ String(impact));
 
-        function on() {
-            document.getElementById("overlay").style.display = "block";
-        }
+            }, 10 * 60 * 1000);
 
-        function off() {
-            document.getElementById("overlay").style.display = "none";
-        }
+            function on() {
+                $("#overlay").css("display", "block");
+            }
+
+            function off() {
+                $("#overlay").css("display", "none");
+            }
     </script>
-    <style type="text/css">
-        #overlay {
-            position: fixed;
-            /* Sit on top of the page content */
-            display: none;
-            /* Hidden by default */
-            width: 100%;
-            /* Full width (cover the whole page) */
-            height: 100%;
-            /* Full height (cover the whole page) */
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Black background with opacity */
-            z-index: 2;
-            /* Specify a stack order in case you're using a different order for other elements */
-            cursor: pointer;
-            /* Add a pointer on hover */
-        }
-        .title_ {
-              position: absolute;
-              width: 100%;
-              left: 0;
-              top: 120px;
-              font-weight: 700;
-              font-size: 100px;
-              text-align: center;
-              text-transform: uppercase;
-              color: black;
-              z-index: 1;
-              transition: top .5s ease;
-            }
-         .button {
-              position: absolute;
-              width: 100%;
-              left:0;
-              top: 360px;
-              text-align: center;
-              opacity: 0;
-              transition: opacity .35s ease;
-            }   
-
-        .button a {
-              width: 1000px;
-              padding: 36px 144px;
-              text-align: center;
-              color: black;
-              border: solid 8px black;
-              z-index: 1;
-              font-size: 50px;
-            }
-        .container:hover .button {
-              opacity: 1;
-        }
-
- 
-    </style>
 </head>
 
 
@@ -180,11 +122,10 @@
     <div id ="overlay" class="container">
        <p class="title_"> Time´s up </p>
            <div class="button" onclick="off()">
-                <a href="/questionnaire"> Finish! </a>
+                <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
            </div>
     </div>
         
-
 
     <!--Wikidata-->
     <!--Benutzereinstellungen Sprache Login etc-->
@@ -203,9 +144,8 @@
     <!--Logo Farbverlauf Navigationsbereich -->
     <div class="ui first grid">
         <div class="ui secondary three column row">
-            <div class="three wide left aligned column ">
+            <div class="two wide left aligned column ">
                 <!--Wikidata Logo -->
-
             </div>
             <div class="six wide left bottom aligned column">
                 <div class="ui top attached tabular menu">
@@ -230,12 +170,13 @@
     <!--Menue Links Hauptseite-->
     <div class="ui secondary grid">
         <div class="ui two column row">
-            <div class="three wide left aligned links column ">
-                <div>
-                    <img class="ui center floated image" src="https://www.wikidata.org/static/images/project-logos/wikidatawiki.png">
+            <div class="two wide left aligned links column ">
+                <div style="margin-top: -40px; margin-left: 20px;">
+                    <img class="ui center floated image"
+                         src="https://www.wikidata.org/static/images/project-logos/wikidatawiki.png">
                 </div>
                 <div>
-                    <br><br><br><br><br><br>
+                    <br><br><br><br><br><br> <br><br>
                     <ul id="ul"><a>Main page</a> <br>
                         <a>Community
                             portal</a> <br>
@@ -273,130 +214,58 @@
                 </div>
             </div>
             <!--Item Bereich -->
-            <div class="thirteen wide left aligned column" style="background-color: white">
-                <div class="ui third grid" style="padding-bottom: 10px; padding-left:15px;">
+            <div class="fourteen wide left aligned column" style="background-color: white;     padding-left: 25px;
+                    padding-top: 10px">
+                <div class="ui third grid" style="padding-left:15px;">
                     <!--Item Name und ID-->
-                    <div class="two column row" id="line">
+                    <div class="two column row">
                         <!--Jesse-->
-                        <div class="ten wide column" style="padding-left:0%">
+                        <div class="thirteen wide column" style="padding-left:0%">
                             <div>
                                 <h1 id="firstHeading">Chris Hadfield <span id="itemID">(Q1076962)</span></h1>
                             </div>
                         </div>
-                        <!--Recoin Progressbar-->
-                        <!--
-                    <div class="three wide center aligned column">
-                        <div><img src="https://tools.wmflabs.org/recoin/progressbar/2.png"></div>
-                    </div>
-                    -->
+                        <div class="three wide center aligned column">
+                                <div id="recoinProgressbar"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="padding-bottom: 0;">
                     <div>
                         <span id="class"> Canadian astronaut</span> </br>
                         <span id="alias">Chris Austin Hadfield | Christopher Austin Hadfield |
-                            Chris A. Hadfield</span>
+                                    Chris A. Hadfield</span>
                     </div>
                 </div>
                 <!--Recoin-->
-                <!-- 
-            <div class="row" style="padding-top: 0;">
-                <div class="ui fluid accordion">
-                    <div class="title" id="accordiontitle">
-                        <i class="dropdown icon"></i>
-                        Most relevant properties which are absent
-                    </div>
-                    <div class="content" style="padding-left:30px;">
-                        <p class="transition hidden">
-                        <div class="box" id="recoinv1Text">
-                            <table class="recoinv1Box">
-                                <thead>
-                                <tr>
-                                    <td>Property ID</td>
-                                    <td>Label</td>
-                                    <td>Relative</td>
-                                    <td>Add Claim</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P108">P108</a></label>
-                                    </td>
-                                    <td>employer</td>
-                                    <td>46.52%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P410">P410</a></label>
-                                    </td>
-                                    <td>military rank</td>
-                                    <td>42.61%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P241">P241</a></label>
-                                    </td>
-                                    <td>military branch</td>
-                                    <td>34.19%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P1412">P1412</a></label>
-                                    </td>
-                                    <td>languages spoken, written or signed</td>
-                                    <td>14.16%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P1343">P1343</a></label>
-                                    </td>
-                                    <td>described by source</td>
-                                    <td>10.62%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P102">P102</a></label>
-                                    </td>
-                                    <td>member of political party</td>
-                                    <td>10.01%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P103">P103</a></label>
-                                    </td>
-                                    <td>native language</td>
-                                    <td>7.57%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P463">P463</a></label>
-                                    </td>
-                                    <td>member of</td>
-                                    <td>7.57%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P910">P910</a></label>
-                                    </td>
-                                    <td>topic's main category</td>
-                                    <td>7.45%</td>
-                                    <td><i class="plus icon"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><label><a href="https://www.wikidata.org/wiki/Property:P935">P935</a></label>
-                                    </td>
-                                    <td>Commons gallery</td>
-                                    <td>6.84%</td>
-                                    <td></td>
-                                </tr>
-                                </tbody>
-                            </table>
+<!--                 <div class="row" style="padding-top: 0;">
+                    <div class="ui fluid accordion">
+                        <div class="title" id="accordiontitle">
+                            <i class="dropdown icon"></i>
+                            Most relevant properties which are absent
                         </div>
-                        </p>
+                        <div class="content" style="padding-left:30px;">
+                            <p class="transition hidden">
+                            <div class="box" id="recoinv1Text">
+                                <table id="recoinTable" class="recoinv1Box">
+                                    <thead>
+                                    <tr>
+                                        <td>Property ID</td>
+                                        <td>Label</td>
+                                        <td>Relative</td>
+                                        <td>Add Claim</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </div>  
-        -->
+                </div> -->
                 <!--Language Box-->
                 <div class="row">
                     <div class="ui fluid accordion">
@@ -408,112 +277,111 @@
                             <div class="box" id="languageText">
                                 <table class="languageBox">
                                     <thead>
-                                        <th scope="col">Language</th>
-                                        <th scope="col">Label</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Also Known As</th>
+                                    <th scope="col">Language</th>
+                                    <th scope="col">Label</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Also Known As</th>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th>English</th>
-                                            <td>Chris Hadfield</td>
-                                            <td>Canadian Astronaut</td>
-                                            <td>Chris Austin Hadfield<br />Christopher Austin Hadfield<br />Chris
-                                                A.
-                                                Hadfield
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>German</th>
-                                            <td>Chris Austin Hadfield</td>
-                                            <td>kanadischer Astronaut</td>
-                                            <td>Chris Hadfield</td>
-                                        </tr>
-                                        <tr>
-                                            <th>French</th>
-                                            <td>Chris Hadfield</td>
-                                            <td>astronaute canadien</td>
-                                            <td>Chris A. Hadfield</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Bavarian</th>
-                                            <td style="color:#a2a9b1;">No label defined</td>
-                                            <td style="color:#a2a9b1;">No label defined</td>
-                                            <td></td>
-                                        </tr>
+                                    <tr>
+                                        <th>English</th>
+                                        <td>Chris Hadfield</td>
+                                        <td>Canadian Astronaut</td>
+                                        <td>Chris Austin Hadfield<br/>Christopher Austin Hadfield<br/>Chris
+                                            A.
+                                            Hadfield
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>German</th>
+                                        <td>Chris Austin Hadfield</td>
+                                        <td>kanadischer Astronaut</td>
+                                        <td>Chris Hadfield</td>
+                                    </tr>
+                                    <tr>
+                                        <th>French</th>
+                                        <td>Chris Hadfield</td>
+                                        <td>astronaute canadien</td>
+                                        <td>Chris A. Hadfield</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bavarian</th>
+                                        <td style="color:#a2a9b1;">No label defined</td>
+                                        <td style="color:#a2a9b1;">No label defined</td>
+                                        <td></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--Statements-->
-                <div class="row">
-                    <h2 id="secondHeading">Statements</h2>
-                    <!--    Statements from Wikidata -->
-                    <div class="box statementBox">
-                        <div class="propertyBox">instance of</div>
-                        <div class="valueBox">human</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
+                    <!--Statements-->
+                    <div class="row">
+                        <h2 id="secondHeading">Statements</h2>
+                        <!--    Statements from Wikidata -->
+                        <div class="box statementBox">
+                            <div class="propertyBox">instance of</div>
+                            <div class="valueBox">human</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <div class="box statementBox">
+                            <div class="propertyBox">image</div>
+                            <div class="valueBox"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Chris_Hadfield_2011.jpg/144px-Chris_Hadfield_2011.jpg" width="140px"></div>
+                            <div class="valueBox">Chris Hadfield 2011.jpg</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <div class="box statementBox">
+                            <div class="propertyBox">sex or gender</div>
+                            <div class="valueBox">male</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <div class="box statementBox">
+                            <div class="propertyBox">occupation</div>
+                            <div class="valueBox">astronaut</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <div class="box statementBox">
+                            <div class="propertyBox">date of birth</div>
+                            <div class="valueBox">August 29, 1959</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <div class="box statementBox">
+                            <div class="propertyBox">place of birth</div>
+                            <div class="valueBox">Toronto, Canada</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <div class="box statementBox">
+                            <div class="propertyBox">time in space</div>
+                            <div class="valueBox">166 days</div>
+                            <div class="toolbarBox">
+                                <div class="addValue">+ add value</div>
+                            </div>
+                        </div>
+
+                        <!--    Here statements are added -->
+                        <div class="box" id="addStatementBox">
+                            <div id="addStatement" onclick="addStatementContainer()">+ add statement</div>
                         </div>
                     </div>
-
-                    <div class="box statementBox">
-                        <div class="propertyBox">image</div>
-                        <div class="valueBox"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Chris_Hadfield_2011.jpg/144px-Chris_Hadfield_2011.jpg" width="140px"></div>
-                        <div class="valueBox">Chris Hadfield 2011.jpg</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
-                        </div>
-                    </div>
-
-                    <div class="box statementBox">
-                        <div class="propertyBox">sex or gender</div>
-                        <div class="valueBox">male</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
-                        </div>
-                    </div>
-
-                    <div class="box statementBox">
-                        <div class="propertyBox">occupation</div>
-                        <div class="valueBox">astronaut</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
-                        </div>
-                    </div>
-
-                    <div class="box statementBox">
-                        <div class="propertyBox">date of birth</div>
-                        <div class="valueBox">August 29, 1959</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
-                        </div>
-                    </div>
-
-                    <div class="box statementBox">
-                        <div class="propertyBox">place of birth</div>
-                        <div class="valueBox">Toronto, Canada</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
-                        </div>
-                    </div>
-
-                    <div class="box statementBox">
-                        <div class="propertyBox">time in space</div>
-                        <div class="valueBox">166 days</div>
-                        <div class="toolbarBox">
-                            <div class="addValue">+ add value</div>
-                        </div>
-                    </div>
-
-                    <!--    Here statements are added -->
-                    <div class="box" id="addStatementBox">
-                        <div id="addStatement">+ add statement</div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -547,8 +415,6 @@
                     <a style="padding-right: 10px;">Cookie statement</a>
                     <a style="padding-right: 10px;">Mobile view</a>
                     <a style="padding-right: 10px;">Data access</a>
-                    <!--Pass Grade & Average Relevance here-->
-                    <a href="/questionnaire?recoinGrade=AWESOME&averageRelevance=25">Finish.</a>
 
                     <div style="text-align: right">
                         <img src="https://www.wikidata.org/static/images/wikimedia-button.png">
@@ -561,7 +427,6 @@
     </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
     <script>
         $('.ui.accordion')
             .accordion();
