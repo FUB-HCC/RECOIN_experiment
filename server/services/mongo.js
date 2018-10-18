@@ -38,29 +38,33 @@ module.exports = {
 	getDb: () => {
 		return db;
 	},
-	insertData: async (mDatamCollection = collection) => {
-			let collection = _db.collection(mCollection);
-			let response = {};
-		
-			await collection.insertOne(mData).then((result) => {
-				response.success = true;
+	insertData: async (mData, mCollection = collection) => {
+		let collection = _db.collection(mCollection);
+		let response = {};
+		let res = await new Promise((resolve, reject) => {
+			collection.insertOne(mData).then((err, result) => {
+				if (err) {
+					reject(err);
+					response.error = err;
+					return false;
+				}
+				resolve(result);
 				response.data = result;
-				return true;
-			}).catch((err) => {
-				response.success = false;
-				response.error = err;
-				return false
+				return result;
 			});
-			client.close();
+		});
 
-			return response;
-		},
+		response.success = result ? true : false;
+		return response;
+	},
+
 	findData: async (data = {}, mCollection = collection) => {
 		let collection = _db.collection(mCollection);
 		let response = {};
 		let sortVariable = {
 			workerID: 1
 		};
+		
 		let result = await new Promise((resolve, reject) => {
 			collection.find(data).sort(sortVariable).toArray(async (err, result) => {
 				if (err) {

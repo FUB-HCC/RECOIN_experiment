@@ -6,25 +6,9 @@ const csv = require('csv-express');
 const app = express();
 
 app.post('/event', async (req, res) => {
-	let assignmentID = req.body.assignmentID;
-	let condition = req.body.condition;
-	let workerID = req.body.workerID || 1;
-	let properties = req.body.properties;
-	let questions = req.body.questions;
-	let grade = req.body.grade;
-	let averageRelevance = req.body.averageRelevance;
-	
 	console.log(req.body);
-	
-	let response = {
-		workerID,
-		assignmentID,
-		condition,
-		properties,
-		questions,
-		grade,
-		averageRelevance,
-	}
+
+	let response = req.body;
 
 	/*
 	 * connect to server => insert data to DB => retrieve data from DB
@@ -33,11 +17,12 @@ app.post('/event', async (req, res) => {
 	let storedToDB = await mongo.connectToServer()
 		.then(async (res) => {
 			if (res.success) {
-				let oldValue = {
-					workerID
-				};
-				let newValue = response;
-				return await mongo.updateData(oldValue, newValue);
+				// let oldValue = {
+				// 	workerID
+				// };
+				// let newValue = response;
+				// return await mongo.updateData(oldValue, newValue);
+				return await mongo.insertData(response);
 			}
 			response.success = false;
 			throw res.error;
@@ -77,8 +62,9 @@ app.get('/exportProperties', async (req, res) => {
 				mWorker.property = property.name;
 				mWorker.value = value;
 				mWorker.recoin = property.recoin;
+				mWorker.hitID = property.hitID;
 				mWorker.recoinUsed = property.recoinUsed;
-				mWorker.timestamp = property.timestamp || "";
+				mWorker.timestamp = property.timestamp;
 				result.push(mWorker);
 				mWorker = {};
 			}
