@@ -24,5 +24,17 @@ docker images for deployment:
 running on the server
 
     docker run -p 8080:3000 -e AWS_ACCESS_KEY_ID=<insert here> -e AWS_SECRET_ACCESS_KEY=<insert here> -t git.imp.fu-berlin.de:5000/jbenjamin/ikon/recoin-experiment
-   
- 
+
+## Add Data to server ./api/event
+
+    {
+       "workerID": "1",
+       "assignmentID": "1",
+       "hitID": "1",
+       "condition": "1",
+       "relevance": "0.65",
+       "timestamp": "1539874808385",
+       "property": "Instance of",
+       "value": "Human",
+       "impactOnRelevance": "0.534",
+   }
