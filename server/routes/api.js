@@ -50,25 +50,26 @@ app.get('/exportProperties', async (req, res) => {
 	let result = [];
 
 	for (worker of workers) {
+		result.push(worker);
 		let mWorker = {};
-		let properties = worker.properties;
+		// let properties = worker.properties;
 
-		for (property of properties) {
-			let values = property.values;
-
-			for (value of values) {
-				mWorker.workerID = worker.workerID;
-				mWorker.assignmentID = worker.assignmentID;
-				mWorker.property = property.name;
-				mWorker.value = value;
-				mWorker.recoin = property.recoin;
-				mWorker.hitID = property.hitID;
-				mWorker.recoinUsed = property.recoinUsed;
-				mWorker.timestamp = property.timestamp;
-				result.push(mWorker);
-				mWorker = {};
-			}
-		}
+		// for (property of properties) {
+		// 	let values = property.values;
+		// 
+		// 	for (value of values) {
+		// 		mWorker.workerID = worker.workerID;
+		// 		mWorker.assignmentID = worker.assignmentID;
+		// 		mWorker.property = property.name;
+		// 		mWorker.value = value;
+		// 		mWorker.recoin = property.recoin;
+		// 		mWorker.hitID = property.hitID;
+		// 		mWorker.recoinUsed = property.recoinUsed;
+		// 		mWorker.timestamp = property.timestamp;
+		// 		result.push(mWorker);
+		// 		mWorker = {};
+		// 	}
+		// }
 
 		/*
 		for (question of questions) {

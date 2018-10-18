@@ -42,22 +42,22 @@ module.exports = {
 		let collection = _db.collection(mCollection);
 		let response = {};
 		let res = await new Promise((resolve, reject) => {
-			collection.insertOne(mData).then((err, result) => {
-				if (err) {
+			collection.insertOne(mData)
+				.then((result) => {
+					resolve(result);
+					response.data = result;
+					return result;
+				})
+				.catch((err) => {
 					reject(err);
 					response.error = err;
 					return false;
-				}
-				resolve(result);
-				response.data = result;
-				return result;
-			});
+				});
 		});
-
-		response.success = result ? true : false;
+		console.log('res', res);
+		response.success = res ? true : false;
 		return response;
 	},
-
 	findData: async (data = {}, mCollection = collection) => {
 		let collection = _db.collection(mCollection);
 		let response = {};
@@ -91,9 +91,11 @@ module.exports = {
 		let updateOptions = {
 			upsert: true
 		};
+		
 		let updateQuery = {
 			$set:newValue
-		}
+		};
+		
 		let result = await new Promise((resolve, reject) => {
 			collection.updateOne(findOldValue, updateQuery, updateOptions, (err, result) => {
 				if (err){
