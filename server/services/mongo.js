@@ -58,8 +58,11 @@ module.exports = {
 	findData: async (data = {}, mCollection = collection) => {
 		let collection = _db.collection(mCollection);
 		let response = {};
+		let sortVariable = {
+			workerID: 1
+		};
 		let result = await new Promise((resolve, reject) => {
-			collection.find(data).toArray(async (err, result) => {
+			collection.find(data).sort(sortVariable).toArray(async (err, result) => {
 				if (err) {
 					reject(err);
 					response.error = err;
@@ -102,8 +105,6 @@ module.exports = {
 		
 		client.close();
 		response.success = result ? true : false;
-		
-		console.log('response',response);
 		return response;
 	},
 

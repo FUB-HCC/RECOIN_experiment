@@ -6,18 +6,24 @@ const csv = require('csv-express');
 const app = express();
 
 app.post('/event', async (req, res) => {
-	let property = req.body.property;
-	let value = req.body.value;
-	let recoinValue = req.body.recoinValue;
-	let questions = req.body.questions;
+	let assignmentID = req.body.assignmentID;
+	let condition = req.body.condition;
 	let workerID = req.body.workerID || 1;
-
+	let properties = req.body.properties;
+	let questions = req.body.questions;
+	let grade = req.body.grade;
+	let averageRelevance = req.body.averageRelevance;
+	
+	console.log(req.body);
+	
 	let response = {
 		workerID,
-		property,
-		value,
-		recoinValue,
-		questions
+		assignmentID,
+		condition,
+		properties,
+		questions,
+		grade,
+		averageRelevance,
 	}
 
 	/*
@@ -35,23 +41,20 @@ app.post('/event', async (req, res) => {
 			}
 			response.success = false;
 			throw res.error;
-
 		})
 		.then(async (res) => (res.success))
 		.catch((err) => {
 			console.log(err);
 			response.success = false;
-
 		});
-
 	response.success = storedToDB;
 	res.send(response);
 });
 
-app.get('/exportDatabase', async (req, res) => {
+app.get('/exportProperties', async (req, res) => {
 	let filename = "mTurkWorkers_" + getTimestamp() + ".csv";
 
-	let foundData = await mongo.connectToServer().then(async (res) => {
+	let workers = await mongo.connectToServer().then(async (res) => {
 		if (res.success) {
 			let foundData = await mongo.findData({});
 			return foundData.data;
@@ -59,10 +62,43 @@ app.get('/exportDatabase', async (req, res) => {
 		return null;
 	});
 
+	let result = [];
+
+	for (worker of workers) {
+		let mWorker = {};
+		let properties = worker.properties;
+
+		for (property of properties) {
+			let values = property.values;
+
+			for (value of values) {
+				mWorker.workerID = worker.workerID;
+				mWorker.assignmentID = worker.assignmentID;
+				mWorker.property = property.name;
+				mWorker.value = value;
+				mWorker.recoin = property.recoin;
+				mWorker.recoinUsed = property.recoinUsed;
+				mWorker.timestamp = property.timestamp || "";
+				result.push(mWorker);
+				mWorker = {};
+			}
+		}
+
+		/*
+		for (question of questions) {
+			console.log('question',question);
+			mWorker.workerID = worker.workerID;
+			mWorker.property = question.property;
+			mWorker.value = question.value;
+			mWorker.recoin = question.recoin;
+			result.push(mWorker);
+		}
+		*/
+	}
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/csv');
 	res.setHeader("Content-Disposition", 'attachment; filename=' + filename);
-	res.csv(foundData, true);
+	res.csv(result, true);
 });
 
 function getTimestamp() {
