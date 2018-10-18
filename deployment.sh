@@ -6,7 +6,7 @@
 # umask 002
 # -u $UID:$GID
 
-DB_PATH=/home/mackeprm/tmp/RECOINDB
+DB_PATH=/srv/ikon-research/data
 
 mkdir -p $DB_PATH
 
