@@ -34,17 +34,17 @@
 // sendProperties(data1);
 // sendQuestions(data2);
 
-function sendProperties(data) {
-	console.log(worker);
-
+function sendProperties(data,cb) {
+	console.log(data);
 	$.ajax({
 		url: './api/event/',
-		data: worker,
+		data: data,
 		dataType: 'json',
 		type: "POST",
 
 		success: function (data) {
 			console.log(data);
+			cb(data);
 		}
 	});
 }

@@ -224,9 +224,14 @@ function addValue(obj) {
 
 
 //Sajeera
-function addStatementInput() {
-    var input = "<input type='text' class='newStatement'><input type='submit' value='Publish' onclick='addStatement(this)'>";
-    var container = createElement('div')
+function addStatementInput(obj) {
+    console.log(obj);
+    var newStatement = document.createElement("div");
+
+    var input = "<div class='propertyBox'><input type='text' name='newValue'>  <input  type='submit' value='Publish'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
+
+    $(obj).addClass("box").addClass("statementBox").html(input);
+    $(newStatement).insertBefore($("#addStatementBox"));
 }
 
 function addStatement(newStatement) {
@@ -240,11 +245,13 @@ function addStatement(newStatement) {
     if(condition != 1 && condition <= 4) {
         $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a "+ completeness.text + " amount of information.'></a>");
     }
+
+
+
 }
 
 
 //----------------------------- General Functions -------------------------------------------------------------------
-
 
 function callPropertyAutocompletion(e) {
     var options = {

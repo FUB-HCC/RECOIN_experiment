@@ -21,12 +21,13 @@ router.get('/', function (req, res) {
     if (assignmentId == null || assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE") {
         preview = true;
     }
-
+   
     // TODO include mturk-config in model?
     let model = {
         "preview": preview,
         "hit-start-url": buildStartLinkFrom(assignmentId, workerId, hitId, turkSubmitTo, condition),
-        "query": JSON.stringify(req.query)
+        "query": JSON.stringify(req.query),
+        "mturkConfig" : JSON.stringify(req.query)
     };
     console.log(model);
     res.render('hit/hit-preview.mustache', model);

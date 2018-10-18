@@ -32,6 +32,15 @@
             }
         };
 
+        function getRelevance(property){
+            for(mProperty of list_entity_original){
+                if(mProperty.name == property){
+                    return mProperty.relevance;
+                }
+                return 0
+            }
+        }
+
         $(document).ready(function() {
             recoinInit(1);
             // Gets all addValue divs
@@ -44,29 +53,29 @@
 
                     $(newValue).insertBefore($(this).parent(".toolbarBox"));
                     var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
-                    console.log("property", property)
 
                     $(newValue).find('input:submit').click(function() {
                         var value = $(this).parent().find('input').val();
                         var property = $(this).parents(".statementBox").find(".propertyBox").text();
-                        //postToServer(value, property);
-                        $.ajax({
-                            type: 'POST',
-                            url: "./api/event",
-                            data: {
-                                property: property,
-                                value: value
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
-                                    $(newValue).remove();
-                                }
-                            },
-                            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                console.log(errorThrown);
+
+                        var data = {
+                            workerID: localStorage.getItem("workerID"),
+                            hitID: localStorage.getItem("hitID"),
+                            assignmentID: localStorage.getItem("assignmentID"),
+                            condition: "1",
+                            relevance: getRelevance(property),
+                            timestamp: Date.now(),
+                            value: value,
+                            property: property,
+                            impactOnRelevance: impactOfEdits()
+                        };
+                        sendProperties(data, function(response){
+                          if (response.success) {
+                                $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                                $(newValue).remove();
                             }
                         });
+        
                     });
                 });
             }
