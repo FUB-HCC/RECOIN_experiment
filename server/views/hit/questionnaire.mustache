@@ -45,7 +45,21 @@
             };
             sendProperties(data, function(response){
               if (response.success) {
-                    alert("juhu");
+                    console.log(response);
+                    var turkSubmitTo = localStorage.getItem('turkSubmitTo');
+                    var assignmentID = localStorage.getItem('assignmentID');
+                    console.log(turkSubmitTo);
+
+                    $.ajax({
+                        url: turkSubmitTo,
+                        assignmentId: assignmentID,
+                        type: "POST",
+
+                        success: function (data) {
+                            console.log(data);
+                        }
+                    });
+                
                 }
             });
         }    
