@@ -13,4 +13,4 @@ mkdir -p $DB_PATH
 docker run \
 -p 8080:3000 \
 -v $DB_PATH:/database \
- -t git.imp.fu-berlin.de:5000/jbenjamin/ikon/recoin-experiment
+ -t git.imp.fu-berlin.de:5000/jbenjamin/ikon/recoin-experiment:latest
