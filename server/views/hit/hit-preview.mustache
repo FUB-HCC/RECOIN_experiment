@@ -5,11 +5,13 @@
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <style>
         .large.text {
             font-size: 12px;
         }
     </style>
+
 </head>
 <body>
 <h1>Mturk Preview</h1>
@@ -27,5 +29,14 @@
         <pre>{{query}}</pre>
     </div>
 </div>
+    <script type="text/javascript">
+        
+        var mTurkConfig = JSON.parse($('#mturkConfig').val());
+        localStorage.setItem('assignmentID',mTurkConfig.assignmentId);
+        localStorage.setItem('workerID',mTurkConfig.workerId);
+        localStorage.setItem('hitID',mTurkConfig.hitId);
+        localStorage.setItem('turkSubmitTo',mTurkConfig.turkSubmitTo);
+
+    </script>
 </body>
 </html>

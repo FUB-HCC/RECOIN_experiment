@@ -38,29 +38,33 @@ module.exports = {
 	getDb: () => {
 		return db;
 	},
-	insertData: async (mDatamCollection = collection) => {
-			let collection = _db.collection(mCollection);
-			let response = {};
-		
-			await collection.insertOne(mData).then((result) => {
-				response.success = true;
-				response.data = result;
-				return true;
-			}).catch((err) => {
-				response.success = false;
-				response.error = err;
-				return false
-			});
-			client.close();
-
-			return response;
-		},
+	insertData: async (mData, mCollection = collection) => {
+		let collection = _db.collection(mCollection);
+		let response = {};
+		let res = await new Promise((resolve, reject) => {
+			collection.insertOne(mData)
+				.then((result) => {
+					resolve(result);
+					response.data = result;
+					return result;
+				})
+				.catch((err) => {
+					reject(err);
+					response.error = err;
+					return false;
+				});
+		});
+		console.log('res', res);
+		response.success = res ? true : false;
+		return response;
+	},
 	findData: async (data = {}, mCollection = collection) => {
 		let collection = _db.collection(mCollection);
 		let response = {};
 		let sortVariable = {
 			workerID: 1
 		};
+		
 		let result = await new Promise((resolve, reject) => {
 			collection.find(data).sort(sortVariable).toArray(async (err, result) => {
 				if (err) {
@@ -87,9 +91,11 @@ module.exports = {
 		let updateOptions = {
 			upsert: true
 		};
+		
 		let updateQuery = {
 			$set:newValue
-		}
+		};
+		
 		let result = await new Promise((resolve, reject) => {
 			collection.updateOne(findOldValue, updateQuery, updateOptions, (err, result) => {
 				if (err){

@@ -5,34 +5,46 @@
  *		values: ['value1','value2','value3']
  *	}
  */
-function sendProperties() {
-	var properties = $('.propertyBox').toArray().map(function (property) {
-		let mProperty = {}
-		let values = $(property).parent().find('.valueBox').toArray().map(function (value) {
-			return $(value).html();
-		});
 
-		mProperty.name = $(property).html();
-		mProperty.values = values;
-		return mProperty;
-	});
-	var worker = {};
+// var data1 = {
+// 	workerID,
+// 	hitID,
+// 	assignmentID,
+// 	condition,
+// 	relevance,
+// 	timestamp,
+// 	property,
+// 	value,
+// 	impactOnRelevance
+// }
+// 
+// var data2 = {
+// 	workerID,
+// 	hitID,
+// 	assignmentID,
+// 	grade,
+// 	avgRelevance,
+// 	wikidata,
+// 	comprehension,
+// 	fairness,
+// 	accuracy,
+// 	trust,
+// }
+// 
+// sendProperties(data1);
+// sendQuestions(data2);
 
-	worker.workerID = "1";
-	worker.assignmentID = "1";
-	worker.condition = "1";
-	worker.properties = JSON.stringify(properties);
-	worker.relevance = ""
-	console.log(worker);
-
+function sendProperties(data,cb) {
+	console.log(data);
 	$.ajax({
 		url: './api/event/',
-		data: worker,
+		data: data,
 		dataType: 'json',
 		type: "POST",
 
 		success: function (data) {
 			console.log(data);
+			cb(data);
 		}
 	});
 }

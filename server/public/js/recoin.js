@@ -193,11 +193,14 @@ function recoinAddValue(obj) {
 
 
 //Sajeera
+function addStatementInput(obj) {
+    console.log(obj);
+    var newStatement = document.createElement("div");
 
-//Sajeera
-function addStatementInput() {
-    var input = "<input type='text' class='newStatement'><input type='submit' value='Publish' onclick='addStatement(this)'>";
-    var container = createElement('div')
+    var input = "<div class='propertyBox'><input type='text' name='newValue'>  <input  type='submit' value='Publish'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
+
+    $(obj).addClass("box").addClass("statementBox").html(input);
+    $(newStatement).insertBefore($("#addStatementBox"));
 }
 
 function addStatement(newStatement) {
@@ -232,8 +235,6 @@ function createCORSRequest(method, url) {
     }
     return xhr;
 }
-
-
 
 function callPropertyAutocompletion(e) {
     var options = {
@@ -274,8 +275,8 @@ function callWikidataApi(e) {
         console.log(tempJSON);
     }
     //$(".newValue").easyAutocomplete({data: $(".newValue").attr("data-store")});
-
 }
+
 
 function addStatementContainer() {
     let newStatementProperty = 'newStatementPropertyInput';

@@ -4,26 +4,65 @@
     <title>Wikidata-Questionnaire</title>
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+    <script src="js/api-backend.js"></script>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>      
-    <script language="javascript" type="text/javascript"> 
-        function radioWert(rObj) {
-            for (var i=0; i<rObj.length; i++) if (rObj[i].checked) return rObj[i].value;
-            return false;
-        } 
-
-
-        $("#text1").value = "Insert Text";
-
+    <script language="javascript" type="text/javascript">     
         function getVal(){
-           var text1 = $("#text1").value;
-           var text2 = $("#text2").value;
-           var text3 = $("#text3").value;
-           var text4 = $("#text4").value;
-           var text5 = $("#text5").value;
+            console.log($('#relevance').val());
+            console.log($('#grade').val());
+             var text1 = $("#text1").val();
+           var text2 = $("#text2").val();
+           var text3 = $("#text3").val();
+           var text4 = $("#text4").val();
+           var text5 = $("#text5").val();
+            var data = {
+                workerID: localStorage.getItem("workerID"),
+                hitID: localStorage.getItem("hitID"),
+                assignmentID: localStorage.getItem("assignmentID"),
+                grade: $('#grade').val(),
+                avgRelevance: $('#relevance').val(), 
+                wikidata: {
+                    value: $('.wikidata input:checked').val(),
+                    text: text1,
+                },
+                comprehension: {
+                    value: $('.comprehension input:checked').val(),
+                    text:text2,
+                },    
+                fairness: {
+                    value: $('.fairness input:checked').val(),
+                    text: text3,
+                },    
+                accuracy: {
+                    value: $('.accuracy input:checked').val(),
+                    text: text4,
+                }, 
+                trust: {
+                    value: $('.trust input:checked').val(),
+                    text: text5,
+                }, 
+                condition: "1",
+            };
+            sendProperties(data, function(response){
+              if (response.success) {
+                    console.log(response);
+                    var turkSubmitTo = localStorage.getItem('turkSubmitTo');
+                    var assignmentID = localStorage.getItem('assignmentID');
+                    console.log(turkSubmitTo);
 
+                    $.ajax({
+                        url: turkSubmitTo,
+                        assignmentId: assignmentID,
+                        type: "POST",
 
-           alert(text1 + '\n' + text2 + '\n' + text3 + '\n' + text4 + ' \n' + text5);
-        }
+                        success: function (data) {
+                            console.log(data);
+                        }
+                    });
+                
+                }
+            });
+        }    
     </script>    
 </head>
 
@@ -42,6 +81,8 @@
     </div>
 </div>
 <div class="ui grid">
+    <input type="" hidden id="grade" value="{{recoinGrade}}">
+    <input type="" hidden id="relevance" value="{{averageRelevance}}">       
     <div class="three wide column"></div>
     <div style="font-size: 18px;" class="ten wide column">
         <p>Thank you for adding data to Chris Hadfield’s Wikidata entry! We’ve had a look at the relevance of your
@@ -61,39 +102,40 @@
                     <li><b>To what extent were you familiar with Wikidata prior to this HIT?</b></li>
                     <br>
                     <div class="ui form">
-                        <div class="inline fields">
+                        <div class="inline fields wikidata">
                             <div class="field">
                                 <label>Not familiar at all</label>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="1" onClick="alert(radioWert(document.myForm1.myRadio));">
+                                    <input type="radio" name="myRadio" value="1">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="2" onClick="alert(radioWert(document.myForm1.myRadio));">
+                                    <input type="radio" name="myRadio" value="2">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="3" onClick="alert(radioWert(document.myForm1.myRadio));">
+                                    <input type="radio" name="myRadio" value="3">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="4" onClick="alert(radioWert(document.myForm1.myRadio));"">
+                                    <input type="radio" name="myRadio" value="4">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5" onClick="alert(radioWert(document.myForm1.myRadio));">
-                                    <label>Very Familiar</label>
+                                    <input type="radio" name="myRadio" value="5">
+                                    <label></label>
                                 </div>
+                                <label>Very Familiar</label>
                             </div>
                         </div>
                     </div>
@@ -105,40 +147,41 @@
                     <li><b>To what extent do you understand how your task has been graded?</b></li>
                     <br>
                     <div  class="ui form">
-                        <div class="inline fields">
+                        <div class="inline fields comprehension">
                             <div class="field">
                                 <label>No understanding at all</label>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="1" onClick="alert(radioWert(document.myForm2.myRadio));">
+                                    <input type="radio" name="myRadio" value="1" >
 
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="2" onClick="alert(radioWert(document.myForm2.myRadio));">
+                                    <input type="radio" name="myRadio" value="2" >
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="3" onClick="alert(radioWert(document.myForm2.myRadio));"/>
+                                    <input type="radio" name="myRadio" value="3">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="4" onClick="alert(radioWert(document.myForm2.myRadio));">
+                                    <input type="radio" name="myRadio" value="4" >
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5" onClick="alert(radioWert(document.myForm2.myRadio));">
+                                    <input type="radio" name="myRadio" value="5" >
+                                    <label></label>
+                                </div>
                                     <label>Excellent understanding</label>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,52 +194,53 @@
                     <li><b>How fair or unfair is your grade?</b></li>
                     <br>
                     <div class="ui form">
-                        <div class="inline fields">
+                        <div class="inline fields fairness">
                             <div class="field">
                                 <label>Definitely fair</label>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="1" onClick="alert(radioWert(document.myForm3.myRadio));">
+                                    <input type="radio" name="myRadio" value="1">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="2" onClick="alert(radioWert(document.myForm3.myRadio));">
+                                    <input type="radio" name="myRadio" value="2">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="3" onClick="alert(radioWert(document.myForm3.myRadio));">
+                                    <input type="radio" name="myRadio" value="3">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="4" onClick="alert(radioWert(document.myForm3.myRadio));">
+                                    <input type="radio" name="myRadio" value="4">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5" onClick="alert(radioWert(document.myForm3.myRadio));"">
+                                    <input type="radio" name="myRadio" value="5"">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="6" onClick="alert(radioWert(document.myForm3.myRadio));">
+                                    <input type="radio" name="myRadio" value="6">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input type="radio" name="myRadio" value="7" onClick="alert(radioWert(document.myForm3.myRadio));">
-                                        <label>Definitely unfair</label>
+                                        <input type="radio" name="myRadio" value="7">
+                                        <label></label>
                                     </div>
+                                    <label>Definitely unfair</label>
                                 </div>
                             </div>
                         </div>
@@ -209,52 +253,53 @@
                     <li><b>How inaccurate or accurate was the task graded?</b></li>
                     <br>
                     <div class="ui form">
-                        <div class="inline fields">
+                        <div class="inline fields accuracy">
                             <div class="field">
                                 <label>Very inaccurate</label>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="1" onClick="alert(radioWert(document.myForm4.myRadio));">
+                                    <input type="radio" name="myRadio" value="1">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="2" onClick="alert(radioWert(document.myForm4.myRadio));">
+                                    <input type="radio" name="myRadio" value="2">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="3" onClick="alert(radioWert(document.myForm4.myRadio));">
+                                    <input type="radio" name="myRadio" value="3">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="4" onClick="alert(radioWert(document.myForm4.myRadio));">
+                                    <input type="radio" name="myRadio" value="4">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5" onClick="alert(radioWert(document.myForm4.myRadio));">
+                                    <input type="radio" name="myRadio" value="5">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="6" onClick="alert(radioWert(document.myForm4.myRadio));">
+                                    <input type="radio" name="myRadio" value="6">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input type="radio" name="myRadio" value="7" onClick="alert(radioWert(document.myForm4.myRadio));">
-                                        <label>Very accurateg</label>
+                                        <input type="radio" name="myRadio" value="7">
+                                        <label></label>
                                     </div>
+                                    <label>Very accurateg</label>
                                 </div>
                             </div>
                         </div>
@@ -267,52 +312,54 @@
                     <li><b>How much did you trust or distrust Wikidata to fairly grade your data completion?</b></li>
                     <br>
                     <div class="ui form">
-                        <div class="inline fields">
+                        <div class="inline fields trust">
                             <div class="field">
                                 <label>Definitely trust</label>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="1" onClick="alert(radioWert(document.myForm5.myRadio));">
+                                    <input type="radio" name="myRadio" value="1">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="2" onClick="alert(radioWert(document.myForm5.myRadio));">
+                                    <input type="radio" name="myRadio" value="2">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="3" onClick="alert(radioWert(document.myForm5.myRadio));">
+                                    <input type="radio" name="myRadio" value="3">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="4" onClick="alert(radioWert(document.myForm5.myRadio));">
+                                    <input type="radio" name="myRadio" value="4">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5" onClick="alert(radioWert(document.myForm5.myRadio));"">
+                                    <input type="radio" name="myRadio" value="5"">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="6" onClick="alert(radioWert(document.myForm5.myRadio));">
+                                    <input type="radio" name="myRadio" value="6">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="field">
                                     <div class="ui radio checkbox">
-                                        <input type="radio" name="myRadio" value="7" onClick="alert(radioWert(document.myForm5.myRadio));">
-                                        <label>Definitely distrust</label>
+                                        <input type="radio" name="myRadio" value="7">
+                                        <label></label>
                                     </div>
+                                    <label>Definitely distrust</label>
+
                                 </div>
                             </div>
                         </div>
