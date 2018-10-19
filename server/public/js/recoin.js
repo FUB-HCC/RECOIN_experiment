@@ -206,38 +206,37 @@ function getRelevance(property){
         }
 //--------------- neue Statement-Box wird hinzugefügt---------------//
 
-function addStatement(newStatement) {
+function addStatement(obj) {
 
     
 //--------------- AUTOCOMPLETE WIKIDATA API ---------------//
 
- var options = {
-            minLength: 2,
-            source: function(request, response) {
-                var term = request.term;
-                var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
-                var xhr = createCORSRequest('GET', url);
-                xhr.onload = function () {
-                    var responseText = JSON.parse(xhr.responseText);
-                    var responseArray = [];
-                    for(let key in responseText.search) {
-                        responseArray.push(responseText.search[key].label);
-                    }
-                    response(responseArray);
-                };
-                xhr.send();
-            }
-    };
+     var options = {
+                minLength: 2,
+                source: function(request, response) {
+                    var term = request.term;
+                    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+                    var xhr = createCORSRequest('GET', url);
+                    xhr.onload = function () {
+                        var responseText = JSON.parse(xhr.responseText);
+                        var responseArray = [];
+                        for(let key in responseText.search) {
+                            responseArray.push(responseText.search[key].label);
+                        }
+                        response(responseArray);
+                    };
+                    xhr.send();
+                }
+        };
 
 //--------------- AUTOCOMPLETE JSON  ---------------//
 
-$("#astronaut-stats").autocomplete({
-    source: "data/astronaut-stats.json"
-});
+    $("#astronaut-stats").autocomplete({
+        source: "data/astronaut-stats.json"
+    });
 
 //--------------------------------------------------//
 
-    console.log(newStatement);
     var newStatement = document.createElement("div");
     var input = "<div class='propertyBox'><input id='astronaut-stats' type='text' name='newProperty'><input id='publish_btn1' type='submit' value='Publish'></div><div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_btn2' type='submit' value='Publish'><input type='submit' value='cancel'></div>";
     $(newStatement).addClass("box").addClass("statementBox").html(input);
