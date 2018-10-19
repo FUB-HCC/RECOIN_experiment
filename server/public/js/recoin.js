@@ -1,10 +1,11 @@
-var list_entity_original, list_entity_edited, completeness, usedRecoin, condition;
+var list_entity_original, list_entity_edited, completeness, usedRecoin, condition, liveAutocompleteOptions, threshold;
 
 //Initialisierung von Recoin mit JSON von Properties
 function recoinInit(c) {
     //TODO jquery.ajax ()
     usedRecoin = false;
     condition = c;
+    liveAutocompleteOptions = [];
     $.ajax({
       url: './data/astronaut-stats.json',
       dataType: 'json',
@@ -150,16 +151,18 @@ function renderRecoinRedesign() {
 
 function recoinPlus(obj) {
     var newValue;
-    var input = "<input type='text' class='newValue' id='"+ obj.id + "'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
+    var input = "<input type='text' class='newValue' id='"+ obj.id + "' oninput='callWikidataApi(this)'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
     $(obj).parent().closest("div").append(input);
-    newValue = $(obj).parent().closest("div").children(".newValue");
-    $(obj).remove();   
+    $(obj).remove(); 
 }
 
 function recoinAddValue(obj) {
     var property = $(obj).siblings('input')["0"].id;
     var value = $(obj).parent().find('input').val();
-    var addedValue = "<div>" + value + "</div>";
+
+    //var newStatementKey = findWithAttribute(list_entity_edited, 'name', property);
+    //var relevanceOfAddedProperty = list_entity_edited[newStatementKey].relevance;
+
     usedRecoin = true;
 
     addStatement(property);
@@ -190,38 +193,6 @@ function recoinAddValue(obj) {
 
 
 //Sajeera
-function addValue(obj) {
-    var property = $(obj).siblings('input')["0"].id;
-    var value = $(obj).parent().find('input').val();
-    var addedValue = "<div>" + value + "</div>";
-    usedRecoin = true;
-
-    addStatement(property);
-    $(obj).parent().closest("div").html(addedValue);
-            // $.ajax({
-            //     type: 'POST',
-            //     url: "./api/event",
-            //     data: {
-            //             //toDo
-
-            //             property: property,
-            //             value: value,
-            //               condition: condition,
-            //               relevance: completeness.percentage,
-            //         },
-            //         success: function(response) {
-            //             if (response.success) {
-
-            //             }
-            //         },
-            //         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //             alert("Oh no! There was an error on the server side. Please contact us at: ikon-research@inf.fu-berlin.de.");
-            //         }
-            //     });
-    //    });
-    usedRecoin = false;
-}
-
 
 //Sajeera
 function addStatementInput() {
@@ -232,11 +203,9 @@ function addStatementInput() {
 function addStatement(newStatement) {
     var oldStatementKey = findWithAttribute(list_entity_edited, 'name', newStatement);
     if (list_entity_edited[oldStatementKey].presence == false) {
-        console.log(list_entity_edited[oldStatementKey]);
         list_entity_edited[oldStatementKey].presence = true;
     }
     completeness = determineCompletenessLevel(list_entity_edited, 5);
-    
     if(condition != 1 && condition <= 4) {
         $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a "+ completeness.text + " amount of information.'></a>");
     }
@@ -244,6 +213,26 @@ function addStatement(newStatement) {
 
 
 //----------------------------- General Functions -------------------------------------------------------------------
+
+
+// Create the XHR object.
+function createCORSRequest(method, url) {
+    var xhr = new XMLHttpRequest();
+    xhr.timeout = 400;
+    if ("withCredentials" in xhr) {
+        // XHR for Chrome/Firefox/Opera/Safari.
+        xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != "undefined") {
+        // XDomainRequest for IE.
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+    } else {
+        // CORS not supported.
+        xhr = null;
+    }
+    return xhr;
+}
+
 
 
 function callPropertyAutocompletion(e) {
@@ -263,7 +252,29 @@ function callPropertyAutocompletion(e) {
 }
 
 function callWikidataApi(e) {
-    console.log("wikidata auotocomplete wiht:" + e.value);
+    var liveInput = $(e).val();
+    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + liveInput;
+    
+    var xhr = createCORSRequest('GET', url);
+
+    xhr.onload = function () {
+        var responseText = JSON.parse(xhr.responseText);
+        for(let key in responseText.search) {
+            liveAutocompleteOptions.push(responseText.search[key].label);
+        }
+        $(e).attr("data-store", liveAutocompleteOptions);
+    };
+    xhr.send();
+
+    var tempString = $(e).attr("data-store");
+    var tempJSON;
+
+    if(tempString != null) {
+        tempJSON = tempString.split(",");
+        console.log(tempJSON);
+    }
+    //$(".newValue").easyAutocomplete({data: $(".newValue").attr("data-store")});
+
 }
 
 function addStatementContainer() {
