@@ -5,28 +5,19 @@
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <script language="javascript" type="text/javascript">
-        function post(path, params, method) {
-            method = method || "post"; // Set method to post by default if not specified.
+        function enableFinishHitButton() {
+            $("#submitQuestionnaireButton").removeClass("primary");
+            $("#finishHITExplanation").remove();
 
-            // The rest of this code assumes you are not using a library.
-            // It can be made less wordy if you use one.
-            var form = document.createElement("form");
-            form.setAttribute("method", method);
-            form.setAttribute("action", path);
+            var turkSubmitTo = localStorage.getItem('turkSubmitTo');
+            var path = turkSubmitTo + "/mturk/externalSubmit";
+            $("#finishHITForm").attr("action", path);
 
-            for (var key in params) {
-                if (params.hasOwnProperty(key)) {
-                    var hiddenField = document.createElement("input");
-                    hiddenField.setAttribute("type", "hidden");
-                    hiddenField.setAttribute("name", key);
-                    hiddenField.setAttribute("value", params[key]);
+            $("#finishHITButton").addClass("primary");
+            $('#finishHITButton').removeAttr("disabled");
+            var assignmentId = localStorage.getItem("assignmentID");
+            $("#finishHitAssignmentId").attr("value", assignmentId);
 
-                    form.appendChild(hiddenField);
-                }
-            }
-
-            document.body.appendChild(form);
-            form.submit();
         }
 
         function sendQuestionnaireToIkonResearchAndSubmitHit() {
@@ -67,10 +58,7 @@
             };
             sendProperties(data, function (response) {
                 console.log("response");
-                var turkSubmitTo = localStorage.getItem('turkSubmitTo');
-                var assignmentID = localStorage.getItem('assignmentID');
-                var path = turkSubmitTo + "/mturk/externalSubmit";
-                post(path, {"assignmentId": assignmentID}, null);
+                enableFinishHitButton();
             });
         }
     </script>
@@ -383,10 +371,20 @@
         </ol>
         </form>
 
-        <div style="float:right;">
-            <input type="button" onclick="sendQuestionnaireToIkonResearchAndSubmitHit();" class="ui button"
-                   value="submit"/>
+        <hr/>
+        <div>
+            <input id="submitQuestionnaireButton" type="button" onclick="sendQuestionnaireToIkonResearchAndSubmitHit();"
+                   class="ui button primary"
+                   value="submit questionnaire"/>
         </div>
+        <form id="finishHITForm" method="POST">
+            <div>
+                <p id="finishHITExplanation">Please click the "submit questionnaire" button first</p>
+                <input id="finishHitAssignmentId" type="hidden" name="assignmentId">
+                <button class="ui button" id="finishHITButton" type="submit" disabled>Finish HIT
+                </button>
+            </div>
+        </form>
     </div>
     <div class="three wide column"></div>
 </div>
