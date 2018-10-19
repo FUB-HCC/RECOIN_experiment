@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Autocomplete</title>
+	<link type="text/css" rel="stylesheet" hr­ef="autocomplete.css"/>
+	<script sr­c="jquery.min.js"></script>
+	<scri­pt sr­c="autocomplete.js"></script>
+	<script type="text/javascript">
+		var states = [
+		  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+		  'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 
+		  'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 
+		  'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 
+		  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 
+		  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+		  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 
+		  'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 
+		  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 
+		  'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 
+		  'West Virginia', 'Wisconsin', 'Wyoming'
+		];
+
+		$(function() {
+		  $("input").autocomplete({
+		    source:[states]
+		  }); 
+		});
+
+	</script>
+
+</head>
+<body>
+
+	<input type="" name="states">
+
+
+
+</body>
+</html>

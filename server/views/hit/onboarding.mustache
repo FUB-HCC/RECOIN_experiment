@@ -10,8 +10,10 @@
             font-size: 12px;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
+<input id="mturkConfig" type="hidden" value="{{mturkConfig}}">
 <h1></h1>
 <div class="ui grid">
     <div class="one wide column">
@@ -40,8 +42,10 @@
         <br>
         {{#shouldIncludeRecoinText}}
             <p>
-                Recoin is an analytics and recommender tool for understanding and improving the completeness of Wikidata.
-                The goal of Recoin is to automate the identification of relevant properties for an entity, and to visualize
+                Recoin is an analytics and recommender tool for understanding and improving the completeness of
+                Wikidata.
+                The goal of Recoin is to automate the identification of relevant properties for an entity, and to
+                visualize
                 the completeness degree of an entity.
             </p>
         {{/shouldIncludeRecoinText}}
@@ -59,7 +63,7 @@
         <nav>
             <a href="/briefing">
                 <div style="float:right;">
-                    <button class="ui button">
+                    <button class="ui button primary">
                         Proceed
                     </button>
                 </div>
@@ -67,5 +71,13 @@
         </nav>
     </div>
 </div>
+<script type="text/javascript">
+    var mTurkConfig = JSON.parse($('#mturkConfig').val());
+    localStorage.setItem('assignmentID', mTurkConfig.assignmentId);
+    localStorage.setItem('workerID', mTurkConfig.workerId);
+    localStorage.setItem('hitID', mTurkConfig.hitId);
+    localStorage.setItem('turkSubmitTo', mTurkConfig.turkSubmitTo);
+    localStorage.setItem('condition', mTurkConfig.condition);
+</script>
 </body>
 </html>

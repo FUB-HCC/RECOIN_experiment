@@ -22,7 +22,7 @@ app.engine('mustache', mustacheExpress());
 
 app.set('view engine', 'mustache');
 app.set('views', __dirname + '/views');
-//app.enable('view cache');
+app.disable('view cache');
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -5,38 +5,75 @@
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <style>
         .large.text {
             font-size: 12px;
         }
     </style>
-
 </head>
 <body>
-<h1>Mturk Preview</h1>
-<input id="mturkConfig" type="hidden" value="{{mturkConfig}}">
-<div>
-    {{#preview}}
-        <a href="#">Please accept hit to start</a>
-    {{/preview}}
-    {{^preview}}
-        <a href="{{hit-start-url}}">Start</a>
-    {{/preview}}
-    <hr/>
-    <div>
-        <!-- TODO debug information -->
-        <pre>{{query}}</pre>
+<h1></h1>
+<div class="ui grid">
+    <div class="one wide column">
+    </div>
+    <div class="seven wide column">
+        <img class="ui medium left floated image" src="/img/Wide.png">
+    </div>
+    <div class="seven wide column">
+        <img class="ui medium right floated image" src="/img/Fub-logo-trans.png">
+    </div>
+    <div class="one wide column">
     </div>
 </div>
-    <script type="text/javascript">
-        
-        var mTurkConfig = JSON.parse($('#mturkConfig').val());
-        localStorage.setItem('assignmentID',mTurkConfig.assignmentId);
-        localStorage.setItem('workerID',mTurkConfig.workerId);
-        localStorage.setItem('hitID',mTurkConfig.hitId);
-        localStorage.setItem('turkSubmitTo',mTurkConfig.turkSubmitTo);
-
-    </script>
+<div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ten wide column" style="font-size: 18px;">
+        <h1>Data Entry Study</h1>
+        <h2>Task</h2>
+        <p>In this HIT, you will have 10 minutes add the most relevant data to a page, followed by a questionnaire.</p>
+        <ul>
+            <li>5 minutes <strong>Onboarding/Tutorial</strong></li>
+            <li>10 minutes <strong>Data Entry Task</strong></li>
+            <li>5 minutes <strong>Questionnaire</strong></li>
+        </ul>
+        <p>For this HIT, you will receive <em>x$.</em></p>
+        <br>
+        <h2>Who are we?</h2>
+        <p>This HIT is an experiment, conducted by the <a href="https://www.mi.fu-berlin.de/en/inf/groups/hcc/">Human-Centered-Computing</a>
+            at the <a href="https://www.fu-berlin.de/en/">Freie Universität Berlin
+                (Germany)</a>.
+            <br/>
+        <p><strong>Please accept this HIT only if you are sure that you can commit your full attention for
+            the
+            next 20 minutes.</strong></p>
+        <p>This HIT requires javascript to be enabled.</p>
+    </div>
+    <div class="three wide column"></div>
+</div>
+<div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ten wide column">
+        <nav>
+            {{#preview}}
+                <a href="#">
+                    <div style="float:right;">
+                        <button class="ui button">
+                            Please Accept the HIT before you start
+                        </button>
+                    </div>
+                </a>
+            {{/preview}}
+            {{^preview}}
+                <a href="{{hit-start-url}}">
+                    <div style="float:right;">
+                        <button class="ui button primary">
+                            Proceed
+                        </button>
+                    </div>
+                </a>
+            {{/preview}}
+        </nav>
+    </div>
+</div>
 </body>
 </html>

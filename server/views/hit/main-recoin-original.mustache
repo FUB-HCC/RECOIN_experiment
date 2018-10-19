@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <title>Chris Hadfield - Wikidata</title>
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <link rel="stylesheet" href="/css/wikidata.css">
     <link rel="stylesheet" href="/css/style.css">
     <!--<link rel="stylesheet" href="/css/jquery-ui.min.css">-->
@@ -15,6 +15,17 @@
     <!--<link rel="stylesheet" href="css/easy-autocomplete.css">-->
     <!--<link rel="stylesheet" href="css/easy-autocomplete.themes.css">-->
     <script src="/js/recoin.js"></script>
+    <!-- Hotjar Tracking Code for http://ikon-research.imp.fu-berlin.de/ -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1018535,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
     <script type="text/javascript">
         var impact, grade;
 
@@ -259,6 +270,7 @@
                     </div>
                 </div>
                     <!--Statements-->
+
                     <div class="row">
                         <h2 id="secondHeading">Statements</h2>
                         <!--    Statements from Wikidata -->
@@ -321,7 +333,12 @@
 
                         <!--    Here statements are added -->
                         <div class="box" id="addStatementBox">
-                            <div id="addStatement" onclick="addStatementInput(this)">+ add statement</div>
+                            <div id="addStatement" onclick="addStatement()">+ add statement</div>
+<!--                             <div class="propertyBox">
+                                <input>
+                            </div>
+                            <div class="valueBox" onclick="addValueInput()">+ add value</div>
+                        </div> -->
                         </div>
                     </div>
             </div>

@@ -4,66 +4,66 @@
     <title>Wikidata-Questionnaire</title>
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
-    <script src="js/api-backend.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>      
-    <script language="javascript" type="text/javascript">     
-        function getVal(){
+    <script language="javascript" type="text/javascript">
+        function enableFinishHitButton() {
+            $("#submitQuestionnaireButton").removeClass("primary");
+            $("#finishHITExplanation").remove();
+
+            var turkSubmitTo = localStorage.getItem('turkSubmitTo');
+            var path = turkSubmitTo + "/mturk/externalSubmit";
+            $("#finishHITForm").attr("action", path);
+
+            $("#finishHITButton").addClass("primary");
+            $('#finishHITButton').removeAttr("disabled");
+            var assignmentId = localStorage.getItem("assignmentID");
+            $("#finishHitAssignmentId").attr("value", assignmentId);
+
+        }
+
+        function sendQuestionnaireToIkonResearchAndSubmitHit() {
             console.log($('#relevance').val());
             console.log($('#grade').val());
-             var text1 = $("#text1").val();
-           var text2 = $("#text2").val();
-           var text3 = $("#text3").val();
-           var text4 = $("#text4").val();
-           var text5 = $("#text5").val();
+            var text1 = $("#text1").val();
+            var text2 = $("#text2").val();
+            var text3 = $("#text3").val();
+            var text4 = $("#text4").val();
+            var text5 = $("#text5").val();
             var data = {
                 workerID: localStorage.getItem("workerID"),
                 hitID: localStorage.getItem("hitID"),
                 assignmentID: localStorage.getItem("assignmentID"),
                 grade: $('#grade').val(),
-                avgRelevance: $('#relevance').val(), 
+                avgRelevance: $('#relevance').val(),
                 wikidata: {
                     value: $('.wikidata input:checked').val(),
                     text: text1,
                 },
                 comprehension: {
                     value: $('.comprehension input:checked').val(),
-                    text:text2,
-                },    
+                    text: text2,
+                },
                 fairness: {
                     value: $('.fairness input:checked').val(),
                     text: text3,
-                },    
+                },
                 accuracy: {
                     value: $('.accuracy input:checked').val(),
                     text: text4,
-                }, 
+                },
                 trust: {
                     value: $('.trust input:checked').val(),
                     text: text5,
-                }, 
+                },
                 condition: "1",
             };
-            sendProperties(data, function(response){
-              if (response.success) {
-                    console.log(response);
-                    var turkSubmitTo = localStorage.getItem('turkSubmitTo');
-                    var assignmentID = localStorage.getItem('assignmentID');
-                    console.log(turkSubmitTo);
-
-                    $.ajax({
-                        url: turkSubmitTo,
-                        assignmentId: assignmentID,
-                        type: "POST",
-
-                        success: function (data) {
-                            console.log(data);
-                        }
-                    });
-                
-                }
+            sendProperties(data, function (response) {
+                console.log("response");
+                enableFinishHitButton();
             });
-        }    
-    </script>    
+        }
+    </script>
+    <script src="js/api-backend.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 
 <body>
@@ -82,7 +82,7 @@
 </div>
 <div class="ui grid">
     <input type="" hidden id="grade" value="{{recoinGrade}}">
-    <input type="" hidden id="relevance" value="{{averageRelevance}}">       
+    <input type="" hidden id="relevance" value="{{averageRelevance}}">
     <div class="three wide column"></div>
     <div style="font-size: 18px;" class="ten wide column">
         <p>Thank you for adding data to Chris Hadfield’s Wikidata entry! We’ve had a look at the relevance of your
@@ -97,8 +97,8 @@
             the page will finish the HIT.</p>
         <br>
         <ol class="ui list">
-        <form id="question">
-                <form name="myForm1">  
+            <form id="question">
+                <form name="myForm1">
                     <li><b>To what extent were you familiar with Wikidata prior to this HIT?</b></li>
                     <br>
                     <div class="ui form">
@@ -139,28 +139,28 @@
                             </div>
                         </div>
                     </div>
-                </form> 
+                </form>
                 <div class="ui input">
                     <textarea id="text1" name="text_1" cols="95" rows="4"></textarea>
                 </div>
                 <form name="myForm2">
                     <li><b>To what extent do you understand how your task has been graded?</b></li>
                     <br>
-                    <div  class="ui form">
+                    <div class="ui form">
                         <div class="inline fields comprehension">
                             <div class="field">
                                 <label>No understanding at all</label>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="1" >
+                                    <input type="radio" name="myRadio" value="1">
 
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="2" >
+                                    <input type="radio" name="myRadio" value="2">
                                     <label></label>
                                 </div>
                             </div>
@@ -172,25 +172,25 @@
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="4" >
+                                    <input type="radio" name="myRadio" value="4">
                                     <label></label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5" >
+                                    <input type="radio" name="myRadio" value="5">
                                     <label></label>
                                 </div>
-                                    <label>Excellent understanding</label>
+                                <label>Excellent understanding</label>
                             </div>
                         </div>
                     </div>
                 </form>
-                 <div class="ui input" TYPE=text NAME=myField VALUE="Feld1" SIZE=30>
+                <div class="ui input" TYPE=text NAME=myField VALUE="Feld1" SIZE=30>
                     <textarea id="text2" name="text" cols="95" rows="4"></textarea>
                 </div>
                 <br>
-                <form name="myForm3" >
+                <form name="myForm3">
                     <li><b>How fair or unfair is your grade?</b></li>
                     <br>
                     <div class="ui form">
@@ -299,16 +299,16 @@
                                         <input type="radio" name="myRadio" value="7">
                                         <label></label>
                                     </div>
-                                    <label>Very accurateg</label>
+                                    <label>Very accurate</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </form>
-                 <div class="ui input">
-                   <textarea id="text4" name="text" cols="95" rows="4"></textarea>
+                </form>
+                <div class="ui input">
+                    <textarea id="text4" name="text" cols="95" rows="4"></textarea>
                 </div>
-                    <form name="myForm5">
+                <form name="myForm5">
                     <li><b>How much did you trust or distrust Wikidata to fairly grade your data completion?</b></li>
                     <br>
                     <div class="ui form">
@@ -364,16 +364,29 @@
                             </div>
                         </div>
                     </div>
-                    </form> 
+                </form>
                 <div class="ui input">
                     <textarea id="text5" name="text" cols="95" rows="4"></textarea>
                 </div>
-            </ol>
+        </ol>
         </form>
 
-        <div style="float:right;">
-            <input type="button" onclick="getVal();" class="ui button" value="submit"/>
+        <hr/>
+        <div>
+            <input id="submitQuestionnaireButton" type="button" onclick="sendQuestionnaireToIkonResearchAndSubmitHit();"
+                   class="ui button primary"
+                   value="submit questionnaire"/>
         </div>
+        <form id="finishHITForm" method="post" action="#">
+            <div>
+                <p id="finishHITExplanation">Please click the "submit questionnaire" button first</p>
+                <input id="finishHitAssignmentId" type="hidden" name="assignmentId">
+                <input name="recoinGrade" type="hidden" value="{{recoinGrade}}">
+                <input name="averageRelevance" type="hidden" value="{{averageRelevance}}">
+                <button class="ui button" id="finishHITButton" type="submit" disabled>Finish HIT
+                </button>
+            </div>
+        </form>
     </div>
     <div class="three wide column"></div>
 </div>

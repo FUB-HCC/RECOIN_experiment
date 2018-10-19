@@ -196,16 +196,54 @@ function recoinAddValue(obj) {
 
 
 //Sajeera
-function addStatementInput(obj) {
-    var newStatement = document.createElement("div");
-
-    var input = "<div class='propertyBox'><input type='text' name='newValue'>  <input  type='submit' value='Publish'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
-
-    $(obj).addClass("box").addClass("statementBox").html(input);
-    $(newStatement).insertBefore($("#addStatementBox"));
-}
+function getRelevance(property){
+            for(mProperty of list_entity_original){
+                if(mProperty.name == property){
+                    return mProperty.relevance;
+                }
+                return 0
+            }
+        }
+//--------------- neue Statement-Box wird hinzugefügt---------------//
 
 function addStatement(newStatement) {
+
+    
+//--------------- AUTOCOMPLETE WIKIDATA API ---------------//
+
+ var options = {
+            minLength: 2,
+            source: function(request, response) {
+                var term = request.term;
+                var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+                var xhr = createCORSRequest('GET', url);
+                xhr.onload = function () {
+                    var responseText = JSON.parse(xhr.responseText);
+                    var responseArray = [];
+                    for(let key in responseText.search) {
+                        responseArray.push(responseText.search[key].label);
+                    }
+                    response(responseArray);
+                };
+                xhr.send();
+            }
+    };
+
+//--------------- AUTOCOMPLETE JSON  ---------------//
+
+$("#astronaut-stats").autocomplete({
+    source: "data/astronaut-stats.json"
+});
+
+//--------------------------------------------------//
+
+    console.log(newStatement);
+    var newStatement = document.createElement("div");
+    var input = "<div class='propertyBox'><input id='astronaut-stats' type='text' name='newProperty'><input id='publish_btn1' type='submit' value='Publish'></div><div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_btn2' type='submit' value='Publish'><input type='submit' value='cancel'></div>";
+    $(newStatement).addClass("box").addClass("statementBox").html(input);
+    $(newStatement).insertBefore($("#addStatementBox"));
+
+
     var oldStatementKey = findWithAttribute(list_entity_edited, 'name', newStatement);
     if (list_entity_edited[oldStatementKey].presence == false) {
         list_entity_edited[oldStatementKey].presence = true;
@@ -218,7 +256,53 @@ function addStatement(newStatement) {
         $('#recoinExplanation').remove();
         generateRecoinExplanation(list_entity_edited);
     }
+
+    $(newStatement).find('#publish_btn1').click(function() {
+        var value = $(this).parents('.statementBox').find('input:text').val();
+        var propertyBox = $(this).parents(".statementBox").find('.propertyBox');
+        propertyBox.html(value);
+    });
+
+    $(newStatement).find('#publish_btn2').click(function() {
+        var value = $(this).parents('.statementBox').find('input:text').val();
+        var property = $(this).parents(".statementBox").find(".propertyBox").text();
+        //var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
+        var valueBox = $(this).parents(".statementBox").find('.valueBox');
+        valueBox.html(value);
+
+        var data = {
+                    workerID: localStorage.getItem("workerID"),
+                    hitID: localStorage.getItem("hitID"),
+                    assignmentID: localStorage.getItem("assignmentID"),
+                    condition: "1",
+                    relevance: "23",
+                    timestamp: Date.now(),
+                    value: value,
+                    property: property,
+                    impactOnRelevance: impactOfEdits()
+                };
+                sendProperties(data, function(response){
+                  if (response.success) {
+                        $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                        $(newValue).remove();
+                    }
+                });
+    });
+    $("#astronaut-stats").autocomplete(options);
+    $('#wikidataApi').autocomplete(options);
+
 }
+
+//--------------- erstes Value wird hinzugefügt---------------//
+
+//TODO: erst beim klick auf "publish" soll das value feld erscheinen
+function addValue(){
+
+}
+
+//--------------- weitere Values werden hinzugefügt---------------//
+
+
 
 
 //----------------------------- General Functions -------------------------------------------------------------------
