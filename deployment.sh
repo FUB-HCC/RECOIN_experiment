@@ -10,6 +10,8 @@ DB_PATH=/srv/ikon-research/data
 
 mkdir -p $DB_PATH
 
+docker pull git.imp.fu-berlin.de:5000/jbenjamin/ikon/recoin-experiment:latest
+
 docker run \
 -p 8080:3000 \
 -v $DB_PATH:/database \

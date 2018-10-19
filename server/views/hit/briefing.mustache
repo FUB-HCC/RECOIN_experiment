@@ -2,7 +2,9 @@
 <head>
     <meta charset="utf-8">
     <title>Wikidata-Briefing</title>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 <!--  <div class="ui container">
@@ -25,13 +27,19 @@
 <div class="ui grid">
     <div class="three wide column"></div>
     <div class="ten wide column" style="font-size: 18px;">
-        <p>The Canadian astronaut Chris Hadfield rose to prominence by playing “Major Tom” on his guitar on the International Space Station (ISS). Ever since returning to Earth, he’s been an active public figure as well. However, Wikidata doesn’t know very much about him at all! </p>
+        <p>The Canadian astronaut Chris Hadfield rose to prominence by playing “Major Tom” on his guitar on the
+            International Space Station (ISS). Ever since returning to Earth, he’s been an active public figure as well.
+            However, Wikidata doesn’t know very much about him at all! </p>
         <br>
-        <p>Your job is to add important data to Chris’ Wikidata entry. Search this text (opens in new tab) for the data.</p>
+        <p>Your job is to add important data to Chris’ Wikidata entry. Search this text (opens in new tab) for the
+            data.</p>
         <br>
-        <p>Also, you can check out <a href="https://www.wikidata.org/wiki/Q2252" target="_blank">Buzz Aldrin</a> on Wikidata, which is a very complete astronaut entry. If you need more examples of astronauts, have a look at this <a href="http://tinyurl.com/ycnh3q37" target="_blank">list</a>.</p>
+        <p>Also, you can check out <a href="https://www.wikidata.org/wiki/Q2252" target="_blank">Buzz Aldrin</a> on
+            Wikidata, which is a very complete astronaut entry. If you need more examples of astronauts, have a look at
+            this <a href="http://tinyurl.com/ycnh3q37" target="_blank">list</a>.</p>
         <br>
-        <p>By clicking “Begin” at the bottom of this page, you will start your task. You will have 10 minutes to add data to Chris Hadfield’s entry.</p>
+        <p>By clicking “Begin” at the bottom of this page, you will start your task. You will have 10 minutes to add
+            data to Chris Hadfield’s entry.</p>
         <br>
         <p>Here is a brief video tutorial (2:30min) on how to add statements to a Wikidata entry:</p>
         <!--  VIDEO TUTORIAL -->
@@ -48,9 +56,8 @@
     <div class="two wide column"></div>
     <div class="twelve wide column">
         <nav>
-            <!-- TODO set condition -->
-            <a href="/main?condition=1">
-                <div style="float: right;" class="ui animated button" tabindex="0">
+            <a id="goToMainLink" href="#">
+                <div style="float: right;" class="ui animated button primary" tabindex="0">
                     <div class="visible content">Begin</div>
                     <div class="hidden content">
                         <i class="right arrow icon"></i>
@@ -60,5 +67,11 @@
         </nav>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        var condition = localStorage.getItem("condition");
+        $("#goToMainLink").attr("href", "/main?condition=" + condition);
+    });
+</script>
 </body>
 </html>
