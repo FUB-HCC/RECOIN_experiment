@@ -377,10 +377,11 @@
                    class="ui button primary"
                    value="submit questionnaire"/>
         </div>
-        <form id="finishHITForm" method="POST">
+        <form id="finishHITForm" method="post" action="#">
             <div>
                 <p id="finishHITExplanation">Please click the "submit questionnaire" button first</p>
                 <input id="finishHitAssignmentId" type="hidden" name="assignmentId">
+                <input name="questionnaireData" type="hidden" value="testdata">
                 <button class="ui button" id="finishHITButton" type="submit" disabled>Finish HIT
                 </button>
             </div>
