@@ -1,11 +1,11 @@
-var list_entity_original, list_entity_edited, completeness, usedRecoin, condition, liveAutocompleteOptions, threshold;
+var list_entity_original, list_entity_edited, completeness, usedRecoin, condition, liveAutocompleteOptions, threshold, completenessColor;
 
 //Initialisierung von Recoin mit JSON von Properties
 function recoinInit(c) {
     //TODO jquery.ajax ()
     usedRecoin = false;
     condition = c;
-    liveAutocompleteOptions = [];
+    completenessColor = '#'
     $.ajax({
       url: './data/astronaut-stats.json',
       dataType: 'json',
@@ -137,8 +137,8 @@ function generateRecoinExplanation(list_of_props) {
       }
   }
   var explanation = document.createElement("div");
-  $(explanation).html("<div style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + currentCompleteness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", <span style='font-style:normal;'>and</span> " + arrayExplanation[4] + "</span>.</div>" );
-  $(explanation).insertBefore($('#recoinv1Text'));
+  $(explanation).html("<div id='recoinExplanation' style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + currentCompleteness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", <span style='font-style:normal;'>and</span> " + arrayExplanation[4] + "</span>.</div>" );
+  $(explanation).insertBefore($('#recoinAccordion'));
 }
 
 
@@ -151,14 +151,17 @@ function renderRecoinRedesign() {
 
 function recoinPlus(obj) {
     var newValue;
-    var input = "<input type='text' class='newValue' id='"+ obj.id + "' oninput='callWikidataApi(this)'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
+    var input = "<input type='text' id='newValue' class='"+ obj.id + "' onchange='manageWikiAutocompletion(this)' oninput='callWikidataApi(this)'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
     $(obj).parent().closest("div").append(input);
     $(obj).remove(); 
 }
 
 function recoinAddValue(obj) {
-    var property = $(obj).siblings('input')["0"].id;
+    //var property = $(obj).siblings('input')["0"].attr('data-property');
+    var property = $(obj).siblings('input')["0"];
     var value = $(obj).parent().find('input').val();
+    property = $(property).attr('class');
+
 
     //var newStatementKey = findWithAttribute(list_entity_edited, 'name', property);
     //var relevanceOfAddedProperty = list_entity_edited[newStatementKey].relevance;
@@ -166,7 +169,7 @@ function recoinAddValue(obj) {
     usedRecoin = true;
 
     addStatement(property);
-    $(obj).parent().closest("div").html(addedValue);
+    $(obj).parent().closest("div").html(value);
             // $.ajax({
             //     type: 'POST',
             //     url: "./api/event",
@@ -194,7 +197,6 @@ function recoinAddValue(obj) {
 
 //Sajeera
 function addStatementInput(obj) {
-    console.log(obj);
     var newStatement = document.createElement("div");
 
     var input = "<div class='propertyBox'><input type='text' name='newValue'>  <input  type='submit' value='Publish'></div><div class='valueBox'></div><div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
@@ -209,13 +211,88 @@ function addStatement(newStatement) {
         list_entity_edited[oldStatementKey].presence = true;
     }
     completeness = determineCompletenessLevel(list_entity_edited, 5);
-    if(condition != 1 && condition <= 4) {
+    if(condition != 1 && condition <= 5) {
         $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a "+ completeness.text + " amount of information.'></a>");
+    }
+    if(condition == 5) {
+        $('#recoinExplanation').remove();
+        generateRecoinExplanation(list_entity_edited);
     }
 }
 
 
 //----------------------------- General Functions -------------------------------------------------------------------
+
+
+function manageWikiAutocompletion(obj) {
+    var tempJSON = [];
+    var tempString = $(obj).attr("data-store");
+
+    if(tempString != null) {
+        tempJSON = tempString.split(",");
+        console.log(tempJSON);
+    }
+
+    liveAutocompleteOptions = {
+        data: tempJSON,
+        requestDelay: 400,
+
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    }
+}
+
+function callPropertyAutocompletion(e) {
+    var options = {
+        url: "data/astronaut-stats.json",
+
+        getValue: "name",
+
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    //$("#astronaut-stats").easyAutocomplete(options);
+}
+
+function callWikidataApi(e) {
+    var autocompleteOptions = [];
+    var liveInput = $(e).val();
+    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + liveInput;
+    
+    var xhr = createCORSRequest('GET', url);
+
+    xhr.onload = function () {
+        var responseText = JSON.parse(xhr.responseText);
+        for(let key in responseText.search) {
+            autocompleteOptions.push(responseText.search[key].label);
+        }
+        $(e).attr("data-store", autocompleteOptions);
+    };
+
+    xhr.send();
+    //$(".newValue").easyAutocomplete({data: $(".newValue").attr("data-store")});
+}
+
+
+function addStatementContainer() {
+    let newStatementProperty = 'newStatementPropertyInput';
+    let newStatementValueId = 'newStatementValueInput';
+    return "<div class='propertyBox'>" +
+    "<input type='text' id=" + newStatementProperty + " oninput='callPropertyAutocompletion(this)'>" +
+    "</div>" +
+    "<div class='valueBox'>" +
+    "<input type='text' id=" + newStatementValueId + " oninput='callWikidataApi(this)'>" +
+    "</div>" +
+    "<div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
+}
+
 
 
 // Create the XHR object.
@@ -234,60 +311,6 @@ function createCORSRequest(method, url) {
         xhr = null;
     }
     return xhr;
-}
-
-function callPropertyAutocompletion(e) {
-    var options = {
-        url: "data/astronaut-stats.json",
-
-        getValue: "name",
-
-        list: {
-            match: {
-                enabled: true
-            }
-        }
-    };
-
-    $("#astronaut-stats").easyAutocomplete(options);
-}
-
-function callWikidataApi(e) {
-    var liveInput = $(e).val();
-    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + liveInput;
-    
-    var xhr = createCORSRequest('GET', url);
-
-    xhr.onload = function () {
-        var responseText = JSON.parse(xhr.responseText);
-        for(let key in responseText.search) {
-            liveAutocompleteOptions.push(responseText.search[key].label);
-        }
-        $(e).attr("data-store", liveAutocompleteOptions);
-    };
-    xhr.send();
-
-    var tempString = $(e).attr("data-store");
-    var tempJSON;
-
-    if(tempString != null) {
-        tempJSON = tempString.split(",");
-        console.log(tempJSON);
-    }
-    //$(".newValue").easyAutocomplete({data: $(".newValue").attr("data-store")});
-}
-
-
-function addStatementContainer() {
-    let newStatementProperty = 'newStatementPropertyInput';
-    let newStatementValueId = 'newStatementValueInput';
-    return "<div class='propertyBox'>" +
-    "<input type='text' id=" + newStatementProperty + " oninput='callPropertyAutocompletion(this)'>" +
-    "</div>" +
-    "<div class='valueBox'>" +
-    "<input type='text' id=" + newStatementValueId + " oninput='callWikidataApi(this)'>" +
-    "</div>" +
-    "<div class='toolbarBox'><div class='addValue'>+ add value</div></div>";
 }
 
 //Hax0r function

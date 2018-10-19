@@ -46,7 +46,7 @@
 		"name": "given name",
 		"amount": 710, 
 		"relevance": 86.69, 	
-		"presence": false
+		"presence": true
 	},
 	{ 
 		"property": "P18", 
@@ -130,14 +130,14 @@
 		"name": "date of death",
 		"amount": 163, 
 		"relevance": 19.90, 
-		"presence": false
+		"presence": true
 	},
 	{ 
 		"property": "P20",
 		"name": "place of death",
 		"amount": 148, 
 		"relevance": 18.07, 
-		"presence": false
+		"presence": true
 	},
 	{ 
 		"property": "P1412", 

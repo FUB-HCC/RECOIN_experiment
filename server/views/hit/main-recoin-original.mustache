@@ -4,22 +4,42 @@
 <head>
     <meta charset="UTF-8" />
     <title>Chris Hadfield - Wikidata</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
     <link rel="stylesheet" href="/css/wikidata.css">
     <link rel="stylesheet" href="/css/style.css">
-    <script src="js/jquery.easy-autocomplete.js"></script>
-    <link rel="stylesheet" href="css/easy-autocomplete.css">
-    <link rel="stylesheet" href="css/easy-autocomplete.themes.css">
+    <!--<link rel="stylesheet" href="/css/jquery-ui.min.css">-->
+    <!--<script src="js/jquery.easy-autocomplete.js"></script>-->
+    <!--<link rel="stylesheet" href="css/easy-autocomplete.css">-->
+    <!--<link rel="stylesheet" href="css/easy-autocomplete.themes.css">-->
     <script src="/js/recoin.js"></script>
     <script type="text/javascript">
         var impact, grade;
 
         $(document).ready(function () {
             recoinInit(2);
-            
+            var options = {
+                    minLength: 2,
+                    source: function(request, response) {
+                        var term = request.term;
+                        var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+
+                        var xhr = createCORSRequest('GET', url);
+                        xhr.onload = function () {
+                            var responseText = JSON.parse(xhr.responseText);
+                            var responseArray = [];
+                            for(let key in responseText.search) {
+                                responseArray.push(responseText.search[key].label);
+                            }
+                            response(responseArray);
+                        };
+                        xhr.send();
+                    }
+            };
+            $('#testInput').autocomplete(options);
+
             // TIMEOUT
             setTimeout(function() {
                 on();
@@ -144,6 +164,7 @@
                         <div class="thirteen wide column" style="padding-left:0%">
                             <div>
                                 <h1 id="firstHeading">Chris Hadfield <span id="itemID">(Q1076962)</span></h1>
+                                <input type="text" name="Foo" id="testInput">
                             </div>
                         </div>
                         <div class="three wide center aligned column">

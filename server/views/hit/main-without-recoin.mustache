@@ -111,7 +111,7 @@
                 //alert('Die Zeit ist um');
                 impact = impactOfEdits();
                 grade = gradeEdits();
-                $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance="+ String(impact));
+                $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance="+ String(Math.round(impact)));
 
             }, 10 * 60 * 1000);
 
