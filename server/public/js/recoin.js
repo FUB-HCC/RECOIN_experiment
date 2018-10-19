@@ -205,25 +205,41 @@ function getRelevance(property){
 
 function addStatement(newStatement) {
 
-    var options = {
-            url: "data/astronaut-stats.json",
+    
+//--------------- AUTOCOMPLETE WIKIDATA API ---------------//
 
-            getValue: "name",
-
-            list: {
-                match: {
-                    enabled: true
-                }
+ var options = {
+            minLength: 2,
+            source: function(request, response) {
+                var term = request.term;
+                var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+                var xhr = createCORSRequest('GET', url);
+                xhr.onload = function () {
+                    var responseText = JSON.parse(xhr.responseText);
+                    var responseArray = [];
+                    for(let key in responseText.search) {
+                        responseArray.push(responseText.search[key].label);
+                    }
+                    response(responseArray);
+                };
+                xhr.send();
             }
-        };
+    };
 
+//--------------- AUTOCOMPLETE JSON  ---------------//
+
+$("#astronaut-stats").autocomplete({
+    source: "data/astronaut-stats.json"
+});
+
+//--------------------------------------------------//
 
     console.log(newStatement);
     var newStatement = document.createElement("div");
-    var input = "<div class='propertyBox'><input id='astronaut-stats' type='text' name='newProperty'><input id='publish_btn1' type='submit' value='Publish'></div><div class='valueBox'><input type='text' name='newValue'><input id='publish_btn2' type='submit' value='Publish'><input type='submit' value='cancel'></div>";
+    var input = "<div class='propertyBox'><input id='astronaut-stats' type='text' name='newProperty'><input id='publish_btn1' type='submit' value='Publish'></div><div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_btn2' type='submit' value='Publish'><input type='submit' value='cancel'></div>";
     $(newStatement).addClass("box").addClass("statementBox").html(input);
     $(newStatement).insertBefore($("#addStatementBox"));
-    $("#astronaut-stats").easyAutocomplete(options);
+
 
 
 
@@ -245,7 +261,7 @@ function addStatement(newStatement) {
                     hitID: localStorage.getItem("hitID"),
                     assignmentID: localStorage.getItem("assignmentID"),
                     condition: "1",
-                   // relevance: getRelevance(property),
+                    relevance: "23",
                     timestamp: Date.now(),
                     value: value,
                     property: property,
@@ -258,23 +274,22 @@ function addStatement(newStatement) {
                     }
                 });
     });
+    $("#astronaut-stats").autocomplete(options);
+    $('#wikidataApi').autocomplete(options);
+
 }
 
-//--------------- neue Statement-Input wird hinzugefügt---------------//
-
-
-function addStatementInput(newStatementInput) {
-    console.log(newStatementInput);
-}
 
 //--------------- erstes Value wird hinzugefügt---------------//
 
-
+//TODO: erst beim klick auf "publish" soll das value feld erscheinen
 function addValue(){
 
 }
 
 //--------------- weitere Values werden hinzugefügt---------------//
+
+//Bemerkung: zur Zeit ausgestellt
 
 function addValueInput(newValue){
 
