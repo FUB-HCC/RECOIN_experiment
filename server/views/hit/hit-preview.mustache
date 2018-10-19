@@ -15,7 +15,6 @@
 </head>
 <body>
 <h1>Mturk Preview</h1>
-<input id="mturkConfig" type="hidden" value="{{mturkConfig}}">
 <div>
     {{#preview}}
         <a href="#">Please accept hit to start</a>
@@ -29,14 +28,5 @@
         <pre>{{query}}</pre>
     </div>
 </div>
-    <script type="text/javascript">
-        
-        var mTurkConfig = JSON.parse($('#mturkConfig').val());
-        localStorage.setItem('assignmentID',mTurkConfig.assignmentId);
-        localStorage.setItem('workerID',mTurkConfig.workerId);
-        localStorage.setItem('hitID',mTurkConfig.hitId);
-        localStorage.setItem('turkSubmitTo',mTurkConfig.turkSubmitTo);
-
-    </script>
 </body>
 </html>

@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 function buildStartLinkFrom(assignmentId, workerId, hitId, turkSubmitTo, condition) {
-    //TODO workerId, hitId, turkSubmitTo
-    return "/onboarding?assignmentId=" + assignmentId + "&condition=" + condition;
+    return "/onboarding?assignmentId=" + assignmentId + "&workerId=" + workerId + "&hitId=" + hitId + "&turkSubmitTo=" + turkSubmitTo + "&condition=" + condition;
 }
 
 /*
@@ -21,13 +20,12 @@ router.get('/', function (req, res) {
     if (assignmentId == null || assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE") {
         preview = true;
     }
-   
+
     // TODO include mturk-config in model?
     let model = {
         "preview": preview,
         "hit-start-url": buildStartLinkFrom(assignmentId, workerId, hitId, turkSubmitTo, condition),
         "query": JSON.stringify(req.query),
-        "mturkConfig" : JSON.stringify(req.query)
     };
     console.log(model);
     res.render('hit/hit-preview.mustache', model);
@@ -41,6 +39,7 @@ router.get('/onboarding', function (req, res) {
     let condition = req.query.condition;
 
     let model = {
+        "mturkConfig": JSON.stringify(req.query),
         "shouldIncludeRecoinText": (condition >= 3)
     };
     res.render('hit/onboarding.mustache', model);
@@ -81,7 +80,7 @@ router.get('/questionnaire', function (req, res) {
     let averageRelevance = req.query.averageRelevance;
     let model = {
         "recoinGrade": recoinGrade,
-        "averageRelevance" : averageRelevance
+        "averageRelevance": averageRelevance
     };
     res.render('hit/questionnaire.mustache', model);
 });
