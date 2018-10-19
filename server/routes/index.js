@@ -21,7 +21,6 @@ router.get('/', function (req, res) {
         preview = true;
     }
 
-    // TODO include mturk-config in model?
     let model = {
         "preview": preview,
         "hit-start-url": buildStartLinkFrom(assignmentId, workerId, hitId, turkSubmitTo, condition),
