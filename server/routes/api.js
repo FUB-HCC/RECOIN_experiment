@@ -7,6 +7,13 @@ const app = express();
 
 app.post('/event', async (req, res) => {
     console.log(req.body);
+    //TODO check if the event is "trackingEvent" or "summary"
+
+    //if "trackingEvent":
+    //store: workerID;assignmentID;timestamp;property;value;relevance;impactOnRelevance;condition
+
+    //if "summary"
+    //workerID;assignmentID;grade;avgRelevance;wikidata;comprehension;fairness;accuracy;trust;condition
 
     let response = req.body;
 

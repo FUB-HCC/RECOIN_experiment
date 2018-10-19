@@ -51,6 +51,10 @@ router.get('/briefing', function (req, res) {
 
 router.get('/main', function (req, res) {
     let condition = req.query.condition;
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
     if (condition == null) {
         //TODO throw a meaningful error
         throw error;
@@ -58,10 +62,6 @@ router.get('/main', function (req, res) {
         res.render('hit/main-without-recoin.mustache', {});
         console.log("main-without-recoin");
     } else if (condition <= 4) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
         res.render('hit/main-recoin-original.mustache', {});
         console.log("main-recoin-original");
     } else if (condition == 5) {
