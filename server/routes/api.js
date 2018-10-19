@@ -6,7 +6,7 @@ const csv = require('csv-express');
 const app = express();
 
 app.post('/event', async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     //TODO check if the event is "trackingEvent" or "summary"
 
     //if "trackingEvent":
@@ -16,31 +16,58 @@ app.post('/event', async (req, res) => {
     //workerID;assignmentID;grade;avgRelevance;wikidata;comprehension;fairness;accuracy;trust;condition
 
     let response = req.body;
-
+    response.serverTimestamp = new Date().toISOString();
+    console.log("is servertimestamp included?" + JSON.stringify(response));
+    var isTracking = true;
     /*
      * connect to server => insert data to DB => retrieve data from DB
      * on success send response with success = true else success = false
      */
-    let storedToDB = await mongo.connectToServer()
-        .then(async (res) => {
-            if (res.success) {
-                // let oldValue = {
-                // 	workerID
-                // };
-                // let newValue = response;
-                // return await mongo.updateData(oldValue, newValue);
-                return await mongo.insertData(response);
-            }
-            response.success = false;
-            throw res.error;
-        })
-        .then(async (res) => (res.success))
-        .catch((err) => {
-            console.log(err);
-            response.success = false;
-        });
-    response.success = storedToDB;
-    res.send(response);
+    if (isTracking) {
+        let storedToDB = await mongo.connectToServer()
+            .then(async (res) => {
+                if (res.success) {
+                    // let oldValue = {
+                    // 	workerID
+                    // };
+                    // let newValue = response;
+                    // return await mongo.updateData(oldValue, newValue);
+                    return await mongo.insertData(response, "mturk-tracking-events");
+                }
+                response.success = false;
+                throw res.error;
+            })
+            .then(async (res) => (res.success))
+            .catch((err) => {
+                console.log(err);
+                response.success = false;
+            });
+        response.success = storedToDB;
+        res.send(response);
+
+    } else {
+        let storedToDB = await mongo.connectToServer()
+            .then(async (res) => {
+                if (res.success) {
+                    // let oldValue = {
+                    // 	workerID
+                    // };
+                    // let newValue = response;
+                    // return await mongo.updateData(oldValue, newValue);
+                    return await mongo.insertData(response, "mturk-summaries");
+                }
+                response.success = false;
+                throw res.error;
+            })
+            .then(async (res) => (res.success))
+            .catch((err) => {
+                console.log(err);
+                response.success = false;
+            });
+        response.success = storedToDB;
+        res.send(response);
+
+    }
 });
 
 app.get('/exportProperties', async (req, res) => {
@@ -93,6 +120,43 @@ app.get('/exportProperties', async (req, res) => {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader("Content-Disposition", 'attachment; filename=' + filename);
     res.csv(result, true);
+});
+
+app.get('/tracking-all.json', async (req, res) => {
+    let trackingEvents = await mongo.connectToServer().then(async (res) => {
+        if (res.success) {
+            let foundData = await mongo.findData({}, "mturk-tracking-events");
+            return foundData.data;
+        }
+        return null;
+    });
+
+    let trackingEventResults = [];
+
+    for (trackingEvent of trackingEvents) {
+        trackingEventResults.push(trackingEvent);
+    }
+
+    let summaries = await mongo.connectToServer().then(async (res) => {
+        if (res.success) {
+            let foundData = await mongo.findData({}, "mturk-summaries");
+            return foundData.data;
+        }
+        return null;
+    });
+
+    let summaryResults = [];
+
+    for (summary of summaries) {
+        trackingEventResults.push(summary);
+    }
+
+    let results = {
+        "trackingEvents": trackingEventResults,
+        "summaries": summaryResults
+    };
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(results));
 });
 
 function getTimestamp() {
