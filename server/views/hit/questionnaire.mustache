@@ -4,6 +4,11 @@
     <title>Wikidata-Questionnaire</title>
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+
+    <script src="/js/api-backend.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
     <script language="javascript" type="text/javascript">
         function enableFinishHitButton() {
             $("#submitQuestionnaireButton").removeClass("primary");
@@ -13,16 +18,14 @@
             var path = turkSubmitTo + "/mturk/externalSubmit";
             $("#finishHITForm").attr("action", path);
 
-            $("#finishHITButton").addClass("primary");
-            $('#finishHITButton').removeAttr("disabled");
+            let finishHitButton = $("#finishHITButton");
+            finishHitButton.addClass("primary");
+            finishHitButton.removeAttr("disabled");
             var assignmentId = localStorage.getItem("assignmentID");
             $("#finishHitAssignmentId").attr("value", assignmentId);
-
         }
 
         function sendQuestionnaireToIkonResearchAndSubmitHit() {
-            console.log($('#relevance').val());
-            console.log($('#grade').val());
             var text1 = $("#text1").val();
             var text2 = $("#text2").val();
             var text3 = $("#text3").val();
@@ -62,8 +65,6 @@
             });
         }
     </script>
-    <script src="js/api-backend.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 
 <body>
@@ -81,8 +82,8 @@
     </div>
 </div>
 <div class="ui grid">
-    <input type="" hidden id="grade" value="{{recoinGrade}}">
-    <input type="" hidden id="relevance" value="{{averageRelevance}}">
+    <input type="hidden" id="grade" value="{{recoinGrade}}">
+    <input type="hidden" id="relevance" value="{{averageRelevance}}">
     <div class="three wide column"></div>
     <div style="font-size: 18px;" class="ten wide column">
         <p>Thank you for adding data to Chris Hadfield’s Wikidata entry! We’ve had a look at the relevance of your
@@ -224,7 +225,7 @@
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5"">
+                                    <input type="radio" name="myRadio" value="5">
                                     <label></label>
                                 </div>
                             </div>
@@ -342,7 +343,7 @@
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="myRadio" value="5"">
+                                    <input type="radio" name="myRadio" value="5">
                                     <label></label>
                                 </div>
                             </div>
@@ -368,8 +369,8 @@
                 <div class="ui input">
                     <textarea id="text5" name="text" cols="95" rows="4"></textarea>
                 </div>
+            </form>
         </ol>
-        </form>
 
         <hr/>
         <div>
