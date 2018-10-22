@@ -3,6 +3,7 @@ var list_entity_original, list_entity_edited, completeness, usedRecoin, conditio
 //Initialisierung von Recoin mit JSON von Properties
 function recoinInit(c) {
     //TODO jquery.ajax ()
+    threshold = 5;
     usedRecoin = false;
     condition = c;
     completenessColor = '#'
@@ -13,7 +14,7 @@ function recoinInit(c) {
       success: function(data) {
         list_entity_original = data;
         list_entity_edited = list_entity_original;
-        completeness = determineCompletenessLevel(list_entity_edited, 5);
+        completeness = determineCompletenessLevel(list_entity_edited, threshold);
         }
     });
     recoinRender(condition);
@@ -143,7 +144,119 @@ function generateRecoinExplanation(list_of_props) {
 
 
 function renderRecoinRedesign() {
- //redesign!   
+    var limit = 0;
+    $.each(list_entity_edited, function (i, obj) {
+        if (obj.presence === false) {
+            $('#recoinv2table tbody').append('<tr><td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:'+ obj.property + '" target="_blank">' + obj.name + '</a></td><td style="width: 40%"><div class="ui input" ><input type="text" placeholder=" "><div id="rv2addvalue">add value</div></div></td><td style="width: 35%"> <span>' + Math.round(obj.relevance) + ' %</span><div class="label" style="font-size: 14px; text-align: left">  '+ obj.amount + ' out of 819</div><div class="ui tiny progress" style="background: white"><div class=" bar" style="width:' + Math.round(obj.relevance) + '% ;background-color: #66B3BA;"></div></div></td></tr>');
+            limit++;
+        }
+    });
+    $('#recoinv2table').html('Hallo');
+
+
+    //$("#progressBarRecoinAccordionText").append('div class="label">This Astronaut provides ' + completeness.text + ' information </div></div>');
+
+
+    // function completenessBarLength(lvl) {
+    //     switch(lvl) {
+    //         case 5:
+    //             return '100%'
+    //             break;
+    //         case 4:
+    //             return '75%'
+    //             break;
+    //         case 3:
+    //             return '50%'
+    //             break;
+    //         case 2:
+    //             return '25%'
+    //             break;
+    //         case 1:
+    //             return '5%'
+    //             break;
+    //     }
+    // }
+
+    // var barLength = completenessBarLength(completeness.level);
+
+    // //progress bar accordion                                             
+    // $("#progressBarRecoinAccordionBar").append('<div class="ui small blue progress" style="width: 25%;"><div class="progress" style="background: white"></div> <div class="bar" style="width:' + barLength + '% ;background-color: #66B3BA;"></div>');
+
+    // $("#tableüberschrift").append('<div class="label">'+ limit + ' of ' + list_entity_edited.length + ' properties were not added for this astronaut</div></div>');
+
+    // /*pagination recoinv2*/
+
+    // var rowsShown;
+
+    // function paging(itemPerPage) {
+    //     if ($(".ui.pagination.menu").length == 0)
+    //         $('#recoinpagination').after('<div class="ui pagination menu"></div>');
+    //     else {
+    //         $(".ui.pagination.menu").remove();
+    //         $('#recoinpagination').after('<div class="ui pagination menu"></div>');
+    //     }
+    //     rowsShown = itemPerPage;
+    //     var rowsTotal = $('#recoinv2table tbody tr').length;
+    //     var numPages = rowsTotal / rowsShown;
+    //     for (i = 0; i < numPages; i++) {
+    //         var pageNum = i + 1;
+    //         $('.ui.pagination.menu').append('<a href="#/" class="item" rel="' + i + '">' + pageNum + '</a> ');
+    //     }
+    //     $('#recoinv2table tbody tr').hide();
+    //     $('#recoinv2table tbody tr').slice(0, rowsShown).show();
+    //     $('.ui.pagination.menu a:first').addClass('active');
+    //     $('.ui.pagination.menu a').bind('click', function () {
+
+    //         $('.ui.pagination.menu a').removeClass('active');
+    //         $(this).addClass('active');
+    //         var currPage = $(this).attr('rel');
+    //         var startItem = currPage * rowsShown;
+    //         var endItem = startItem + rowsShown;
+    //         $('#recoinv2table tbody tr').css('opacity', '0.0').hide().slice(startItem, endItem).
+    //             css('display', 'table-row').animate({ opacity: 1 }, 300);
+
+    //     });
+    // }
+
+    // paging(10);
+
+
+    // $("#firstButton").click(function () {
+    //     paging(5);
+    // });
+
+    // $("#secondButton").click(function () {
+    //     paging(10);
+    // });
+
+    // $("#thirdButton").click(function () {
+    //     paging(15);
+    // });
+
+    // $("#allButton").click(function () {
+    //     paging(limit);
+    // });
+
+    // /* multisliderrangerecoin*/
+
+    // $("#slider-range").slider({
+    //     range: true,
+    //     min: 0,
+    //     max: 819,
+    //     values: [0, 819],
+    //     slide: function (event, ui) {
+    //         $("#amount").val("EXISTS FOR " + ui.values[0] + " OUT OF " + ui.values[1] + " ASTRONAUTS");
+    //         $('#recoinv2table tbody tr').remove();
+    //         $.each(data, function (i, obj) {
+    //             if (obj.presence === false && obj.amount > ui.values[0] && obj.amount < ui.values[1]) {
+    //                 $('#recoinv2table tbody').append('<tr>td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:'+ obj.property + '" target="_blank">' + obj.name + '</a></td><td style="width: 40%"><div class="ui input"><input type="text" placeholder=" "><div id="rv2addvalue">add value</div></div></td><td style="width: 35%"> <!--<span>' + Math.round(obj.relevance) + ' %</span>--><div class="label" style="font-size: 14px; text-align: left">  '+ obj.amount + ' out of 819</div> <div class="ui tiny progress" style="background: white" ><div class=" bar" style="width:' + Math.round(obj.relevance) + '%; background-color: #66B3BA;"></div></div></td></tr>');
+    //             }
+    //         });
+    //         paging(rowsShown);
+    //     }
+    // });
+    // $("#amount").val(" EXISTS FOR " + $("#slider-range").slider("values", 0) + " OUT OF " + $("#slider-range").slider("values", 1) + " ASTRONAUTS ");
+    //$('.ui.accordion').accordion();
 }
 
 //----------------------------- Recoin Functions --------------------------------------------------------------------
@@ -206,12 +319,9 @@ function getRelevance(property){
         }
 //--------------- neue Statement-Box wird hinzugefügt---------------//
 
-function addStatement(obj) {
+function addStatement() {
 
-    
-//--------------- AUTOCOMPLETE WIKIDATA API ---------------//
-
-     var options = {
+     liveAutocompleteOptions = {
                 minLength: 2,
                 source: function(request, response) {
                     var term = request.term;
@@ -229,37 +339,23 @@ function addStatement(obj) {
                 }
         };
 
-//--------------- AUTOCOMPLETE JSON  ---------------//
-
-    $("#astronaut-stats").autocomplete({
-        source: "data/astronaut-stats.json"
-    });
-
-//--------------------------------------------------//
-
     var newStatement = document.createElement("div");
-    var input = "<div class='propertyBox'><input id='astronaut-stats' type='text' name='newProperty'><input id='publish_btn1' type='submit' value='Publish'></div><div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_btn2' type='submit' value='Publish'><input type='submit' value='cancel'></div>";
+    var input = "<div class='propertyBox'><input id='astronaut-stats' type='text' name='newProperty'><input id='publish_btn1' type='submit' value='Publish'></div>";
     $(newStatement).addClass("box").addClass("statementBox").html(input);
     $(newStatement).insertBefore($("#addStatementBox"));
-
-
-    var oldStatementKey = findWithAttribute(list_entity_edited, 'name', newStatement);
-    if (list_entity_edited[oldStatementKey].presence == false) {
-        list_entity_edited[oldStatementKey].presence = true;
-    }
-    completeness = determineCompletenessLevel(list_entity_edited, 5);
-    if(condition != 1 && condition <= 5) {
-        $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a "+ completeness.text + " amount of information.'></a>");
-    }
-    if(condition == 5) {
-        $('#recoinExplanation').remove();
-        generateRecoinExplanation(list_entity_edited);
-    }
 
     $(newStatement).find('#publish_btn1').click(function() {
         var value = $(this).parents('.statementBox').find('input:text').val();
         var propertyBox = $(this).parents(".statementBox").find('.propertyBox');
         propertyBox.html(value);
+        addValue(newStatement);
+        console.log(value);
+
+        // var oldStatementKey = findWithAttribute(list_entity_edited, 'name', newStatement);
+        // if (list_entity_edited[oldStatementKey].presence == false) {
+        //     list_entity_edited[oldStatementKey].presence = true;
+        // }
+        // completeness = determineCompletenessLevel(list_entity_edited, 5);
     });
 
     $(newStatement).find('#publish_btn2').click(function() {
@@ -273,7 +369,7 @@ function addStatement(obj) {
                     workerID: localStorage.getItem("workerID"),
                     hitID: localStorage.getItem("hitID"),
                     assignmentID: localStorage.getItem("assignmentID"),
-                    condition: "1",
+                    condition: localStorage.getItem("condition"),
                     relevance: "23",
                     timestamp: Date.now(),
                     value: value,
@@ -287,16 +383,33 @@ function addStatement(obj) {
                     }
                 });
     });
-    $("#astronaut-stats").autocomplete(options);
-    $('#wikidataApi').autocomplete(options);
 
+//--------------- AUTOCOMPLETE JSON  ---------------//
+
+    $("#astronaut-stats").autocomplete({
+        source: './data/astronaut-stats.json'
+    });
+
+    console.log(list_entity_edited);
+
+
+//--------------- Re-Render-Recoin  ---------------//
+    if(condition != 1 && condition <= 5) {
+        $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a "+ completeness.text + " amount of information.'></a>");
+    }
+    if(condition == 5) {
+        $('#recoinExplanation').remove();
+        generateRecoinExplanation(list_entity_edited);
+    }
 }
 
 //--------------- erstes Value wird hinzugefügt---------------//
 
 //TODO: erst beim klick auf "publish" soll das value feld erscheinen
-function addValue(){
+function addValue(obj){
+    $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_btn2' type='submit' value='Publish'><input type='submit' value='cancel'></div>");
 
+    $('#wikidataApi').autocomplete(liveAutocompleteOptions);
 }
 
 //--------------- weitere Values werden hinzugefügt---------------//

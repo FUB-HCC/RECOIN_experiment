@@ -68,7 +68,7 @@ router.get('/main', function (req, res) {
         res.render('hit/main-recoin-with-explanation.mustache', {});
         console.log("main-recoin-with-explanation");
     } else if (condition == 6) {
-        res.render('main-recoin-redesign.mustache', {});
+        res.render('hit/main-recoin-redesign.mustache', {});
         console.log("main-recoin-redesign");
     }
 });
