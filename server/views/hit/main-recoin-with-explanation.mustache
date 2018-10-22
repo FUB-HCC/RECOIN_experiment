@@ -17,11 +17,7 @@
         }, 1 * 60 * 1000);
 
         function on() {
-            $("#overlay").style.display = "block";
-        }
-
-        function off() {
-            $("#overlay").style.display = "none";
+            $("#overlay").css("display", "block");
         }
     </script>
 </head>
@@ -31,7 +27,7 @@
 <!-- OVERLAY-->
 <div id="overlay" class="container">
     <p class="title_"> Your ten minutes are over, thank you for your input! </p>
-    <div class="button" onclick="off()">
+    <div class="button">
         <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
     </div>
 </div>

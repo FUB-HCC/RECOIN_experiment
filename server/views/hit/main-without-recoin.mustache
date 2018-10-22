@@ -15,11 +15,11 @@
         setTimeout(function () {
             on();
             //alert('Die Zeit ist um');
-            impact = impactOfEdits();
+            impact = Math.round(impactOfEdits());
             grade = gradeEdits();
             $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance=" + String(impact));
 
-        }, 10 * 60 * 1000);
+        }, 1 * 60 * 1000);
 
         function on() {
             $("#overlay").css("display", "block");
