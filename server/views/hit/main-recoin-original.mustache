@@ -7,25 +7,6 @@
 
         $(document).ready(function () {
             recoinInit(2);
-            var options = {
-                minLength: 2,
-                source: function (request, response) {
-                    var term = request.term;
-                    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
-
-                    var xhr = createCORSRequest('GET', url);
-                    xhr.onload = function () {
-                        var responseText = JSON.parse(xhr.responseText);
-                        var responseArray = [];
-                        for (let key in responseText.search) {
-                            responseArray.push(responseText.search[key].label);
-                        }
-                        response(responseArray);
-                    };
-                    xhr.send();
-                }
-            };
-            $('#testInput').autocomplete(options);
 
             // TIMEOUT
             setTimeout(function () {

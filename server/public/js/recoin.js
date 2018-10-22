@@ -42,18 +42,20 @@ function recoinInit(c) {
 //Calculate completeness and return percentage, level, and text. 
 function determineCompletenessLevel(list_of_props, threshold) {
     var i = 0;
+    var completenessPercentage = 0;
     var sumAbsences = 0;
     for (let currentProp in list_of_props) {
         if (i >= threshold) {
             break;
         }
         if (list_of_props[currentProp].presence == false) {
-            sumAbsences = sumAbsences + list_of_props[currentProp].relevance;
-            i++;
+            sumAbsences = sumAbsences + list_of_props[currentProp].relevance;    
+            completenessPercentage = 100 - (sumAbsences / threshold);
+         i++;
         }
     }
-    var completenessPercentage = 100 - (sumAbsences / threshold);
     var completenessText, completenessLevel;
+    console.log(completenessPercentage);
 
     if (completenessPercentage > 95) {
         completenessText = "very detailed";
@@ -75,14 +77,12 @@ function determineCompletenessLevel(list_of_props, threshold) {
         "percentage": completenessPercentage,
         "level": completenessLevel,
         "text": completenessText
-    };
+    };    
     return completenessPackage;
 }
 
 //Calculate the impact participant contributions have made on completeness:
 function impactOfEdits() {
-    console.log(list_entity_original[9]);
-    console.log(list_entity_edited[9]);
     var completenessBefore = determineCompletenessLevel(list_entity_original, 5);
     var completenessAfter = determineCompletenessLevel(list_entity_edited, 5);
     return completenessBefore.percentage - completenessAfter.percentage;
@@ -142,20 +142,23 @@ function renderRecoinOriginal(c) {
     $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a " + completeness.text + " amount of information.'></a>");
 
     if (c == 5) {
-        generateRecoinExplanation(list_entity_edited);
+        generateRecoinExplanation();
     }
 }
 
-function generateRecoinExplanation(list_of_props) {
-    var currentCompleteness = determineCompletenessLevel(list_of_props, 5);
+function generateRecoinExplanation() {
+    var currentCompleteness = determineCompletenessLevel(list_entity_edited, threshold);
+    console.log(currentCompleteness);
     var i = 0;
     var arrayExplanation = [];
-    for (let currentProp of list_of_props) {
-        if (i >= 5) {
+    console.log(list_entity_edited);
+    for (let currentProp in list_entity_edited) {
+        if (i >= threshold) {
             break;
         }
         if (currentProp.presence == false) {
             arrayExplanation.push(currentProp.name);
+            console.log(arrayExplanation);
             i++;
         }
     }

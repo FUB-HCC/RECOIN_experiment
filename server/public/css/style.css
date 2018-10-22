@@ -30,6 +30,7 @@ html, body {
     z-index: 2;
     /* Specify a stack order in case you're using a different order for other elements */
     cursor: pointer;
+    overflow-y: scroll;
     /* Add a pointer on hover */
 }
 
@@ -39,7 +40,7 @@ html, body {
     left: 0;
     top: 120px;
     font-weight: 700;
-    font-size: 2em;
+    font-size: 1.4em;
     text-align: center;
     text-transform: uppercase;
     color: black;
@@ -51,21 +52,21 @@ html, body {
     position: absolute;
     width: 100%;
     left: 0;
-    top: 360px;
+    top: 12%;
     text-align: center;
     opacity: 0.5;
     transition: opacity .35s ease;
 }
 
 .button a {
-    width: 1000px;
+    width: 33%;
     padding: 36px 144px;
     text-align: center;
     color: #0645ad;
     background-color: rgba(255, 255, 255, 0.5);
     border: solid 8px #0645ad;
     z-index: 1;
-    font-size: 50px;
+    font-size: 1.5em;
 }
 
 .container:hover .button {
