@@ -39,7 +39,7 @@ html, body {
     left: 0;
     top: 120px;
     font-weight: 700;
-    font-size: 100px;
+    font-size: 2em;
     text-align: center;
     text-transform: uppercase;
     color: black;
@@ -62,6 +62,7 @@ html, body {
     padding: 36px 144px;
     text-align: center;
     color: #0645ad;
+    background-color: rgba(255, 255, 255, 0.5);
     border: solid 8px #0645ad;
     z-index: 1;
     font-size: 50px;
@@ -261,7 +262,7 @@ html, body {
     margin-left: 18em;
     margin-right: 18em;
     margin-bottom: 1em;
-    width: 20em;
+    min-width: 20em;
     word-wrap: break-word;
     background-color: #ffffff;
     padding: 10px 5px 5px 10px;
@@ -298,6 +299,20 @@ html, body {
     color: #0645ad;
     cursor: pointer;
 }
+
+#publish_statement_button {
+    border: none;
+    background: none;
+    display: inline-block;
+}
+
+#cancel_statement_button {
+    border: none;
+    background: none;
+    display: inline-block;
+}
+
+
 
 /* hopefully this will fix the autocomplete css */
 
@@ -342,6 +357,8 @@ html, body {
 .ui-menu .ui-menu-item-wrapper {
     position: relative;
     padding: 3px 1em 3px .4em;
+    border: 1px solid #eaecf0;
+    background-color: #fff;
 }
 
 .ui-menu .ui-menu-divider {

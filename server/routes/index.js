@@ -48,6 +48,10 @@ router.get('/briefing', function (req, res) {
     res.render('hit/briefing.mustache', {});
 });
 
+router.get('/material', function (req, res) {
+    res.render('hit/material.mustache', {});
+});
+
 
 router.get('/main', function (req, res) {
     let condition = req.query.condition;
