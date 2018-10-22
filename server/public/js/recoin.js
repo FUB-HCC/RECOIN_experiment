@@ -81,11 +81,9 @@ function determineCompletenessLevel(list_of_props, threshold) {
 
 //Calculate the impact participant contributions have made on completeness:
 function impactOfEdits() {
-    console.log(list_entity_original[9]);
-    console.log(list_entity_edited[9]);
     var completenessBefore = determineCompletenessLevel(list_entity_original, 5);
     var completenessAfter = determineCompletenessLevel(list_entity_edited, 5);
-    return completenessBefore.percentage - completenessAfter.percentage;
+    return completenessAfter.percentage - completenessBefore.percentage;
 }
 
 //Grade the Edits made by participancts:
@@ -410,6 +408,7 @@ function addValue(obj) {
         if (propertyIndex >= 0) {
             list_entity_edited[propertyIndex].presence = true;
             let currentProperty = list_entity_edited[propertyIndex];
+            console.log("List of edited entities:");
             console.log(list_entity_edited);
             var data = {
                 workerID: localStorage.getItem("workerID"),
@@ -419,8 +418,8 @@ function addValue(obj) {
                 relevance: currentProperty.relevance,
                 timestamp: Date.now(),
                 value: value,
-                property: property,
-                impactOnRelevance: impactOfEdits()
+                property: property
+                //impactOnRelevance: impactOfEdits()
             };
             sendTrackingEvent(data, function (data) {
                     console.log("successfuly send things to the api: " + JSON.stringify(data));
