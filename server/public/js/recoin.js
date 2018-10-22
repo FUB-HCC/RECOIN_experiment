@@ -14,7 +14,7 @@ function recoinInit(c) {
         dataType: 'json',
         success: function (data) {
             list_entity_original = data;
-            list_entity_edited = list_entity_original;
+            list_entity_edited = JSON.parse(JSON.stringify(data));
             completeness = determineCompletenessLevel(list_entity_edited, threshold);
         }
     });
@@ -74,6 +74,8 @@ function determineCompletenessLevel(list_of_props, threshold) {
 
 //Calculate the impact participant contributions have made on completeness:
 function impactOfEdits() {
+    console.log(list_entity_original[9]);
+    console.log(list_entity_edited[9]);
     var completenessBefore = determineCompletenessLevel(list_entity_original, 5);
     var completenessAfter = determineCompletenessLevel(list_entity_edited, 5);
     return completenessBefore.percentage - completenessAfter.percentage;
@@ -387,33 +389,45 @@ function addStatement() {
 
 //--------------- Adding a value AFTER the corresponding property is set ---------------//
 function addValue(obj) {
-    $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='Publish'><input type='submit' value='cancel'></div>");
+    $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>");
 
     $(obj).find('#publish_statement_button').click(function () {
         console.log("Clicked the publish button!");
         var value = $(this).parents('.statementBox').find('input:text').val();
         var property = $(this).parents(".statementBox").find(".propertyBox").text();
-        //var toolbarBox = $(newValue).parents(".statementBox").find(".toolbarBox");
         var valueBox = $(this).parents(".statementBox").find('.valueBox');
         valueBox.html(value);
 
-        var data = {
-            workerID: localStorage.getItem("workerID"),
-            hitID: localStorage.getItem("hitID"),
-            assignmentID: localStorage.getItem("assignmentID"),
-            condition: localStorage.getItem("condition"),
-            relevance: "23",
-            timestamp: Date.now(),
-            value: value,
-            property: property,
-            impactOnRelevance: impactOfEdits()
-        };
-        sendProperties(data, function (response) {
-            if (response.success) {
-                $("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
-                $(newValue).remove();
-            }
-        });
+        // find property by name: 		"name": "place of death",
+        let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
+        if (propertyIndex >= 0) {
+            list_entity_edited[propertyIndex].presence = true;
+            let currentProperty = list_entity_edited[propertyIndex];
+            console.log(list_entity_edited);
+            var data = {
+                workerID: localStorage.getItem("workerID"),
+                hitID: localStorage.getItem("hitID"),
+                assignmentID: localStorage.getItem("assignmentID"),
+                condition: localStorage.getItem("condition"),
+                relevance: currentProperty.relevance,
+                timestamp: Date.now(),
+                value: value,
+                property: property,
+                impactOnRelevance: impactOfEdits()
+            };
+            sendTrackingEvent(data, function (data) {
+                    console.log("successfuly send things to the api: " + JSON.stringify(data));
+                    $(obj).find(".propertyBox").removeClass("new");
+                    //$("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                    //$(newValue).remove();
+                },
+                function (response) {
+                    console.log("Something went terribly wrong!");
+                    console.log(response);
+                });
+        } else {
+            console.log("Couldn't find property in list_entity edited:" + property);
+        }
     });
 
 
@@ -496,4 +510,14 @@ function createCORSRequest(method, url) {
         xhr = null;
     }
     return xhr;
+}
+
+//Hax0r function
+function findWithAttribute(array, attr, value) {
+    for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) {
+            return i;
+        }
+    }
+    return -1;
 }

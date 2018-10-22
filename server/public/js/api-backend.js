@@ -34,17 +34,31 @@
 // sendProperties(data1);
 // sendQuestions(data2);
 
-function sendProperties(data,cb) {
-	console.log(data);
-	$.ajax({
-		url: './api/event/',
-		data: data,
-		dataType: 'json',
-		type: "POST",
+function sendTrackingEvent(trackingEventData, onSuccessFn, onErrorFn) {
+    console.log("Calling tracking api with:" + JSON.stringify(trackingEventData));
+    $.ajax({
+        url: './api/event/',
+        data: trackingEventData,
+        dataType: 'json',
+        type: "POST",
 
-		success: function (data) {
-			console.log(data);
-			cb(data);
-		}
-	});
+        success: (e) => onSuccessFn(e),
+        error: (e) => onErrorFn(e)
+    });
+}
+
+//TODO aufräumen!
+function sendProperties(data, cb) {
+    console.log(data);
+    $.ajax({
+        url: './api/event/',
+        data: data,
+        dataType: 'json',
+        type: "POST",
+
+        success: function (data) {
+            console.log(data);
+            cb(data);
+        }
+    });
 }
