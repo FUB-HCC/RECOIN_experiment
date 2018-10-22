@@ -60,7 +60,7 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-//TODO this seems to be broken. npm start gives a server on 3000
+//TODO this is broken. npm start gives a server on 3000
 app.listen(3001, '0.0.0.0');
 
 

@@ -7,7 +7,6 @@ const endpoint = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com';
 let mturk;
 
 /* GET home page. */
-//TODO async/await doesn't work for jesse.
 router.get('/', function (req, res, next) {
 	let region = 'us-east-1';
 

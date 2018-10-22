@@ -6,31 +6,12 @@
         $(document).ready(function () {
             recoinInit(5);
         });
-        // TIMEOUT
-        setTimeout(function () {
-            on();
-            //alert('Die Zeit ist um');
-            impact = impactOfEdits();
-            grade = gradeEdits();
-            $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance=" + String(impact));
-
-        }, 1 * 60 * 1000);
-
-        function on() {
-            $("#overlay").css("display", "block");
-        }
     </script>
 </head>
-
-
 <body>
 <!-- OVERLAY-->
-<div id="overlay" class="container">
-    <p class="title_"> Your ten minutes are over, thank you for your input! </p>
-    <div class="button">
-        <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
-    </div>
-</div>
+{{> hit/partials/overlay}}
+
 <!--Wikidata-->
 {{> hit/partials/wikidata-headings }}
 <!--Menue Links Hauptseite-->
@@ -44,7 +25,7 @@
                 <!--Item Name und ID-->
                 <div class="two column row">
                     <!--Jesse-->
-                    <div class="ten wide column" style="padding-left:0%">
+                    <div class="thirteen wide column" style="padding-left:0%">
                         <div>
                             <h1 id="firstHeading">Chris Hadfield <span id="itemID">(Q1076962)</span></h1>
                         </div>
