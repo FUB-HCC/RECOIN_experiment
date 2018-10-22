@@ -1,370 +1,352 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Chris Hadfield - Wikidata</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
-    <script src="/js/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="/css/wikidata.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/recoin.js"></script>
-    <!-- Hotjar Tracking Code for http://ikon-research.imp.fu-berlin.de/ -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:1018535,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
+    {{> hit/partials/main-headers}}
     <script type="text/javascript">
 
-    var impact, grade, condition;
+        var impact, grade, condition;
 
-    //LIVE
-    //condition = localStorage.getItem("condition");
-    //TESt
-    condition = 1;
-    recoinInit(condition);
-    // TIMEOUT
-    setTimeout(function() {
-        on();
-        //alert('Die Zeit ist um');
-        impact = impactOfEdits();
-        grade = gradeEdits();
-        $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance="+ String(impact));
+        //LIVE
+        //condition = localStorage.getItem("condition");
+        //TESt
+        condition = 1;
+        recoinInit(condition);
+        // TIMEOUT
+        setTimeout(function () {
+            on();
+            //alert('Die Zeit ist um');
+            impact = impactOfEdits();
+            grade = gradeEdits();
+            $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance=" + String(impact));
 
-    }, 10 * 60 * 1000);
+        }, 10 * 60 * 1000);
 
-    function on() {
-        $("#overlay").css("display", "block");
-    }
+        function on() {
+            $("#overlay").css("display", "block");
+        }
 
-    function off() {
-        $("#overlay").css("display", "none");
-    }
+        function off() {
+            $("#overlay").css("display", "none");
+        }
     </script>
 </head>
 
 
 <body>
-    <!-- OVERLAY-->
-    <div id ="overlay" class="container">
-       <p class="title_"> Time´s up </p>
-           <div class="button" onclick="off()">
-                <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
-           </div>
+<!-- OVERLAY-->
+<div id="overlay" class="container">
+    <p class="title_"> Time´s up </p>
+    <div class="button" onclick="off()">
+        <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
     </div>
-        
+</div>
 
-    <!--Wikidata-->
-    <!--Benutzereinstellungen Sprache Login etc-->
-    <div class="ui right left aligned row">
-        <a></a><i class="grey language icon"></i>English</a>
-        <a>Username</a>
-        <a><i class="grey large bell icon"></i></a>
-        <a><i class=" black large sticky note outline icon"></i></a>
-        <a>Talk</a>
-        <a>Preferences</a>
-        <a>Beta</a>
-        <a>Watchlist</a>
-        <a>Contributions</a>
-        <a>Logout</a>
-    </div>
-    <!--Logo Farbverlauf Navigationsbereich -->
-    <div class="ui first grid">
-        <div class="ui secondary three column row">
-            <div class="two wide left aligned column ">
-                <!--Wikidata Logo -->
+
+<!--Wikidata-->
+<!--Benutzereinstellungen Sprache Login etc-->
+<div class="ui right left aligned row">
+    <a></a><i class="grey language icon"></i>English</a>
+    <a>Username</a>
+    <a><i class="grey large bell icon"></i></a>
+    <a><i class=" black large sticky note outline icon"></i></a>
+    <a>Talk</a>
+    <a>Preferences</a>
+    <a>Beta</a>
+    <a>Watchlist</a>
+    <a>Contributions</a>
+    <a>Logout</a>
+</div>
+<!--Logo Farbverlauf Navigationsbereich -->
+<div class="ui first grid">
+    <div class="ui secondary three column row">
+        <div class="two wide left aligned column ">
+            <!--Wikidata Logo -->
+        </div>
+        <div class="six wide left bottom aligned column">
+            <div class="ui top attached tabular menu">
+                <div class="active item">Item</div>
+                <div class=" item" style="color: #a55858">Discussion</div>
             </div>
-            <div class="six wide left bottom aligned column">
-                <div class="ui top attached tabular menu">
-                    <div class="active item">Item</div>
-                    <div class=" item" style="color: #a55858">Discussion</div>
-                </div>
-            </div>
-            <div class="seven wide left bottom aligned column">
-                <div class="ui top attached tabular menu">
-                    <div class="active item">Read</div>
-                    <div class=" item">View history</div>
-                    <div class=" item"><i class=" blue star outline icon"></i></div>
-                    <!--Navgation Tab Search-->
-                    <div class="ui searchitem icon input">
-                        <input type="text" placeholder="Search Wikidata">
-                        <i class="search link icon"></i>
-                    </div>
+        </div>
+        <div class="seven wide left bottom aligned column">
+            <div class="ui top attached tabular menu">
+                <div class="active item">Read</div>
+                <div class=" item">View history</div>
+                <div class=" item"><i class=" blue star outline icon"></i></div>
+                <!--Navgation Tab Search-->
+                <div class="ui searchitem icon input">
+                    <input type="text" placeholder="Search Wikidata">
+                    <i class="search link icon"></i>
                 </div>
             </div>
         </div>
     </div>
-    <!--Menue Links Hauptseite-->
-    <div class="ui secondary grid">
-        <div class="ui two column row">
-            <div class="two wide left aligned links column ">
-                <div style="margin-top: -40px; margin-left: 20px;">
-                    <img class="ui center floated image"
-                         src="https://www.wikidata.org/static/images/project-logos/wikidatawiki.png">
-                </div>
-                <div>
-                    <br><br><br><br><br><br> <br><br>
-                    <ul id="ul"><a>Main page</a> <br>
-                        <a>Community
-                            portal</a> <br>
-                        <a>Project chat</a> <br>
-                        <a>Create a new item</a> <br>
-                        <a>Recent
-                            changes</a> <br>
-                        <a>Random item</a> <br>
-                        <a>Query
-                            Service</a><br>
-                        <a>Nearby</a><br>
-                        <a>Help</a><br>
-                        <a>Donate</a></ul>
-                    <br>
-                    <br>
-
-                </div>
-                <div>
-
-                    <ul id="ul">
-                        <span style="line-height: 1.3em; border-bottom: 1px solid #dadce0;">Tools</span></p>
-
-                        <a>What links here</a><br>
-                        <a rel="nofollow" title="Recent changes in pages linked from this page [alt-shift-k]">Related
-                            changes</a><br>
-                        <a>Special pages</a><br>
-                        <a>Permanent
-                            link</a><br>
-                        <a>Page information</a><br>
-                        <a>Concept
-                            URI</a><br>
-                        <a>Cite
-                            this page</a></ul>
-
-                </div>
+</div>
+<!--Menue Links Hauptseite-->
+<div class="ui secondary grid">
+    <div class="ui two column row">
+        <div class="two wide left aligned links column ">
+            <div style="margin-top: -40px; margin-left: 20px;">
+                <img class="ui center floated image"
+                     src="https://www.wikidata.org/static/images/project-logos/wikidatawiki.png">
             </div>
-            <!--Item Bereich -->
-            <div class="fourteen wide left aligned column" style="background-color: white;     padding-left: 25px;
+            <div>
+                <br><br><br><br><br><br> <br><br>
+                <ul id="ul"><a>Main page</a> <br>
+                    <a>Community
+                        portal</a> <br>
+                    <a>Project chat</a> <br>
+                    <a>Create a new item</a> <br>
+                    <a>Recent
+                        changes</a> <br>
+                    <a>Random item</a> <br>
+                    <a>Query
+                        Service</a><br>
+                    <a>Nearby</a><br>
+                    <a>Help</a><br>
+                    <a>Donate</a></ul>
+                <br>
+                <br>
+
+            </div>
+            <div>
+
+                <ul id="ul">
+                    <span style="line-height: 1.3em; border-bottom: 1px solid #dadce0;">Tools</span></p>
+
+                    <a>What links here</a><br>
+                    <a rel="nofollow" title="Recent changes in pages linked from this page [alt-shift-k]">Related
+                        changes</a><br>
+                    <a>Special pages</a><br>
+                    <a>Permanent
+                        link</a><br>
+                    <a>Page information</a><br>
+                    <a>Concept
+                        URI</a><br>
+                    <a>Cite
+                        this page</a></ul>
+
+            </div>
+        </div>
+        <!--Item Bereich -->
+        <div class="fourteen wide left aligned column" style="background-color: white;     padding-left: 25px;
                     padding-top: 10px">
-                <div class="ui third grid" style="padding-left:15px;">
-                    <!--Item Name und ID-->
-                    <div class="two column row">
-                        <!--Jesse-->
-                        <div class="thirteen wide column" style="padding-left:0%">
-                            <div>
-                                <h1 id="firstHeading">Chris Hadfield <span id="itemID">(Q1076962)</span></h1>
-                            </div>
-                        </div>
-                        <div class="three wide center aligned column">
-                                <div id="recoinProgressbar"></div>
+            <div class="ui third grid" style="padding-left:15px;">
+                <!--Item Name und ID-->
+                <div class="two column row">
+                    <!--Jesse-->
+                    <div class="thirteen wide column" style="padding-left:0%">
+                        <div>
+                            <h1 id="firstHeading">Chris Hadfield <span id="itemID">(Q1076962)</span></h1>
                         </div>
                     </div>
+                    <div class="three wide center aligned column">
+                        <div id="recoinProgressbar"></div>
+                    </div>
                 </div>
-                <div class="row" style="padding-bottom: 0;">
-                    <div>
-                        <span id="class"> Canadian astronaut</span> </br>
-                        <span id="alias">Chris Austin Hadfield | Christopher Austin Hadfield |
+            </div>
+            <div class="row" style="padding-bottom: 0;">
+                <div>
+                    <span id="class"> Canadian astronaut</span> </br>
+                    <span id="alias">Chris Austin Hadfield | Christopher Austin Hadfield |
                                     Chris A. Hadfield</span>
-                    </div>
-                </div>
-                <!--Recoin-->
-<!--                 <div class="row" style="padding-top: 0;">
-                    <div class="ui fluid accordion">
-                        <div class="title" id="accordiontitle">
-                            <i class="dropdown icon"></i>
-                            Most relevant properties which are absent
-                        </div>
-                        <div class="content" style="padding-left:30px;">
-                            <p class="transition hidden">
-                            <div class="box" id="recoinv1Text">
-                                <table id="recoinTable" class="recoinv1Box">
-                                    <thead>
-                                    <tr>
-                                        <td>Property ID</td>
-                                        <td>Label</td>
-                                        <td>Relative</td>
-                                        <td>Add Claim</td>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    
-                                    
-                                    </tbody>
-                                </table>
-                            </div>
-                            </p>
-                        </div>
-                    </div>
-                </div> -->
-                <!--Language Box-->
-                <div class="row">
-                    <div class="ui fluid accordion">
-                        <div class="active title" id="accordiontitle">
-                            <i class="dropdown icon"></i>
-                            In more languages
-                        </div>
-                        <div class="active content">
-                            <div class="box" id="languageText">
-                                <table class="languageBox">
-                                    <thead>
-                                    <th scope="col">Language</th>
-                                    <th scope="col">Label</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Also Known As</th>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th>English</th>
-                                        <td>Chris Hadfield</td>
-                                        <td>Canadian Astronaut</td>
-                                        <td>Chris Austin Hadfield<br/>Christopher Austin Hadfield<br/>Chris
-                                            A.
-                                            Hadfield
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>German</th>
-                                        <td>Chris Austin Hadfield</td>
-                                        <td>kanadischer Astronaut</td>
-                                        <td>Chris Hadfield</td>
-                                    </tr>
-                                    <tr>
-                                        <th>French</th>
-                                        <td>Chris Hadfield</td>
-                                        <td>astronaute canadien</td>
-                                        <td>Chris A. Hadfield</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Bavarian</th>
-                                        <td style="color:#a2a9b1;">No label defined</td>
-                                        <td style="color:#a2a9b1;">No label defined</td>
-                                        <td></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <!--Statements-->
-                    <div class="row">
-                        <h2 id="secondHeading">Statements</h2>
-                        <!--    Statements from Wikidata -->
-                        <div class="box statementBox">
-                            <div class="propertyBox">instance of</div>
-                            <div class="valueBox">human</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <div class="box statementBox">
-                            <div class="propertyBox">image</div>
-                            <div class="valueBox"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Chris_Hadfield_2011.jpg/144px-Chris_Hadfield_2011.jpg" width="140px"></div>
-                            <div class="valueBox">Chris Hadfield 2011.jpg</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <div class="box statementBox">
-                            <div class="propertyBox">sex or gender</div>
-                            <div class="valueBox">male</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <div class="box statementBox">
-                            <div class="propertyBox">occupation</div>
-                            <div class="valueBox">astronaut</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <div class="box statementBox">
-                            <div class="propertyBox">date of birth</div>
-                            <div class="valueBox">August 29, 1959</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <div class="box statementBox">
-                            <div class="propertyBox">place of birth</div>
-                            <div class="valueBox">Toronto, Canada</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <div class="box statementBox">
-                            <div class="propertyBox">time in space</div>
-                            <div class="valueBox">166 days</div>
-                            <div class="toolbarBox">
-                                <div class="addValue" style="cursor: not-allowed;">+ add value</div>
-                            </div>
-                        </div>
-
-                        <!--    Here statements are added -->
-                        <div class="box" id="addStatementBox">
-                            <div id="addStatement" onclick="addStatement()">+ add statement</div>
-                        </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <!--Footer-->
-    <div class="ui fourth grid">
-        <div class="ui two column fourth row">
-            <div class="three wide center aligned column ">
-                <div>
                 </div>
             </div>
-            <div class="thirteen wide left aligned column"><br>
-                <p>Aenean massa.
-                    Cum sociis natoque penatibus et magnis dis parturient.
-                </p>
-                <p style="padding-bottom: 10px;">Lorem ipsum dolor sit amet, consectetuer adipiscing
-                    elit. Aenean commodo ligula eget dolor. Aenean massa.
-                    <a>Cum sociis natoque penatibus et magnis</a> dis parturient
-                    montes, nascetur ridiculus mus. <a>Donec quam felis, ultricies nec, pellentesque</a>eu,
-                    pretium
-                    quis, sem.
-                    Lorem ipsum dolor sit amet, consectetuer <a>adipiscing</a>
-                    elit. Aenean commodo ligula eget dolor.
-                </p>
-                <div>
-                    <a style="padding-right: 10px;">Privacy policy</a>
-                    <a style="padding-right: 10px;">About Wikidata</a>
-                    <a style="padding-right: 10px;">Disclaimers</a>
-                    <a style="padding-right: 10px;">Developers</a>
-                    <a style="padding-right: 10px;">Cookie statement</a>
-                    <a style="padding-right: 10px;">Mobile view</a>
-                    <a style="padding-right: 10px;">Data access</a>
+            <!--Recoin-->
+            <!--                 <div class="row" style="padding-top: 0;">
+                                <div class="ui fluid accordion">
+                                    <div class="title" id="accordiontitle">
+                                        <i class="dropdown icon"></i>
+                                        Most relevant properties which are absent
+                                    </div>
+                                    <div class="content" style="padding-left:30px;">
+                                        <p class="transition hidden">
+                                        <div class="box" id="recoinv1Text">
+                                            <table id="recoinTable" class="recoinv1Box">
+                                                <thead>
+                                                <tr>
+                                                    <td>Property ID</td>
+                                                    <td>Label</td>
+                                                    <td>Relative</td>
+                                                    <td>Add Claim</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
 
-                    <div style="text-align: right">
-                        <img src="https://www.wikidata.org/static/images/wikimedia-button.png">
-                        <img src="https://www.wikidata.org/static/images/poweredby_mediawiki_88x31.png">
 
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div> -->
+            <!--Language Box-->
+            <div class="row">
+                <div class="ui fluid accordion">
+                    <div class="active title" id="accordiontitle">
+                        <i class="dropdown icon"></i>
+                        In more languages
                     </div>
+                    <div class="active content">
+                        <div class="box" id="languageText">
+                            <table class="languageBox">
+                                <thead>
+                                <th scope="col">Language</th>
+                                <th scope="col">Label</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Also Known As</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>English</th>
+                                    <td>Chris Hadfield</td>
+                                    <td>Canadian Astronaut</td>
+                                    <td>Chris Austin Hadfield<br/>Christopher Austin Hadfield<br/>Chris
+                                        A.
+                                        Hadfield
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>German</th>
+                                    <td>Chris Austin Hadfield</td>
+                                    <td>kanadischer Astronaut</td>
+                                    <td>Chris Hadfield</td>
+                                </tr>
+                                <tr>
+                                    <th>French</th>
+                                    <td>Chris Hadfield</td>
+                                    <td>astronaute canadien</td>
+                                    <td>Chris A. Hadfield</td>
+                                </tr>
+                                <tr>
+                                    <th>Bavarian</th>
+                                    <td style="color:#a2a9b1;">No label defined</td>
+                                    <td style="color:#a2a9b1;">No label defined</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Statements-->
+            <div class="row">
+                <h2 id="secondHeading">Statements</h2>
+                <!--    Statements from Wikidata -->
+                <div class="box statementBox">
+                    <div class="propertyBox">instance of</div>
+                    <div class="valueBox">human</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">image</div>
+                    <div class="valueBox"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Chris_Hadfield_2011.jpg/144px-Chris_Hadfield_2011.jpg"
+                            width="140px"></div>
+                    <div class="valueBox">Chris Hadfield 2011.jpg</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">sex or gender</div>
+                    <div class="valueBox">male</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">occupation</div>
+                    <div class="valueBox">astronaut</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">date of birth</div>
+                    <div class="valueBox">August 29, 1959</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">place of birth</div>
+                    <div class="valueBox">Toronto, Canada</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <div class="box statementBox">
+                    <div class="propertyBox">time in space</div>
+                    <div class="valueBox">166 days</div>
+                    <div class="toolbarBox">
+                        <div class="addValue" style="cursor: not-allowed;">+ add value</div>
+                    </div>
+                </div>
+
+                <!--    Here statements are added -->
+                <div class="box" id="addStatementBox">
+                    <div id="addStatement" onclick="addStatement()">+ add statement</div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+</div>
 
-    <script>
-        $('.ui.accordion')
+<!--Footer-->
+<div class="ui fourth grid">
+    <div class="ui two column fourth row">
+        <div class="three wide center aligned column ">
+            <div>
+            </div>
+        </div>
+        <div class="thirteen wide left aligned column"><br>
+            <p>Aenean massa.
+                Cum sociis natoque penatibus et magnis dis parturient.
+            </p>
+            <p style="padding-bottom: 10px;">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                elit. Aenean commodo ligula eget dolor. Aenean massa.
+                <a>Cum sociis natoque penatibus et magnis</a> dis parturient
+                montes, nascetur ridiculus mus. <a>Donec quam felis, ultricies nec, pellentesque</a>eu,
+                pretium
+                quis, sem.
+                Lorem ipsum dolor sit amet, consectetuer <a>adipiscing</a>
+                elit. Aenean commodo ligula eget dolor.
+            </p>
+            <div>
+                <a style="padding-right: 10px;">Privacy policy</a>
+                <a style="padding-right: 10px;">About Wikidata</a>
+                <a style="padding-right: 10px;">Disclaimers</a>
+                <a style="padding-right: 10px;">Developers</a>
+                <a style="padding-right: 10px;">Cookie statement</a>
+                <a style="padding-right: 10px;">Mobile view</a>
+                <a style="padding-right: 10px;">Data access</a>
+
+                <div style="text-align: right">
+                    <img src="https://www.wikidata.org/static/images/wikimedia-button.png">
+                    <img src="https://www.wikidata.org/static/images/poweredby_mediawiki_88x31.png">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $('.ui.accordion')
             .accordion();
-    </script>
+</script>
 </body>
 
 </html>

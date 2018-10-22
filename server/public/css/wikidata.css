@@ -225,6 +225,10 @@
     color: #0645ad;
 }
 
+.propertyBox.new {
+    background: #b6c8ec;
+}
+
 .valueBox {
     position: relative;
     margin-left: 18em;
@@ -397,7 +401,6 @@
     line-height: 22px;
     color: #72777d;
 }
-
 
 #class {
     font-size: 14px;
@@ -604,7 +607,7 @@
     border: 1px solid #c8ccd1;
     display: table;
     table-layout: auto;
-/*    width: 70%;*/
+    /*    width: 70%;*/
 
 }
 
@@ -663,7 +666,6 @@
 /*v2 recoin*/
 /*Recoinv2Table*/
 
-
 #propertieName {
     text-align: center;
     color: #0645ad;
@@ -684,22 +686,21 @@
     text-align: left;
 }
 
-
 /*button*/
-#firstButton , #secondButton, #thirdButton ,#allButton {
+#firstButton, #secondButton, #thirdButton, #allButton {
     background-color: #ffffff;
-    border: 1px solid rgba(34,36,38,.15);
+    border: 1px solid rgba(34, 36, 38, .15);
     width: 15%;
     font-family: sans-serif;
     font-size: 10px;
-    color:black;
+    color: black;
 
 }
 
-#recoinmenue , #amount{
+#recoinmenue, #amount {
     font-family: sans-serif;
     font-size: 10px;
-    color:black;
+    color: black;
     /* font-weight: bold; */
     padding-right: 3%
 }
@@ -708,44 +709,47 @@
 
 .ui-slider-horizontal .ui-slider-range {
     height: 100%;
-    background-color: #66B3BA ;
+    background-color: #66B3BA;
     height: max-content;
 
 }
 
 /* slider border */
 
-.ui-widget.ui-widget-content{
+.ui-widget.ui-widget-content {
     height: 6px;
-    border: 1px solid 66B3BA;
+    border: 1px solid #66B3BA;
 
 }
-
 
 /* slider  */
 .ui-slider-horizontal .ui-slider-handle {
     top: -.3em;
     margin-left: -.6em;
     border-radius: 0;
-    
+
 }
 
-#progressBarRecoinAccordionText{
+#progressBarRecoinAccordionText {
     padding: 0%;
     margin-right: -3%;
     margin-left: -1%;
 
+}
 
-}
-#iconaccordionrecoin{
+#iconaccordionrecoin {
     padding: 0%;
-/* margin-right: 35%; */
+    /* margin-right: 35%; */
 }
-#progressBarRecoinAccordionBar{
+
+#progressBarRecoinAccordionBar {
     padding: 0%;
     padding-top: 4px;
     margin-left: 2%;
-    width: 70%
-
+    width: 70%;
 }
+
+/* Add Statement Box Styling */
+#astronaut-stats {
+    max-width: 100%;
 }

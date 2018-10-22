@@ -1,0 +1,358 @@
+[
+	{ 
+		"property": "P31", 
+		"label": "instance of",
+		"amount": 819, 
+		"relevance": 100.00, 
+		"presence": true
+	},
+	{ 
+		"property": "P106", 
+		"label": "occupation",
+		"amount": 819, 
+		"relevance": 100.00, 	
+		"presence": true
+	},
+	{ 
+		"property": "P21", 
+		"label": "sex or gender",
+		"amount": 803, 
+		"relevance": 98.05, 
+		"presence": true
+	},
+	{ 
+		"property": "P569", 
+		"label": "date of birth",
+		"amount": 737, 
+		"relevance": 89.99, 
+		"presence": true
+	},
+	{ 
+		"property": "P27", 
+		"label": "country of citizenship",
+		"amount": 736, 
+		"relevance": 89.87, 
+		"presence": false
+	},
+	{ 
+		"property": "P19", 
+		"label": "place of birth",
+		"amount": 723, 
+		"relevance": 88.28, 
+		"presence": true
+	},
+	{ 
+		"property": "P735", 
+		"label": "given label",
+		"amount": 710, 
+		"relevance": 86.69, 	
+		"presence": true
+	},
+	{ 
+		"property": "P18", 
+		"label": "image",
+		"amount": 637, 
+		"relevance": 77.78, 
+		"presence": true
+	},
+	{ 
+		"property": "P69", 
+		"label": "educated at",
+		"amount": 607, 
+		"relevance": 74.11, 
+		"presence": false
+	},
+	{ 
+		"property": "P450", 
+		"label": "astronaut mission",
+		"amount": 559, 
+		"relevance": 68.25, 
+		"presence": false
+	},
+	{ 
+		"property": "P2873", 
+		"label": "time in space",
+		"amount": 549, 
+		"relevance": 67.03, 
+		"presence": true
+	},
+	{ 
+		"property": "P166", 
+		"label": "award received",
+		"amount": 441, 
+		"relevance": 53.85, 
+		"presence": false
+	},
+	{ 
+		"property": "P2030", 
+		"label": "NASA biographical ID",
+		"amount": 396, 
+		"relevance": 48.35, 
+		"presence": true
+	},
+	{ 
+		"property": "P361", 
+		"label": "part of",
+		"amount": 382, 
+		"relevance": 46.64, 
+		"presence": false
+	},
+	{ 
+		"property": "P108", 
+		"label": "employer",
+		"amount": 381, 
+		"relevance": 46.52, 
+		"presence": false
+	},
+	{ 
+		"property": "P734", 
+		"label": "family label",
+		"amount": 365, 
+		"relevance": 44.57, 
+		"presence": false
+	},
+	{ 
+		"property": "P410", 
+		"label": "military rank",
+		"amount": 349, 
+		"relevance": 42.61, 
+		"presence": false
+	},
+	{ 
+		"property": "P241", 
+		"label": "military branch",
+		"amount": 280,
+		"relevance": 34.19, 
+		"presence": false
+	},
+	{ 
+		"property": "P570", 
+		"label": "date of death",
+		"amount": 163, 
+		"relevance": 19.90, 
+		"presence": true
+	},
+	{ 
+		"property": "P20",
+		"label": "place of death",
+		"amount": 148, 
+		"relevance": 18.07, 
+		"presence": true
+	},
+	{ 
+		"property": "P1412", 
+		"label": "languages spoken, written or signed",
+		"amount": 116, 
+		"relevance": 14.16, 
+		"presence": false
+	},
+	{ 
+		"property": "P1559", 
+		"label": "label in native language",
+		"amount": 109, 
+		"relevance": 13.31, 
+		"presence": false
+	},
+	{ 
+		"property": "P39", 
+		"label": "position held",
+		"amount": 93, 
+		"relevance": 11.36, 
+		"presence": false},
+	{ 
+		"property": "P1196", 
+		"label": "manner of death",
+		"amount": 89, 
+		"relevance": 10.87, 
+		"presence": false
+	},
+	{
+		"property": "P1343", 
+		"label": "described by source",
+		"amount": 87, 
+		"relevance": 10.62, 
+		"presence": false
+	},
+	{ 
+		"property": "P102",
+		"label": "member of political party",
+		"amount": 82, 
+		"relevance": 10.01, 
+		"presence": false
+	},
+	{ 
+		"property": "P2002", 
+		"label": "Twitter userlabel",
+		"amount": 81, 
+		"relevance": 9.89, 
+		"presence": false
+	},
+	{ 
+		"property": "P509", 
+		"label": "cause of death",
+		"amount": 77, 
+		"relevance": 9.40, 
+		"presence": false
+	},
+	{ 
+		"property": "P119", 
+		"label": "place of burial",
+		"amount": 66, 
+		"relevance": 8.06, 
+		"presence": false
+	},
+	{ 
+		"property": "P463", 
+		"label": "member of ",
+		"amount": 62, 
+		"relevance": 7.57, 
+		"presence": false
+	},
+	{ 
+		"property": "P103", 
+		"label": "native language",	
+		"amount": 62, 
+		"relevance": 7.57, 
+		"presence": false
+	},
+	{ 
+		"property": "P910", 
+		"label": "topic's main category",
+		"amount": 61, 
+		"relevance": 7.45, 
+		"presence": false
+	},
+	{ 
+		"property": "P1441", 
+		"label": "present in work",
+		"amount": 45, 	
+		"relevance": 5.49, 
+		"presence": false
+	},
+	{ 
+		"property": "P26", 
+		"label": "spouse",
+		"amount": 36, 
+		"relevance": 4.40, 
+		"presence": false
+	},
+	{ 
+		"property": "P512", 
+		"label": "academic degree",
+		"amount": 33, 
+		"relevance": 4.03, 
+		"presence": false
+	},
+	{
+		"property": "P1477", 
+		"label": "birth label",
+		"amount": 30, 
+		"relevance": 3.66, 
+		"presence": false
+	},
+	{ 
+		"property": "P856", 
+		"label": "official website",	
+		"amount": 28, 
+		"relevance": 3.42, 
+		"presence": false
+	},
+	{ 
+		"property": "P607", 
+		"label": "conflict",
+		"amount": 27, 
+		"relevance": 3.30, 
+		"presence": false
+	},
+	{ 
+		"property": "P793", 
+		"label": "significant event",
+		"amount": 25, 
+		"relevance": 3.05, 
+		"presence": false
+	},
+	{ 
+		"property": "P1080", 
+		"label": "from fictional universe",
+		"amount": 24, 
+		"relevance": 2.93, 
+		"presence": false
+	},
+	{ 
+		"property": "P937", 
+		"label": "work location",
+		"amount": 20, 
+		"relevance": 2.44, 
+		"presence": false
+	},
+	{
+		"property": "P175", 
+		"label": "performer",
+		"amount": 20, 
+		"relevance": 2.44,
+		"presence": false
+	},
+	{ 
+		"property": "P109", 
+		"label": "signature",
+		"amount": 20, 
+		"relevance": 2.44, 
+		"presence": false
+	},
+	{ 
+		"property": "P22", 
+		"label": "father",
+		"amount": 18, 
+		"relevance": 2.20, 
+		"presence": false
+	},
+	{ 
+		"property": "P140", 
+		"label": "religion",
+		"amount": 17, 
+		"relevance": 2.08, 
+		"presence": false
+	},
+	{
+		"property": "P172", 
+		"label": "ethnic group",
+		"amount": 15, 
+		"relevance": 1.83, 
+		"presence": false
+	},
+	{ 
+		"property": "P2868",
+		"label": "subject has role",
+		"amount": 13, 
+		"relevance": 1.59, 	
+		"presence": false
+	},
+	{
+		"property": "P40", 
+		"label": "child",
+		"amount": 12, 
+		"relevance": 1.47, 
+		"presence": false
+	},
+	{ 
+		"property": "P767",
+		"label": "contributor(s) to the creative work",
+		"amount": 10, 
+		"relevance": 1.22, 
+		"presence": false
+	},
+	{ 
+		"property": "P1814", 
+		"label": "label in kana",
+		"amount": 10, 
+		"relevance": 1.22, 
+		"presence": false
+	},
+	{ 
+		"property": "P551", 
+		"label": "residence",
+		"amount": 109, 
+		"relevance": 1.10,
+		"presence": false
+	}
+]	
