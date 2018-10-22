@@ -134,12 +134,12 @@ function renderRecoinOriginal(c) {
 
     $.each(list_entity_edited, function (i, obj) {
         if (obj.presence === false && counter < 10) {
-            console.log("hooray!");
             $('#recoinTable tbody').append('<tr><td><label><a href="https://www.wikidata.org/wiki/Property:' + obj.property + '" target="_blank">' + obj.property + '</a></label></td><td>' + obj.name + '</td><td>' + obj.relevance + '%</td><td><div><i class="plus icon" id="' + obj.name + '"onclick="recoinPlus(this)"> </i></div></td></tr >');
             counter++;
         }
     });
 
+    console.log("Rendering recoin progressar with:" + JSON.stringify(completeness));
     $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a " + completeness.text + " amount of information.'></a>");
 
     if (c == 5) {
@@ -286,9 +286,9 @@ function renderRecoinRedesign() {
 
 
 function recoinPlus(obj) {
-    console.log(obj);
+    //console.log(obj);
     let inputId = obj.id.replace(/\s/g, "-") + '-input-field';
-    let input = "<input type='text' id='" + inputId + "'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
+    let input = "<input type='text' id='" + inputId + "'><input type='submit' value='Publish' data-claim='" + obj.id + "' onclick='recoinAddValue(this)'>";
     $(obj).parent().closest("div").append(input);
 
     let liveAutocompleteOptions = {
@@ -309,63 +309,57 @@ function recoinPlus(obj) {
         }
     };
 
-    console.log("Searching for id:" + inputId);
+    //console.log("Searching for id:" + inputId);
     $('#' + inputId).autocomplete(liveAutocompleteOptions);
 
     $(obj).remove();
 }
 
 function recoinAddValue(obj) {
-    //var property = $(obj).siblings('input')["0"].attr('data-property');
-    var property = $(obj).siblings('input')["0"];
+    var property = obj.dataset.claim;
     var value = $(obj).parent().find('input').val();
-    property = $(property).attr('class');
 
+    //TODO refactor into function addStatement(property, value, ...)
+    let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
+    if (propertyIndex >= 0) {
+        list_entity_edited[propertyIndex].presence = true;
+        let currentProperty = list_entity_edited[propertyIndex];
+        console.log("List of edited entities:");
+        console.log(list_entity_edited);
+        var data = {
+            type: "trackingEvent",
+            workerID: localStorage.getItem("workerID"),
+            hitID: localStorage.getItem("hitID"),
+            assignmentID: localStorage.getItem("assignmentID"),
+            condition: localStorage.getItem("condition"),
+            relevance: currentProperty.relevance,
+            timestamp: Date.now(),
+            value: value,
+            property: property,
+            usedRecoin: true
+        };
 
-    //var newStatementKey = findWithAttribute(list_entity_edited, 'name', property);
-    //var relevanceOfAddedProperty = list_entity_edited[newStatementKey].relevance;
+        completeness = determineCompletenessLevel(list_entity_edited, threshold);
+        console.log("Completeness new is:" + JSON.stringify(completeness));
+        recoinRender(condition);
 
-    usedRecoin = true;
-
-    addStatement(property);
-    $(obj).parent().closest("div").html(value);
-    // $.ajax({
-    //     type: 'POST',
-    //     url: "./api/event",
-    //     data: {
-    //             //toDo
-
-    //             property: property,
-    //             value: value,
-    //               condition: condition,
-    //               relevance: completeness.percentage,
-    //         },
-    //         success: function(response) {
-    //             if (response.success) {
-
-    //             }
-    //         },
-    //         error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //             alert("Oh no! There was an error on the server side. Please contact us at: ikon-research@inf.fu-berlin.de.");
-    //         }
-    //     });
-    //    });
-    usedRecoin = false;
-}
-
-
-//Sajeera
-function getRelevance(property) {
-    for (mProperty of list_entity_original) {
-        if (mProperty.name == property) {
-            return mProperty.relevance;
-        }
-        return 0
+        sendTrackingEvent(data, function (data) {
+                console.log("successfuly send things to the api: " + JSON.stringify(data));
+                $(obj).parent().closest("div").html(value);
+                //$("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
+                //$(newValue).remove();
+            },
+            function (response) {
+                console.log("Something went terribly wrong!");
+                console.log(response);
+            });
+    } else {
+        console.log("Couldn't find property in list_entity edited:" + property);
     }
 }
 
 //--------------- neue Statement-Box wird hinzugefügt---------------//
-
+//TODO remove?
 function addStatement() {
     var newStatement = document.createElement("div");
     var input = "<div class='propertyBox new'><input id='astronaut-stats' type='text' name='newProperty'></div>";
@@ -423,19 +417,17 @@ function addValue(obj) {
     $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>");
 
     $(obj).find('#publish_statement_button').click(function () {
-        console.log("Clicked the publish button!");
         var value = $(this).parents('.statementBox').find('input:text').val();
         var property = $(this).parents(".statementBox").find(".propertyBox").text();
         var valueBox = $(this).parents(".statementBox").find('.valueBox');
         valueBox.html(value);
 
+        //TODO refactor into function addStatement(property,value,...)
         // find property by name: 		"name": "place of death",
         let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
         if (propertyIndex >= 0) {
             list_entity_edited[propertyIndex].presence = true;
             let currentProperty = list_entity_edited[propertyIndex];
-            console.log("List of edited entities:");
-            console.log(list_entity_edited);
             var data = {
                 type: "trackingEvent",
                 workerID: localStorage.getItem("workerID"),
