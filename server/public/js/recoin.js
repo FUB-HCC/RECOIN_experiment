@@ -1,4 +1,4 @@
-var list_entity_original, list_entity_edited, completeness, usedRecoin, condition, liveAutocompleteOptions, threshold,
+var list_entity_original, list_entity_edited, completeness, usedRecoin, condition, threshold,
     completenessColor;
 
 //TODO replace with onload logic that calculates the correct recoin value
@@ -19,6 +19,7 @@ function recoinInit(c) {
     $.ajax({
         url: './data/astronaut-stats.json',
         dataType: 'json',
+        async: false,
         success: function (data) {
             list_entity_original = data;
             list_entity_edited = JSON.parse(JSON.stringify(data));
@@ -130,8 +131,10 @@ function recoinRender(condition) {
 function renderRecoinOriginal(c) {
     $('.ui.accordion').accordion();
     var counter = 0;
+
     $.each(list_entity_edited, function (i, obj) {
         if (obj.presence === false && counter < 10) {
+            console.log("hooray!");
             $('#recoinTable tbody').append('<tr><td><label><a href="https://www.wikidata.org/wiki/Property:' + obj.property + '" target="_blank">' + obj.property + '</a></label></td><td>' + obj.name + '</td><td>' + obj.relevance + '%</td><td><div><i class="plus icon" id="' + obj.name + '"onclick="recoinPlus(this)"> </i></div></td></tr >');
             counter++;
         }
@@ -283,9 +286,32 @@ function renderRecoinRedesign() {
 
 
 function recoinPlus(obj) {
-    var newValue;
-    var input = "<input type='text' id='newValue' class='" + obj.id + "' onchange='manageWikiAutocompletion(this)' oninput='callWikidataApi(this)'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
+    console.log(obj);
+    let inputId = obj.id.replace(/\s/g, "-") + '-input-field';
+    let input = "<input type='text' id='" + inputId + "'><input type='submit' value='Publish' onclick='recoinAddValue(this)'>";
     $(obj).parent().closest("div").append(input);
+
+    let liveAutocompleteOptions = {
+        minLength: 2,
+        source: function (request, response) {
+            var term = request.term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var xhr = createCORSRequest('GET', url);
+            xhr.onload = function () {
+                var responseText = JSON.parse(xhr.responseText);
+                var responseArray = [];
+                for (let key in responseText.search) {
+                    responseArray.push(responseText.search[key].label);
+                }
+                response(responseArray);
+            };
+            xhr.send();
+        }
+    };
+
+    console.log("Searching for id:" + inputId);
+    $('#' + inputId).autocomplete(liveAutocompleteOptions);
+
     $(obj).remove();
 }
 
@@ -411,6 +437,7 @@ function addValue(obj) {
             console.log("List of edited entities:");
             console.log(list_entity_edited);
             var data = {
+                type: "trackingEvent",
                 workerID: localStorage.getItem("workerID"),
                 hitID: localStorage.getItem("hitID"),
                 assignmentID: localStorage.getItem("assignmentID"),
@@ -418,7 +445,8 @@ function addValue(obj) {
                 relevance: currentProperty.relevance,
                 timestamp: Date.now(),
                 value: value,
-                property: property
+                property: property,
+                usedRecoin: false
                 //impactOnRelevance: impactOfEdits()
             };
             sendTrackingEvent(data, function (data) {
@@ -437,7 +465,7 @@ function addValue(obj) {
     });
 
 
-    liveAutocompleteOptions = {
+    let liveAutocompleteOptions = {
         minLength: 2,
         source: function (request, response) {
             var term = request.term;
@@ -459,46 +487,6 @@ function addValue(obj) {
 }
 
 //----------------------------- General Functions -------------------------------------------------------------------
-
-
-function manageWikiAutocompletion(obj) {
-    var tempJSON = [];
-    var tempString = $(obj).attr("data-store");
-
-    if (tempString != null) {
-        tempJSON = tempString.split(",");
-        console.log(tempJSON);
-    }
-
-    liveAutocompleteOptions = {
-        data: tempJSON,
-        requestDelay: 400,
-
-        list: {
-            match: {
-                enabled: true
-            }
-        }
-    }
-}
-
-function callWikidataApi(e) {
-    var autocompleteOptions = [];
-    var liveInput = $(e).val();
-    var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + liveInput;
-
-    var xhr = createCORSRequest('GET', url);
-
-    xhr.onload = function () {
-        var responseText = JSON.parse(xhr.responseText);
-        for (let key in responseText.search) {
-            autocompleteOptions.push(responseText.search[key].label);
-        }
-        $(e).attr("data-store", autocompleteOptions);
-    };
-
-    xhr.send();
-}
 
 // Create the XHR object.
 function createCORSRequest(method, url) {
