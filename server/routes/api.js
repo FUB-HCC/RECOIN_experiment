@@ -6,76 +6,71 @@ const csv = require('csv-express');
 const app = express();
 
 app.post('/event', async (req, res) => {
-    //console.log(req.body);
-    //TODO check if the event is "trackingEvent" or "summary"
+    let data = req.body;
 
-    //if "trackingEvent":
-    //store: workerID;assignmentID;timestamp;property;value;relevance;impactOnRelevance;condition
-
-    //if "summary"
-    //workerID;assignmentID;grade;avgRelevance;wikidata;comprehension;fairness;accuracy;trust;condition
-
-    let response = req.body;
-    response.serverTimestamp = new Date().toISOString();
-    console.log("is servertimestamp included?" + JSON.stringify(response));
-    var isTracking = true;
+    data.serverTimestamp = new Date().toISOString();
+    let eventType = data.type;
+    var isTracking = eventType == "trackingEvent";
     /*
      * connect to server => insert data to DB => retrieve data from DB
-     * on success send response with success = true else success = false
+     * on success send data with success = true else success = false
      */
     if (isTracking) {
+        //if "trackingEvent":
+        //store: workerID;assignmentID;timestamp;property;value;relevance;impactOnRelevance;condition
         let storedToDB = await mongo.connectToServer()
             .then(async (res) => {
                 if (res.success) {
                     // let oldValue = {
                     // 	workerID
                     // };
-                    // let newValue = response;
+                    // let newValue = data;
                     // return await mongo.updateData(oldValue, newValue);
-                    return await mongo.insertData(response, "mturk-tracking-events");
+                    return await mongo.insertData(data, "mturkTrackingEvents");
                 }
-                response.success = false;
+                data.success = false;
                 throw res.error;
             })
             .then(async (res) => (res.success))
             .catch((err) => {
                 console.log(err);
-                response.success = false;
+                data.success = false;
             });
-        response.success = storedToDB;
-        res.send(response);
-
+        data.success = storedToDB;
+        res.send(data);
     } else {
+        //if "summary"
+        //workerID;assignmentID;grade;avgRelevance;wikidata;comprehension;fairness;accuracy;trust;condition
         let storedToDB = await mongo.connectToServer()
             .then(async (res) => {
                 if (res.success) {
                     // let oldValue = {
                     // 	workerID
                     // };
-                    // let newValue = response;
+                    // let newValue = data;
                     // return await mongo.updateData(oldValue, newValue);
-                    return await mongo.insertData(response, "mturk-summaries");
+                    return await mongo.insertData(data, "mturkSummaries");
                 }
-                response.success = false;
+                data.success = false;
                 throw res.error;
             })
             .then(async (res) => (res.success))
             .catch((err) => {
                 console.log(err);
-                response.success = false;
+                data.success = false;
             });
-        response.success = storedToDB;
-        res.send(response);
+        data.success = storedToDB;
+        res.send(data);
 
     }
 });
 
-app.get('/exportProperties', async (req, res) => {
-    let filename = "mTurkWorkers_" + getTimestamp() + ".csv";
+app.get('/exportSummaries', async (req, res) => {
+    let filename = "mTurkWorkers_summaries_" + getTimestamp() + ".csv";
 
     let workers = await mongo.connectToServer().then(async (res) => {
         if (res.success) {
-            let foundData = await mongo.findData({});
+            let foundData = await mongo.findData({}, "mturkSummaries");
             return foundData.data;
         }
         return null;
@@ -85,36 +80,6 @@ app.get('/exportProperties', async (req, res) => {
 
     for (worker of workers) {
         result.push(worker);
-        let mWorker = {};
-        // let properties = worker.properties;
-
-        // for (property of properties) {
-        // 	let values = property.values;
-        //
-        // 	for (value of values) {
-        // 		mWorker.workerID = worker.workerID;
-        // 		mWorker.assignmentID = worker.assignmentID;
-        // 		mWorker.property = property.name;
-        // 		mWorker.value = value;
-        // 		mWorker.recoin = property.recoin;
-        // 		mWorker.hitID = property.hitID;
-        // 		mWorker.recoinUsed = property.recoinUsed;
-        // 		mWorker.timestamp = property.timestamp;
-        // 		result.push(mWorker);
-        // 		mWorker = {};
-        // 	}
-        // }
-
-        /*
-        for (question of questions) {
-            console.log('question',question);
-            mWorker.workerID = worker.workerID;
-            mWorker.property = question.property;
-            mWorker.value = question.value;
-            mWorker.recoin = question.recoin;
-            result.push(mWorker);
-        }
-        */
     }
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/csv');
@@ -122,41 +87,26 @@ app.get('/exportProperties', async (req, res) => {
     res.csv(result, true);
 });
 
-app.get('/tracking-all.json', async (req, res) => {
-    let trackingEvents = await mongo.connectToServer().then(async (res) => {
+app.get('/exportTrackingEvents', async (req, res) => {
+    let filename = "mTurkWorkers_trackingEvents_" + getTimestamp() + ".csv";
+
+    let workers = await mongo.connectToServer().then(async (res) => {
         if (res.success) {
-            let foundData = await mongo.findData({}, "mturk-tracking-events");
+            let foundData = await mongo.findData({}, "mturkTrackingEvents");
             return foundData.data;
         }
         return null;
     });
 
-    let trackingEventResults = [];
+    let result = [];
 
-    for (trackingEvent of trackingEvents) {
-        trackingEventResults.push(trackingEvent);
+    for (worker of workers) {
+        result.push(worker);
     }
-
-    let summaries = await mongo.connectToServer().then(async (res) => {
-        if (res.success) {
-            let foundData = await mongo.findData({}, "mturk-summaries");
-            return foundData.data;
-        }
-        return null;
-    });
-
-    let summaryResults = [];
-
-    for (summary of summaries) {
-        trackingEventResults.push(summary);
-    }
-
-    let results = {
-        "trackingEvents": trackingEventResults,
-        "summaries": summaryResults
-    };
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(results));
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader("Content-Disposition", 'attachment; filename=' + filename);
+    res.csv(result, true);
 });
 
 function getTimestamp() {

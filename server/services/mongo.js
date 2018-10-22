@@ -4,7 +4,7 @@ const assert = require('assert');
 const url = 'mongodb://localhost';
 const port = '27017';
 const dbName = 'recoin';
-const collection = 'mturk-tracking-events';
+const collection = 'mturkTrackingEvents';
 
 let client;
 var _db;
