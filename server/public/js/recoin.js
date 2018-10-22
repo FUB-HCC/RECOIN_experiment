@@ -56,7 +56,6 @@ function determineCompletenessLevel(list_of_props, threshold) {
         }
     }
     var completenessText, completenessLevel;
-    console.log(completenessPercentage);
 
     if (completenessPercentage > 95) {
         completenessText = "very detailed";
@@ -150,23 +149,19 @@ function renderRecoinOriginal(c) {
 }
 
 function generateRecoinExplanation() {
-    var currentCompleteness = determineCompletenessLevel(list_entity_edited, threshold);
-    console.log(currentCompleteness);
     var i = 0;
     var arrayExplanation = [];
-    console.log(list_entity_edited);
-    for (let currentProp in list_entity_edited) {
+    for (let currentPropKey in list_entity_edited) {
         if (i >= threshold) {
             break;
         }
-        if (currentProp.presence == false) {
-            arrayExplanation.push(currentProp.name);
-            console.log(arrayExplanation);
+        if (list_entity_edited[currentPropKey].presence == false) {
+            arrayExplanation.push(list_entity_edited[currentPropKey].name);
             i++;
         }
     }
     var explanation = document.createElement("div");
-    $(explanation).html("<div id='recoinExplanation' style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + currentCompleteness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", <span style='font-style:normal;'>and</span> " + arrayExplanation[4] + "</span>.</div>");
+    $(explanation).html("<div id='recoinExplanation' style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + completeness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", <span style='font-style:normal;'>and</span> " + arrayExplanation[4] + "</span>.</div>");
     $(explanation).insertBefore($('#recoinAccordion'));
 }
 
