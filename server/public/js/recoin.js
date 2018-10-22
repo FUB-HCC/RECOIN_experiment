@@ -1,6 +1,13 @@
 var list_entity_original, list_entity_edited, completeness, usedRecoin, condition, liveAutocompleteOptions, threshold,
     completenessColor;
 
+//TODO replace with onload logic that calculates the correct recoin value
+completeness = {
+    "percentage": 33.46,
+    "level": 1,
+    "text": "very basic"
+};
+
 let jqueryAutocompleteValues;
 
 //Initialisierung von Recoin mit JSON von Properties und autocomplete krams
