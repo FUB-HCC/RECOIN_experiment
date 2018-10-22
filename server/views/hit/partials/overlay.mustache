@@ -1,0 +1,18 @@
+<!-- OVERLAY-->
+<div id="overlay" class="container">
+    <p class="title_"> Your ten minutes are over, thank you for your input! </p>
+    <div class="button">
+        <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
+    </div>
+</div>
+
+<!-- TODO set timeout back to 10 minutes -->
+<script>
+    // TIMEOUT
+    setTimeout(function () {
+        $("#overlay").css("display", "block");
+        let impact = Math.round(impactOfEdits());
+        let grade = gradeEdits();
+        $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance=" + String(impact));
+    }, 1 * 60 * 1000);
+</script>

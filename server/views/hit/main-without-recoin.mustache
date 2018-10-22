@@ -3,44 +3,14 @@
 <head>
     {{> hit/partials/main-headers}}
     <script type="text/javascript">
-
-        var impact, grade, condition;
-
-        //LIVE
-        //condition = localStorage.getItem("condition");
-        //TESt
-        condition = 1;
-        recoinInit(condition);
-        // TIMEOUT
-        setTimeout(function () {
-            on();
-            //alert('Die Zeit ist um');
-            impact = Math.round(impactOfEdits());
-            grade = gradeEdits();
-            $('#proceedToQuestionnaire').attr("href", "/questionnaire?recoinGrade=" + grade + "&averageRelevance=" + String(impact));
-
-        }, 1 * 60 * 1000);
-
-        function on() {
-            $("#overlay").css("display", "block");
-        }
-
-        function off() {
-            $("#overlay").css("display", "none");
-        }
+        $(document).ready(function () {
+            recoinInit(1);
+        });
     </script>
 </head>
-
-
 <body>
 <!-- OVERLAY-->
-<div id="overlay" class="container">
-    <p class="title_"> Your ten minutes are over, thank you for your input!</p>
-    <div class="button" onclick="off()">
-        <a id="proceedToQuestionnaire"> Proceed to Questionnaire. </a>
-    </div>
-</div>
-
+{{> hit/partials/overlay}}
 
 <!--Wikidata-->
 {{> hit/partials/wikidata-headings }}
