@@ -344,16 +344,20 @@ function recoinAddValue(obj) {
                 var newStatement =     '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">'+ value +'</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
                 $(newStatement).insertBefore($("#addStatementBox"));
                 $('#recoinTable tbody').empty();
+                if(condition == 5) {
+                    $('#recoinExplanation').remove();
+                }
                 recoinRender(condition);
                 //$("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
                 //$(newValue).remove();
             },
             function (response) {
-                console.log("Something went terribly wrong!");
+                alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
                 console.log(response);
             });
     } else {
         console.log("Couldn't find property in list_entity edited:" + property);
+        alert("We couldn't find the property you were trying to add.");
     }
 }
 
@@ -448,11 +452,12 @@ function addValue(obj) {
                     $(obj).append('<div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div>');
                 },
                 function (response) {
-                    console.log("Something went terribly wrong!");
+                    alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
                     console.log(response);
                 });
         } else {
             console.log("Couldn't find property in list_entity edited:" + property);
+            alert("We couldn't find the property you were trying to add.");
         }
     });
 
