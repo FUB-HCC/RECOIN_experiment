@@ -488,7 +488,7 @@ function generalAddValue(obj) {
         usedRecoin = false;
     }
 
-    let newValue = "<div class='valueBox' id='newValue'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>"
+    let newValue = "<div class='valueBox' id='newestValue'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>"
     $(obj).parents(".statementBox").find(".toolbarBox").before(newValue);
 
     //Publishing the new Value
@@ -497,10 +497,13 @@ function generalAddValue(obj) {
         //obj = addValue button
         var value = $(this).siblings("#wikidataApi").val();
         var property = $(this).parents(".statementBox").find(".propertyBox").text();
-        var valueBox = $(this).parents(".statementBox").find('#newValue');
+        var valueBox = $(this).parents(".statementBox").find('#newestValue');
+        valueBox.attr('id', value);
 
         //TODO refactor into function addStatement(property,value,...)
         // find property by name:       "name": "place of death",
+
+
         let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
         if (propertyIndex >= 0) {
             list_entity_edited[propertyIndex].presence = true;
@@ -522,17 +525,18 @@ function generalAddValue(obj) {
                     valueBox.html(value);
                 },
                 function (response) {
-                    console.log("Something went terribly wrong!");
+                    alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
                     console.log(response);
                 });
         } else {
             console.log("Couldn't find property in list_entity edited:" + property);
+            alert("We couldn't find the property you were trying to add.");
         }
     });
 
     //Cancelling the new Value
     $(obj).parents(".statementBox").find('#cancel_statement_button').click(function(){
-        $('#newValue').remove();
+        $('#newestValue').remove();
     }); 
 
     let liveAutocompleteOptions = {
