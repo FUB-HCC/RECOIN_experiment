@@ -164,7 +164,7 @@
 		"name": "manner of death",
 		"amount": 89, 
 		"relevance": 10.87, 
-		"presence": false
+		"presence": true
 	},
 	{
 		"property": "P1343", 
@@ -192,7 +192,7 @@
 		"name": "cause of death",
 		"amount": 77, 
 		"relevance": 9.40, 
-		"presence": false
+		"presence": true
 	},
 	{ 
 		"property": "P119", 

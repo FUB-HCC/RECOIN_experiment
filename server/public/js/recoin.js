@@ -83,8 +83,8 @@ function determineCompletenessLevel(list_of_props, threshold) {
 
 //Calculate the impact participant contributions have made on completeness:
 function impactOfEdits() {
-    var completenessBefore = determineCompletenessLevel(list_entity_original, 5);
-    var completenessAfter = determineCompletenessLevel(list_entity_edited, 5);
+    var completenessBefore = determineCompletenessLevel(list_entity_original, threshold);
+    var completenessAfter = determineCompletenessLevel(list_entity_edited, threshold);
     return completenessAfter.percentage - completenessBefore.percentage;
 }
 
@@ -140,7 +140,6 @@ function renderRecoinOriginal(c) {
         }
     });
 
-    console.log("Rendering recoin progressar with:" + JSON.stringify(completeness));
     $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a " + completeness.text + " amount of information.'></a>");
 
     if (c == 5) {
@@ -324,8 +323,6 @@ function recoinAddValue(obj) {
     if (propertyIndex >= 0) {
         list_entity_edited[propertyIndex].presence = true;
         let currentProperty = list_entity_edited[propertyIndex];
-        console.log("List of edited entities:");
-        console.log(list_entity_edited);
         var data = {
             type: "trackingEvent",
             workerID: localStorage.getItem("workerID"),
@@ -340,12 +337,14 @@ function recoinAddValue(obj) {
         };
 
         completeness = determineCompletenessLevel(list_entity_edited, threshold);
-        console.log("Completeness new is:" + JSON.stringify(completeness));
-        recoinRender(condition);
 
         sendTrackingEvent(data, function (data) {
                 console.log("successfuly send things to the api: " + JSON.stringify(data));
                 $(obj).parent().closest("div").html(value);
+                var newStatement =     '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">'+ value +'</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
+                $(newStatement).insertBefore($("#addStatementBox"));
+                $('#recoinTable tbody').empty();
+                recoinRender(condition);
                 //$("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
                 //$(newValue).remove();
             },
@@ -395,22 +394,21 @@ function addStatement() {
             propertyBox.html(value);
             //This call adds the html for adding values to properties:
             addValue(newStatement);
-            console.log(value);
         }
     });
 
 
-//--------------- Re-Render-Recoin  ---------------//
     if (condition != 1 && condition <= 5) {
-        $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a " + completeness.text + " amount of information.'></a>");
+        $('#recoinTable tbody').empty();
+        recoinRender(condition);    
     }
     if (condition == 5) {
+        $('#recoinTable tbody').empty();
         $('#recoinExplanation').remove();
-        generateRecoinExplanation(list_entity_edited);
+        recoinRender(condition);
     }
 }
 
-//--------------- Adding a value AFTER the corresponding property is set ---------------//
 function addValue(obj) {
     $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>");
 
