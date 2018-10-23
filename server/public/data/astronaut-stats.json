@@ -32,7 +32,7 @@
 		"name": "country of citizenship",
 		"amount": 736, 
 		"relevance": 89.87, 
-		"presence": false
+		"presence": true
 	},
 	{ 
 		"property": "P19", 
@@ -199,7 +199,7 @@
 		"name": "place of burial",
 		"amount": 66, 
 		"relevance": 8.06, 
-		"presence": false
+		"presence": true
 	},
 	{ 
 		"property": "P463", 

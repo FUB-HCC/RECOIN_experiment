@@ -283,7 +283,7 @@ html, body {
     line-height: 2em;
     padding: 10px;
     color: #0645ad;
-    cursor: not-allowed;
+    cursor: pointer;
 }
 
 .addStatementBox {
@@ -313,7 +313,6 @@ html, body {
     background: none;
     display: inline-block;
 }
-
 
 
 /* hopefully this will fix the autocomplete css */

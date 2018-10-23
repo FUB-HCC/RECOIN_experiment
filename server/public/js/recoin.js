@@ -381,7 +381,7 @@ function addStatement() {
             // for each element in the main array ...
             $(astronaut_stats).each(function (iIndex, currentProperty) {
                 // ... if element starts with input value
-                if (currentProperty.label.substr(0, searchValue.length) == searchValue) {
+                if (currentProperty.label.substr(0, searchValue.length) == searchValue && currentProperty.presence == false) {
                     // add element
                     searchResults.push(currentProperty.label);
                 }
@@ -399,8 +399,6 @@ function addStatement() {
         }
     });
 
-    console.log(list_entity_edited);
-
 
 //--------------- Re-Render-Recoin  ---------------//
     if (condition != 1 && condition <= 5) {
@@ -416,6 +414,12 @@ function addStatement() {
 function addValue(obj) {
     $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>");
 
+    if(usedRecoin) {
+        usedRecoin = false;
+    }
+
+
+    //Publishing the statement
     $(obj).find('#publish_statement_button').click(function () {
         var value = $(this).parents('.statementBox').find('input:text').val();
         var property = $(this).parents(".statementBox").find(".propertyBox").text();
@@ -425,7 +429,7 @@ function addValue(obj) {
         //TODO refactor into function addStatement(property,value,...)
         // find property by name: 		"name": "place of death",
         let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
-        if (propertyIndex >= 0) {
+        if (propertyIndex >= 0 && list_entity_edited[propertyIndex].presence == false) {
             list_entity_edited[propertyIndex].presence = true;
             let currentProperty = list_entity_edited[propertyIndex];
             var data = {
@@ -438,14 +442,12 @@ function addValue(obj) {
                 timestamp: Date.now(),
                 value: value,
                 property: property,
-                usedRecoin: false
-                //impactOnRelevance: impactOfEdits()
+                usedRecoin: usedRecoin
             };
             sendTrackingEvent(data, function (data) {
                     console.log("successfuly send things to the api: " + JSON.stringify(data));
                     $(obj).find(".propertyBox").removeClass("new");
-                    //$("<div class='valueBox'>" + value + "</div>").insertBefore($(toolbarBox));
-                    //$(newValue).remove();
+                    $(obj).append('<div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div>');
                 },
                 function (response) {
                     console.log("Something went terribly wrong!");
@@ -455,6 +457,11 @@ function addValue(obj) {
             console.log("Couldn't find property in list_entity edited:" + property);
         }
     });
+
+    //Cancelling the statement
+    $(obj).find('#cancel_statement_button').click(function(){
+        $(obj).remove();
+    }); 
 
 
     let liveAutocompleteOptions = {
@@ -476,6 +483,79 @@ function addValue(obj) {
     };
 
     $('#wikidataApi').autocomplete(liveAutocompleteOptions);
+}
+
+function generalAddValue(obj) {    
+    if(usedRecoin) {
+        usedRecoin = false;
+    }
+
+    let newValue = "<div class='valueBox' id='newValue'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>"
+    $(obj).parents(".statementBox").find(".toolbarBox").before(newValue);
+
+    //Publishing the new Value
+    $(obj).parents(".statementBox").find("#publish_statement_button").click(function () {
+        //this = publish button
+        //obj = addValue button
+        var value = $(this).siblings("#wikidataApi").val();
+        var property = $(this).parents(".statementBox").find(".propertyBox").text();
+        var valueBox = $(this).parents(".statementBox").find('#newValue');
+
+        //TODO refactor into function addStatement(property,value,...)
+        // find property by name:       "name": "place of death",
+        let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
+        if (propertyIndex >= 0) {
+            list_entity_edited[propertyIndex].presence = true;
+            let currentProperty = list_entity_edited[propertyIndex];
+            var data = {
+                type: "trackingEvent",
+                workerID: localStorage.getItem("workerID"),
+                hitID: localStorage.getItem("hitID"),
+                assignmentID: localStorage.getItem("assignmentID"),
+                condition: localStorage.getItem("condition"),
+                relevance: currentProperty.relevance,
+                timestamp: Date.now(),
+                value: value,
+                property: property,
+                usedRecoin: false
+            };
+            sendTrackingEvent(data, function (data) {
+                    console.log("successfuly send things to the api: " + JSON.stringify(data));
+                    valueBox.html(value);
+                },
+                function (response) {
+                    console.log("Something went terribly wrong!");
+                    console.log(response);
+                });
+        } else {
+            console.log("Couldn't find property in list_entity edited:" + property);
+        }
+    });
+
+    //Cancelling the new Value
+    $(obj).parents(".statementBox").find('#cancel_statement_button').click(function(){
+        $('#newValue').remove();
+    }); 
+
+    let liveAutocompleteOptions = {
+        minLength: 2,
+        source: function (request, response) {
+            var term = request.term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var xhr = createCORSRequest('GET', url);
+            xhr.onload = function () {
+                var responseText = JSON.parse(xhr.responseText);
+                var responseArray = [];
+                for (let key in responseText.search) {
+                    responseArray.push(responseText.search[key].label);
+                }
+                response(responseArray);
+            };
+            xhr.send();
+        }
+    };
+
+    $('#wikidataApi').autocomplete(liveAutocompleteOptions);  
 }
 
 //----------------------------- General Functions -------------------------------------------------------------------

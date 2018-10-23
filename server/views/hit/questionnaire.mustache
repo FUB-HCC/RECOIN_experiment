@@ -7,8 +7,11 @@
 
     <script src="/js/api-backend.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-
+    <style type="text/css">
+        form {
+            margin-top: 1em;
+        }
+    </style>
     <script language="javascript" type="text/javascript">
         function enableFinishHitButton() {
             $("#submitQuestionnaireButton").removeClass("primary");
@@ -57,7 +60,7 @@
                     value: $('.trust input:checked').val(),
                     text: text5,
                 },
-                condition: "1",
+                condition: localStorage.getItem("condition"),
             };
             sendProperties(data, function (response) {
                 console.log("response");
@@ -91,11 +94,11 @@
         <br>
         <p style="text-align: center; font-size: 1.2em">{{recoinGrade}}</p>
         <br>
-        <p>On average, your additions were {{averageRelevance}} % relevant.</p>
+        <p>On average, your additions were {{averageRelevance}} % in comparative relevance.</p>
         <br>
         <p>To help us improve Wikidata, please answer the following questions. You can use the scales to answer and also
-            provide more specific feedback in the textfields.<br> After completion, clicking “Submit” at the bottom of
-            the page will finish the HIT.</p>
+            provide more specific feedback in the textfields.<br> After completion, clicking “Submit Questionnaire” at the bottom of
+            the page will enable you to finish the HIT.</p>
         <br>
         <ol class="ui list">
             <form id="question">
@@ -145,7 +148,7 @@
                     <textarea id="text1" name="text_1" cols="95" rows="4"></textarea>
                 </div>
                 <form name="myForm2">
-                    <li><b>To what extent do you understand how your task has been graded?</b></li>
+                    <li><b>To what extent do you understand how your task has been graded? (Please expand)</b></li>
                     <br>
                     <div class="ui form">
                         <div class="inline fields comprehension">
@@ -251,7 +254,7 @@
                     <textarea id="text3" name="text" cols="95" rows="4"></textarea>
                 </div>
                 <form name="myForm4">
-                    <li><b>How inaccurate or accurate was the task graded?</b></li>
+                    <li><b>How inaccurate or accurate is the grade?</b></li>
                     <br>
                     <div class="ui form">
                         <div class="inline fields accuracy">
@@ -310,7 +313,7 @@
                     <textarea id="text4" name="text" cols="95" rows="4"></textarea>
                 </div>
                 <form name="myForm5">
-                    <li><b>How much did you trust or distrust Wikidata to fairly grade your data completion?</b></li>
+                    <li><b>How much do you trust or distrust Wikidata to fairly grade your task? (Please expand)</b></li>
                     <br>
                     <div class="ui form">
                         <div class="inline fields trust">
@@ -372,15 +375,13 @@
             </form>
         </ol>
 
-        <hr/>
-        <div>
-            <input id="submitQuestionnaireButton" type="button" onclick="sendQuestionnaireToIkonResearchAndSubmitHit();"
+        <div style="display: flex; justify-content: space-evenly;">
+            <input style="display: inline-flex; vertical-align: middle; position: relative;" id="submitQuestionnaireButton" type="button" onclick="sendQuestionnaireToIkonResearchAndSubmitHit();"
                    class="ui button primary"
-                   value="submit questionnaire"/>
-        </div>
-        <form id="finishHITForm" method="post" action="#">
-            <div>
-                <p id="finishHITExplanation">Please click the "submit questionnaire" button first</p>
+                   value="Submit Questionnaire"/>
+        <form id="finishHITForm" method="post" action="#" style="display: inline-flex; vertical-align: middle; position: relative;">
+            <div >
+                <p id="finishHITExplanation" style="font-size: .8em">Please click the "Submit Questionnaire" button first.</p>
                 <input id="finishHitAssignmentId" type="hidden" name="assignmentId">
                 <input name="recoinGrade" type="hidden" value="{{recoinGrade}}">
                 <input name="averageRelevance" type="hidden" value="{{averageRelevance}}">
@@ -388,6 +389,7 @@
                 </button>
             </div>
         </form>
+        </div>
     </div>
     <div class="three wide column"></div>
 </div>

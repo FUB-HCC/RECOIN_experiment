@@ -3,8 +3,12 @@
 <head>
     {{> hit/partials/main-headers}}
     <script type="text/javascript">
+        var condition;
+
         $(document).ready(function () {
-            recoinInit(2);
+            //condition = localStorage.getItem("condition");
+            condition = 2;
+            recoinInit(condition);
         });
     </script>
 </head>
