@@ -91,13 +91,13 @@ function impactOfEdits() {
 //Grade the Edits made by participancts:
 function gradeEdits() {
     var percentage_contribution = impactOfEdits(list_entity_original, list_entity_edited);
-    if (percentage_contribution > 50) {
+    if (percentage_contribution > 33) {
         return "A";
-    } else if (percentage_contribution > 30) {
-        return "B";
     } else if (percentage_contribution > 20) {
-        return "C";
+        return "B";
     } else if (percentage_contribution > 10) {
+        return "C";
+    } else if (percentage_contribution > 5) {
         return "D";
     } else {
         return "F";
