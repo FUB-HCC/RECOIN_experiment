@@ -55,7 +55,7 @@ app.post('/event', async (req, res) => {
 	}
 });
 
-app.get('/exportWorker', async (req, res) => {
+app.get('/exportWorkers', async (req, res) => {
 	let data = req.body;
 
 	let workerID = data.workerID;
