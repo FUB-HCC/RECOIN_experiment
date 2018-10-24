@@ -750,6 +750,6 @@
 }
 
 /* Add Statement Box Styling */
-#astronaut-stats {
+.addStatementTextField {
     max-width: 100%;
 }
