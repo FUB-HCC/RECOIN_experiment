@@ -147,6 +147,19 @@ function renderRecoinOriginal(c) {
     }
 }
 
+
+function renderRecoinRedesign() {
+    $('.ui.accordion').accordion();
+    var limit = 0;
+    $.each(list_entity_edited, function (i, obj) {
+        if (obj.presence === false) {
+            $('#recoinv2table tbody').append('<tr><td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:' + obj.property + '" target="_blank">' + obj.name + '</a></td><td style="width: 40%"><div class="ui input" ><input type="text" placeholder=" "><div id="rv2addvalue">add value</div></div></td><td style="width: 35%"> <span>' + Math.round(obj.relevance) + ' %</span><div class="label" style="font-size: 14px; text-align: left">  ' + obj.amount + ' out of 819</div><div class="ui tiny progress" style="background: white"><div class=" bar" style="width:' + Math.round(obj.relevance) + '% ;background-color: #66B3BA;"></div></div></td></tr>');
+            limit++;
+        }
+    });
+}
+
+
 function generateRecoinExplanation() {
     var i = 0;
     var arrayExplanation = [];
@@ -163,18 +176,6 @@ function generateRecoinExplanation() {
     $(explanation).html("<div id='recoinExplanation' style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + completeness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", <span style='font-style:normal;'>and</span> " + arrayExplanation[4] + "</span>.</div>");
     $(explanation).insertBefore($('#recoinAccordion'));
 }
-
-
-function renderRecoinRedesign() {
-    var limit = 0;
-    $.each(list_entity_edited, function (i, obj) {
-        if (obj.presence === false) {
-            $('#recoinv2table tbody').append('<tr><td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:' + obj.property + '" target="_blank">' + obj.name + '</a></td><td style="width: 40%"><div class="ui input" ><input type="text" placeholder=" "><div id="rv2addvalue">add value</div></div></td><td style="width: 35%"> <span>' + Math.round(obj.relevance) + ' %</span><div class="label" style="font-size: 14px; text-align: left">  ' + obj.amount + ' out of 819</div><div class="ui tiny progress" style="background: white"><div class=" bar" style="width:' + Math.round(obj.relevance) + '% ;background-color: #66B3BA;"></div></div></td></tr>');
-            limit++;
-        }
-    });
-    $('#recoinv2table').html('Hallo');
-
 
     //$("#progressBarRecoinAccordionText").append('div class="label">This Astronaut provides ' + completeness.text + ' information </div></div>');
 
@@ -279,7 +280,7 @@ function renderRecoinRedesign() {
     // });
     // $("#amount").val(" EXISTS FOR " + $("#slider-range").slider("values", 0) + " OUT OF " + $("#slider-range").slider("values", 1) + " ASTRONAUTS ");
     //$('.ui.accordion').accordion();
-}
+
 
 //----------------------------- Recoin Functions --------------------------------------------------------------------
 
@@ -411,6 +412,7 @@ function addStatement() {
         $('#recoinExplanation').remove();
         recoinRender(condition);
     }
+
 }
 
 function addValue(obj) {
