@@ -50,9 +50,9 @@ function determineCompletenessLevel(list_of_props, threshold) {
             break;
         }
         if (list_of_props[currentProp].presence == false) {
-            sumAbsences = sumAbsences + list_of_props[currentProp].relevance;    
+            sumAbsences = sumAbsences + list_of_props[currentProp].relevance;
             completenessPercentage = 100 - (sumAbsences / threshold);
-         i++;
+            i++;
         }
     }
     var completenessText, completenessLevel;
@@ -77,7 +77,7 @@ function determineCompletenessLevel(list_of_props, threshold) {
         "percentage": completenessPercentage,
         "level": completenessLevel,
         "text": completenessText
-    };    
+    };
     return completenessPackage;
 }
 
@@ -291,7 +291,7 @@ function recoinPlus(obj) {
     $(obj).parent().closest("div").append(input);
 
     let liveAutocompleteOptions = {
-        minLength: 2,
+        minLength: 1,
         source: function (request, response) {
             var term = request.term;
             var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
@@ -341,10 +341,10 @@ function recoinAddValue(obj) {
         sendTrackingEvent(data, function (data) {
                 console.log("successfuly send things to the api: " + JSON.stringify(data));
                 $(obj).parent().closest("div").html(value);
-                var newStatement =     '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">'+ value +'</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
+                var newStatement = '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">' + value + '</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
                 $(newStatement).insertBefore($("#addStatementBox"));
                 $('#recoinTable tbody').empty();
-                if(condition == 5) {
+                if (condition == 5) {
                     $('#recoinExplanation').remove();
                 }
                 recoinRender(condition);
@@ -361,21 +361,26 @@ function recoinAddValue(obj) {
     }
 }
 
+let statementIdGenerator = 1;
+
 //--------------- neue Statement-Box wird hinzugefügt---------------//
 //TODO remove?
 function addStatement() {
+    statementIdGenerator++;
     var newStatement = document.createElement("div");
-    var input = "<div class='propertyBox new'><input id='astronaut-stats' type='text' name='newProperty'></div>";
+    let addStatementTextFieldId = "addStatementTextField" + statementIdGenerator;
+    var input = "<div class='propertyBox new'><input id='" + addStatementTextFieldId + "' type='text' name='newProperty' class='addStatementTextField'></div>";
     $(newStatement).addClass("box").addClass("statementBox").html(input);
     $(newStatement).insertBefore($("#addStatementBox"));
+
 //--------------- AUTOCOMPLETE JSON  ---------------//
 
     let astronaut_stats = jqueryAutocompleteValues;
+    let addStatementJqueryElement = $("#" + addStatementTextFieldId);
 
-
-    $('#astronaut-stats').autocomplete({
+    addStatementJqueryElement.autocomplete({
         source: astronaut_stats,
-        minLength: 2,
+        minLength: 1,
         search: function (event, oUi) {
             // get current input value
             let searchValue = $(event.target).val();
@@ -400,11 +405,15 @@ function addStatement() {
             addValue(newStatement);
         }
     });
-
+    addStatementJqueryElement.keypress(function(e) {
+        if(e.which == 13) {
+            alert('Please only select option from the dropdown menus (which appear when you start typing)');
+        }
+    });
 
     if (condition != 1 && condition <= 5) {
         $('#recoinTable tbody').empty();
-        recoinRender(condition);    
+        recoinRender(condition);
     }
     if (condition == 5) {
         $('#recoinTable tbody').empty();
@@ -416,7 +425,7 @@ function addStatement() {
 function addValue(obj) {
     $(obj).append("<div class='valueBox'><input id='wikidataApi' type='text' name='newValue'><input id='publish_statement_button' type='submit' value='✓ publish'><input id='cancel_statement_button' type='submit' value='X cancel'></div>");
 
-    if(usedRecoin) {
+    if (usedRecoin) {
         usedRecoin = false;
     }
 
@@ -462,13 +471,13 @@ function addValue(obj) {
     });
 
     //Cancelling the statement
-    $(obj).find('#cancel_statement_button').click(function(){
+    $(obj).find('#cancel_statement_button').click(function () {
         $(obj).remove();
-    }); 
+    });
 
 
     let liveAutocompleteOptions = {
-        minLength: 2,
+        minLength: 1,
         source: function (request, response) {
             var term = request.term;
             var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
@@ -488,8 +497,8 @@ function addValue(obj) {
     $('#wikidataApi').autocomplete(liveAutocompleteOptions);
 }
 
-function generalAddValue(obj) {    
-    if(usedRecoin) {
+function generalAddValue(obj) {
+    if (usedRecoin) {
         usedRecoin = false;
     }
 
@@ -540,12 +549,12 @@ function generalAddValue(obj) {
     });
 
     //Cancelling the new Value
-    $(obj).parents(".statementBox").find('#cancel_statement_button').click(function(){
+    $(obj).parents(".statementBox").find('#cancel_statement_button').click(function () {
         $('#newestValue').remove();
-    }); 
+    });
 
     let liveAutocompleteOptions = {
-        minLength: 2,
+        minLength: 1,
         source: function (request, response) {
             var term = request.term;
             var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
@@ -562,7 +571,7 @@ function generalAddValue(obj) {
         }
     };
 
-    $('#wikidataApi').autocomplete(liveAutocompleteOptions);  
+    $('#wikidataApi').autocomplete(liveAutocompleteOptions);
 }
 
 //----------------------------- General Functions -------------------------------------------------------------------
