@@ -56,18 +56,8 @@ app.post('/event', async (req, res) => {
 });
 
 app.get('/exportWorkers', async (req, res) => {
-	let data = req.body;
-
-	let workerID = data.workerID;
-	let assignmentID = data.assignmentID;
-	let hitID = data.hitID;
-
-	let filter = {
-		hitID
-	}
-
-	filter = JSON.stringify(filter);
-	console.log(filter);
+	
+	let filter = req.query;
 	let filename = "mTurkWorkers_" + getTimestamp() + ".csv";
 
 	let workersSummaries = await mongo.connectToServer().then(async (res) => {
@@ -87,7 +77,7 @@ app.get('/exportWorkers', async (req, res) => {
 	});
 
 	let result = [];
-	
+
 	result.push([
 		'_id',
 		'type',
@@ -109,7 +99,7 @@ app.get('/exportWorkers', async (req, res) => {
 		'condition',
 		'serverTimestamp'
 	]);
-	
+
 	for (summary of workersSummaries) {
 		let arr = [];
 		for (prop in summary) {
@@ -117,6 +107,7 @@ app.get('/exportWorkers', async (req, res) => {
 		}
 		result.push(arr);
 	}
+	result.push([]);
 
 	result.push([
 		'_id',
