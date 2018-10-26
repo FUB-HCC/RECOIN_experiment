@@ -82,8 +82,6 @@ function determineCompletenessLevel(list_of_props, threshold) {
 }
 
 function determineCompletenessLevelRedesign(personalLevel) {
-    var completenessText, completenessLevel;
-
     if (personalLevel > 95) {
         completenessText = "very detailed";
         completenessLevel = 5;
@@ -208,7 +206,7 @@ function renderRecoinRedesign() {
            
             <td style="width: 40%" id="` + obj.name.replace(/\s/g, "-") +  `Field"><div style="min-width:66%;" class="ui input" >
             <input type="text" id="` + obj.name.replace(/\s/g, "-") +  `Input" oninput="recoinRedesignInput(this)">
-            <div class="" id="` + obj.name.replace(/\s/g, "-") +  `" data-prop="` + obj.name + `" style="cursor:pointer; font-size:0.8em; padding: 0.5em;"onclick="recoinRedesignValue(this)">add value</div>
+            <div class="tableAddValue" id="` + obj.name.replace(/\s/g, "-") +  `" data-prop="` + obj.name + `" style="cursor:pointer; font-size:0.8em; padding: 0.5em;"onclick="recoinRedesignValue(this)">add value</div>
         </div></td>
            <td style="width: 35%">
                 <div class="ui tiny progress" style="background: white">
@@ -306,16 +304,21 @@ function calculateFromRedesign() {
         var personalCompletenessPackage;
 
         if (result.length > 0) { //min eine checkbox checked
-            console.log(result.length);
             var resultRelevance = 0;
             result.each(function () {
-                resultRelevance += parseFloat($(this).val()) //addiert alle relevancen der gewählten properties
+                resultRelevance += parseFloat($(this).val());
+                // var row = $(this).parents()[2];
+                // var hasInputField = $(row).find('.tableAddValue').length;
+                // if(hasInputField == 1) {
+                //     resultRelevance += parseFloat($(this).val()); //addiert alle relevancen der gewählten properties
+                // } else {
+                //     resultRelevance = resultRelevance;
+                // }
             });
 
             var perslevel = 100 - (resultRelevance / result.length); //berechnet recoin wert
 
             personalCompletenessPackage = determineCompletenessLevelRedesign(perslevel); //ruft completeness auf und bestimmt den text
-            console.log(personalCompletenessPackage);
         } else if (result.length == 0) {
             personalCompletenessPackage = {
                 "percentage": 100,
@@ -359,6 +362,9 @@ function recoinRedesignValue(obj) {
     let findThis = obj.id;
     let property = obj.dataset.prop;
     let addedValue = $(obj).parents().find("#" + findThis + "Input").val();
+    var row = $(obj).parents()[2];
+    var thisCheckBox = $(row).closest('td').siblings()[0];
+    var personalCompletenessPackage;
 
     let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
     if (propertyIndex >= 0) {
@@ -377,8 +383,8 @@ function recoinRedesignValue(obj) {
             usedRecoin: true
         };
 
-        //personalCompletenessPackage = determineCompletenessLevelRedesign(perslevel)
-        completeness = determineCompletenessLevel(list_entity_edited, threshold);
+        personalCompletenessPackage = determineCompletenessLevelRedesign(currentProperty.relevance);
+        //completeness = determineCompletenessLevel(list_entity_edited, threshold);
 
         sendTrackingEvent(data, function (data) {
                 console.log("successfuly send things to the api: " + JSON.stringify(data));
@@ -387,11 +393,14 @@ function recoinRedesignValue(obj) {
 
                 $(newStatement).insertBefore($("#addStatementBox"));
 
-                //progress bar accordion
-                $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + completeness.text + `</span> by comparison.`);
+                //$(thisCheckBox).html('');
+                //$(row).remove();
 
                 //progress bar accordion
-                $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.percentage + `% ;background-color: #8BBD9B;"></div>`);
+                $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + personalCompletenessPackage.text + `</span> by comparison.`);
+
+                //progress bar accordion
+                $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + personalCompletenessPackage.percentage + `% ;background-color: #8BBD9B;"></div>`);
             },
             function (response) {
                 alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
