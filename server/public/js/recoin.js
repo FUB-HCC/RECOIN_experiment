@@ -168,12 +168,12 @@ function generateRecoinExplanation() {
             break;
         }
         if (list_entity_edited[currentPropKey].presence == false) {
-            arrayExplanation.push(list_entity_edited[currentPropKey].name);
+            arrayExplanation.push({ "name": list_entity_edited[currentPropKey].name, "relevance":list_entity_edited[currentPropKey].relevance});
             i++;
         }
     }
     var explanation = document.createElement("div");
-    $(explanation).html("<div id='recoinExplanation' style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;color:#0645ad;'>" + completeness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0] + ", " + arrayExplanation[1] + ", " + arrayExplanation[2] + ", " + arrayExplanation[3] + ", <span style='font-style:normal;'>and</span> " + arrayExplanation[4] + "</span>.</div>");
+    $(explanation).html("<div id='recoinExplanation' style='margin:1em; font-size:1em; font-family:sans-serif; max-width: 50%; line-height:1.4em;'>This entry is <span style='font-style:italic;'>" + completeness.text + "</span>, because it misses information about <span style='font-style:italic;'>" + arrayExplanation[0].name+ " ("+ arrayExplanation[0].relevance + "% relevant for astronauts), " + arrayExplanation[1].name + " ("+ arrayExplanation[1].relevance + "%), " +  arrayExplanation[2].name + " ("+ arrayExplanation[2].relevance + "%), " + arrayExplanation[3].name  + " ("+ arrayExplanation[3].relevance + "%), <span style='font-style:normal;'>and</span> " + arrayExplanation[4].name + " ("+ arrayExplanation[4].relevance + "%)</span>.</div>");
     $(explanation).insertBefore($('#recoinAccordion'));
 }
 
