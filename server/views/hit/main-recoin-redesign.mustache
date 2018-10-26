@@ -47,33 +47,73 @@
                 </div>
             </div>
             <!--Redesign Recoin-->
-                    <div class="row" style="padding-top: 0;">
-                <div class="ui fluid accordion">
-                    <div class="title" id="accordiontitle">
-                        <i class="dropdown icon"></i>
-                        Most relevant properties which are absent
-                    </div>
-                    <div class="content" style="padding-left:30px;">
-                        <p class="transition hidden">
-                        <div class="box" id="recoinv2Text">
-                            <table id="recoinv2table" class="recoinv2Box">
-                                <thead>
-                                <tr>
-                                    <td>Property ID</td>
-                                    <td>Label</td>
-                                    <td>Relative</td>
-                                    <td>Add Claim</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
+                <div class="row" style="padding-top: 0;">
+                    <div class="ui fluid accordion">
+                        <div class="title" id="accordiontitle">
+                            <div class="ui grid">
+                                <div class="three column row">
+                                    <div class="one wide column" style="padding-right:0%;margin-right: -3%;">
+                                        <i class="dropdown icon" style="color:#004fbc;" id="iconaccordionrecoin"></i>
+                                    </div>
+                                    <div class="three wide left aligned column" style="margin-left: -1em;" id="progressBarRecoinAccordionBar"></div>
+                                    <div class="six wide left aligned column" id="progressBarRecoinAccordionText"></div>
+                                    <!--progressBarRecoinAccordion-->
+                                    <div class="six wide column"></div>
+                                </div>
+                            </div>
                         </div>
-                        </p>
+                        <div class="content" style="margin-left:30px; margin-bottom: 1em;">
+                                <div class="ui grid">
+                                        <div class="two column row">
+                                            <!--recoin tabelle-->
+                                            <div class="twelve wide column">
+                                                <div class="row">
+                                                    <table class="ui very basic table" id="recoinv2table">
+                                                        <thead>
+                                                            <tr>
+                                                                <td colspan="2" id="interactive" onclick="calculateFromRedesign()">
+                                                                    <div  id="comparator">
+                                                                        <i class="check square icon" id="calculateButton"></i>
+                                                                        <div id="calculateText">Compare Completeness</div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div style="margin-top: 0.25em; text-align: right;" id="propertyprogressbar"> 
+                                                                        Filter for prominence:
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                        <div class="selector">
+                                                                            <div class="price-slider">
+                                                                                <span id="min-price" class="slider-price">0</span>
+                                                                                <span class="seperator"> </span>
+                                                                                <span id="max-price" data-max="819" class="slider-price">819</span>
+                                                                                <div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                                                                    <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                                                                    <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                                                                                    <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                </td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                </div>
+                                            <div class="two column row">
+                                                <div class="nine wide column">
+                                                    <div class="row" id="recoinpagination">
+                                                    </div>
+                                                </div>
+                                                <div class="five wide column"> </div>
+                                            </div>
+                                    </div>
+                        </div>
                     </div>
                 </div>
-            </div>
             <!--Language Box-->
             {{> hit/partials/language-box}}
             <!--Statements-->

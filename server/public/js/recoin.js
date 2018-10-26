@@ -81,6 +81,33 @@ function determineCompletenessLevel(list_of_props, threshold) {
     return completenessPackage;
 }
 
+function determineCompletenessLevelRedesign(personalLevel) {
+    var completenessText, completenessLevel;
+
+    if (personalLevel > 95) {
+        completenessText = "very detailed";
+        completenessLevel = 5;
+    } else if (personalLevel > 90) {
+        completenessText = "detailed";
+        completenessLevel = 4;
+    } else if (personalLevel > 75) {
+        completenessText = "fair";
+        completenessLevel = 3;
+    } else if (personalLevel > 50) {
+        completenessText = "basic";
+        completenessLevel = 2;
+    } else {
+        completenessText = "very basic";
+        completenessLevel = 1;
+    }
+    var completenessPackage = {
+        "percentage": personalLevel,
+        "level": completenessLevel,
+        "text": completenessText
+    };
+    return completenessPackage;
+}
+
 //Calculate the impact participant contributions have made on completeness:
 function impactOfEdits() {
     var completenessBefore = determineCompletenessLevel(list_entity_original, threshold);
@@ -149,19 +176,6 @@ function renderRecoinOriginal(c) {
     }
 }
 
-
-function renderRecoinRedesign() {
-    $('.ui.accordion').accordion();
-    var limit = 0;
-    $.each(list_entity_edited, function (i, obj) {
-        if (obj.presence === false) {
-            $('#recoinv2table tbody').append('<tr><td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:' + obj.property + '" target="_blank">' + obj.name + '</a></td><td style="width: 40%"><div class="ui input" ><input type="text" placeholder=" "><div id="rv2addvalue">add value</div></div></td><td style="width: 35%"> <span>' + Math.round(obj.relevance) + ' %</span><div class="label" style="font-size: 14px; text-align: left">  ' + obj.amount + ' out of 819</div><div class="ui tiny progress" style="background: white"><div class=" bar" style="width:' + Math.round(obj.relevance) + '% ;background-color: #66B3BA;"></div></div></td></tr>');
-            limit++;
-        }
-    });
-}
-
-
 function generateRecoinExplanation() {
     var i = 0;
     var arrayExplanation = [];
@@ -179,113 +193,212 @@ function generateRecoinExplanation() {
     $(explanation).insertBefore($('#recoinAccordion'));
 }
 
-    //$("#progressBarRecoinAccordionText").append('div class="label">This Astronaut provides ' + completeness.text + ' information </div></div>');
+function renderRecoinRedesign() {
+    $('.ui.accordion').accordion();
+    var limit = 0;
+    $.each(list_entity_edited, function (i, obj) {
+        if (obj.presence === false) {
+            $('#recoinv2table tbody').append(`<tr class="item">
+            <td style="width: 10%"> <div class="ui fitted checkbox">
+            <input type="checkbox" class="personalCompleteness" value="`+ obj.relevance + `">
+            <label></label>
+          </div>
+           </td>
+            <td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:`+ obj.property + `" target="_blank">` + obj.name + `</a></td>
+           
+            <td style="width: 40%" id="` + obj.name.replace(/\s/g, "-") +  `Field"><div style="min-width:66%;" class="ui input" >
+            <input type="text" id="` + obj.name.replace(/\s/g, "-") +  `Input" oninput="recoinRedesignInput(this)">
+            <div class="" id="` + obj.name.replace(/\s/g, "-") +  `" data-prop="` + obj.name + `" style="cursor:pointer; font-size:0.8em; padding: 0.5em;"onclick="recoinRedesignValue(this)">add value</div>
+        </div></td>
+           <td style="width: 35%">
+                <div class="ui tiny progress" style="background: white">
+                <div class=" bar" style="width:` + Math.round(obj.relevance) + `% ;background-color: #8BBD9B;"></div>
+                <div class="label" id="propertyprogressbar" value="`+ obj.amount + `"> Present for `+ obj.amount + ` other astronauts
+                </div>
+            </div></td>
+         <td style="width: 5%"> 
+         </td>
+        </tr>`);
+            limit++;
+        }
+    });
+
+    var allRows = $('tr.item');
+
+    for(var i = 0; i < threshold; i++) {
+        var checkBox = $(allRows[i]).find('.personalCompleteness');
+        $(checkBox).attr('checked','checked');
+    }
+
+    // for
+    //accordion text
+    $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + completeness.text + `</span> by comparison.`);
+
+    //progress bar accordion
+    $("#progressBarRecoinAccordionBar").append(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.level + `0% ;background-color: #8BBD9B;"></div>`);
+
+    $("#slider-range").slider({
+        classes: {
+            "ui-slider-range": "ui-corner-all ui-widget-header"
+        },
+        range: true, 
+        min: 0,
+        max: 819,
+        step: 1,
+        values:[0,819],
+        slide: function( event, ui ) {
+            var table = document.getElementById("recoinv2table");
+            for (var i = 1, row; row = table.rows[i]; i++) {
+               for (var j = 0, col; col = row.cells[j]; j++) {
+                   if (j == 3) {             // if progressbar column
+                        var currentRow = $(row.cells[j]).children();
+                        var tinyProgressbar = $(currentRow).children()[1];
+                        var value = $(tinyProgressbar).attr("value");
+                        if (value >= ui.values[ 0 ] && value <= ui.values[ 1 ]) {
+                           $(row).show();
+                        } else {
+                           $(row).hide();
+                        }
+                    }
+                }  
+            }
+            $("#min-price").html(ui.values[0]);
+            $("#max-price").html(ui.values[1]);
+        }
+    });
+
+    function paging(itemPerPage) {
+            if ($(".ui.pagination.menu").length == 0)
+                $('#recoinpagination').html('<div class="ui pagination menu"></div>');
+            else {
+                $(".ui.pagination.menu").remove();
+                $('#recoinpagination').html('<div class="ui pagination menu"></div>');
+            }
+            rowsShown = itemPerPage;
+            var rowsTotal = $('#recoinv2table tbody tr').length;
+            var numPages = rowsTotal / rowsShown;
+            for (i = 0; i < numPages; i++) {
+                var pageNum = i + 1;
+                $('.ui.pagination.menu').append('<a href="#/" class="item" rel="' + i + '">' + pageNum + '</a> ');
+            }
+            $('#recoinv2table tbody tr').hide();
+            $('#recoinv2table tbody tr').slice(0, rowsShown).show();
+            $('.ui.pagination.menu a:first').addClass('active');
+            $('.ui.pagination.menu a').bind('click', function () {
+                $('.ui.pagination.menu a').removeClass('active');
+                $(this).addClass('active');
+                var currPage = $(this).attr('rel');
+                var startItem = currPage * rowsShown;
+                var endItem = startItem + rowsShown;
+                $('#recoinv2table tbody tr').css('opacity', '0.0').hide().slice(startItem, endItem).
+                    css('display', 'table-row').animate({ opacity: 1 }, 300);
+
+            });
+    }
+    
+    paging(10);
+}
+
+function calculateFromRedesign() {
+        var result = $('input[class="personalCompleteness"]:checked'); //speichert alle checked checkboxen
+        var personalCompletenessPackage;
+
+        if (result.length > 0) { //min eine checkbox checked
+            var resultRelevance = 0;
+            result.each(function () {
+                resultRelevance += parseFloat($(this).val()) //addiert alle relevancen der gewählten properties
+            });
+
+            var perslevel = 100 - (resultRelevance / result.length); //berechnet recoin wert
+
+            personalCompletenessPackage = determineCompletenessLevelRedesign(perslevel); //ruft completeness auf und bestimmt den text
+            console.log(personalCompletenessPackage);
+        } else {
+            $('#divResult').html("No Property selected"); //ausgabe falls button gedrückt aber nichts ausgewählt/checked
+        }
+
+        $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + personalCompletenessPackage.text + `</span> by comparison.`);
+
+        $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + personalCompletenessPackage.level + `0% ;background-color: #8BBD9B;"></div>`);
+}
 
 
-    // function completenessBarLength(lvl) {
-    //     switch(lvl) {
-    //         case 5:
-    //             return '100%'
-    //             break;
-    //         case 4:
-    //             return '75%'
-    //             break;
-    //         case 3:
-    //             return '50%'
-    //             break;
-    //         case 2:
-    //             return '25%'
-    //             break;
-    //         case 1:
-    //             return '5%'
-    //             break;
-    //     }
-    // }
+function recoinRedesignInput(obj) {
+    let liveInput = $(obj).val();
 
-    // var barLength = completenessBarLength(completeness.level);
+    let liveAutocompleteOptions = {
+        minLength: 1,
+        source: function (request, response) {
+            var term = request.term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var xhr = createCORSRequest('GET', url);
+            xhr.onload = function () {
+                var responseText = JSON.parse(xhr.responseText);
+                var responseArray = [];
+                for (let key in responseText.search) {
+                    responseArray.push(responseText.search[key].label);
+                }
+                response(responseArray);
+            };
+            xhr.send();
+        }
+    };
 
-    // //progress bar accordion                                             
-    // $("#progressBarRecoinAccordionBar").append('<div class="ui small blue progress" style="width: 25%;"><div class="progress" style="background: white"></div> <div class="bar" style="width:' + barLength + '% ;background-color: #66B3BA;"></div>');
+    $(obj).autocomplete(liveAutocompleteOptions)
+}
 
-    // $("#tableüberschrift").append('<div class="label">'+ limit + ' of ' + list_entity_edited.length + ' properties were not added for this astronaut</div></div>');
+function recoinRedesignValue(obj) {
+    let findThis = obj.id;
+    let property = obj.dataset.prop;
+    let addedValue = $(obj).parents().find("#" + findThis + "Input").val();
 
-    // /*pagination recoinv2*/
+    let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
+    if (propertyIndex >= 0) {
+        list_entity_edited[propertyIndex].presence = true;
+        let currentProperty = list_entity_edited[propertyIndex];
+        var data = {
+            type: "trackingEvent",
+            workerID: localStorage.getItem("workerID"),
+            hitID: localStorage.getItem("hitID"),
+            assignmentID: localStorage.getItem("assignmentID"),
+            condition: localStorage.getItem("condition"),
+            relevance: currentProperty.relevance,
+            timestamp: Date.now(),
+            value: addedValue,
+            property: property,
+            usedRecoin: true
+        };
 
-    // var rowsShown;
+        //personalCompletenessPackage = determineCompletenessLevelRedesign(perslevel)
+        completeness = determineCompletenessLevel(list_entity_edited, threshold);
 
-    // function paging(itemPerPage) {
-    //     if ($(".ui.pagination.menu").length == 0)
-    //         $('#recoinpagination').after('<div class="ui pagination menu"></div>');
-    //     else {
-    //         $(".ui.pagination.menu").remove();
-    //         $('#recoinpagination').after('<div class="ui pagination menu"></div>');
-    //     }
-    //     rowsShown = itemPerPage;
-    //     var rowsTotal = $('#recoinv2table tbody tr').length;
-    //     var numPages = rowsTotal / rowsShown;
-    //     for (i = 0; i < numPages; i++) {
-    //         var pageNum = i + 1;
-    //         $('.ui.pagination.menu').append('<a href="#/" class="item" rel="' + i + '">' + pageNum + '</a> ');
-    //     }
-    //     $('#recoinv2table tbody tr').hide();
-    //     $('#recoinv2table tbody tr').slice(0, rowsShown).show();
-    //     $('.ui.pagination.menu a:first').addClass('active');
-    //     $('.ui.pagination.menu a').bind('click', function () {
+        sendTrackingEvent(data, function (data) {
+                console.log("successfuly send things to the api: " + JSON.stringify(data));
+                $("#"+ findThis + "Field").html(addedValue);
+                var newStatement = '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">' + addedValue + '</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
 
-    //         $('.ui.pagination.menu a').removeClass('active');
-    //         $(this).addClass('active');
-    //         var currPage = $(this).attr('rel');
-    //         var startItem = currPage * rowsShown;
-    //         var endItem = startItem + rowsShown;
-    //         $('#recoinv2table tbody tr').css('opacity', '0.0').hide().slice(startItem, endItem).
-    //             css('display', 'table-row').animate({ opacity: 1 }, 300);
+                
+                $(newStatement).insertBefore($("#addStatementBox"));
 
-    //     });
-    // }
+                //progress bar accordion
+                $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + completeness.text + `</span> by comparison.`);
 
-    // paging(10);
+                //progress bar accordion
+                $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.level + `0% ;background-color: #8BBD9B;"></div>`);
+            },
+            function (response) {
+                alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
+                console.log(response);
+            });
+    } else {
+        console.log("Couldn't find property in list_entity edited:" + property);
+        alert("We couldn't find the property you were trying to add.");
+    }
 
-
-    // $("#firstButton").click(function () {
-    //     paging(5);
-    // });
-
-    // $("#secondButton").click(function () {
-    //     paging(10);
-    // });
-
-    // $("#thirdButton").click(function () {
-    //     paging(15);
-    // });
-
-    // $("#allButton").click(function () {
-    //     paging(limit);
-    // });
-
-    // /* multisliderrangerecoin*/
-
-    // $("#slider-range").slider({
-    //     range: true,
-    //     min: 0,
-    //     max: 819,
-    //     values: [0, 819],
-    //     slide: function (event, ui) {
-    //         $("#amount").val("EXISTS FOR " + ui.values[0] + " OUT OF " + ui.values[1] + " ASTRONAUTS");
-    //         $('#recoinv2table tbody tr').remove();
-    //         $.each(data, function (i, obj) {
-    //             if (obj.presence === false && obj.amount > ui.values[0] && obj.amount < ui.values[1]) {
-    //                 $('#recoinv2table tbody').append('<tr>td style="width: 25%"><a href="https://www.wikidata.org/wiki/Property:'+ obj.property + '" target="_blank">' + obj.name + '</a></td><td style="width: 40%"><div class="ui input"><input type="text" placeholder=" "><div id="rv2addvalue">add value</div></div></td><td style="width: 35%"> <!--<span>' + Math.round(obj.relevance) + ' %</span>--><div class="label" style="font-size: 14px; text-align: left">  '+ obj.amount + ' out of 819</div> <div class="ui tiny progress" style="background: white" ><div class=" bar" style="width:' + Math.round(obj.relevance) + '%; background-color: #66B3BA;"></div></div></td></tr>');
-    //             }
-    //         });
-    //         paging(rowsShown);
-    //     }
-    // });
-    // $("#amount").val(" EXISTS FOR " + $("#slider-range").slider("values", 0) + " OUT OF " + $("#slider-range").slider("values", 1) + " ASTRONAUTS ");
-    //$('.ui.accordion').accordion();
+}
 
 
 //----------------------------- Recoin Functions --------------------------------------------------------------------
-
 
 function recoinPlus(obj) {
     //console.log(obj);

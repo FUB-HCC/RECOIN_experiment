@@ -1,0 +1,59 @@
+—————————————————
+——————— HIT IDs
+—————————————————
+Without Recoin
+3BAKUKE49ITG6D9YCFN22YPH7BM1R9 		#9
+3M0556243T1MHUBEQ7L6IGO17S6FNY 		#3
+
+Recoin Original				
+3BPP3MA3TD14NG8XJJLLN6ZCQTILE5		#9
+3QHITW7OYPQCO07YVJRV898FFPGQAN		#3
+31J7RYECZM753FEL7VQ6GMGI1PNL15    #3
+
+Recoin Original + Onboarding
+3NC6WP7WJI1EFA6N8XMTINNSV57WW7 		#3
+3NRZ1LDP7XNSPWER7YS5PX9EJCCPZ3    #3
+
+Recoin Explanation
+3B9XR6P1WFC0LN8D677I6JGZJCHBJK 		#3
+
+—————————————————
+——————— S1 Qualification
+—————————————————
+35NJKTSSL2FPLT3PK2K4VLGHUQ8ZXV
+
+—————————————————
+——————— Data endpoints
+—————————————————
+/api/exportSummaries
+/api/exportTrackingEvents
+
+http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3B9XR6P1WFC0LN8D677I6JGZJCHBJK  
+
+—————————————————
+——————— aws-shell commands 
+—————————————————
+
+——————— Current Get Hit
+—————————————————
+mturk get-hit --hit-id 3QHITW7OYPQCO07YVJRV898FFPWQA3 
+
+——————— List Assignments
+—————————————————
+mturk list-assignments-for-hit --hit-id 3QHITW7OYPQCO07YVJRV898FFPWQA3  
+
+——————— Approve
+—————————————————
+mturk approve-assignment --assignment-id 3GNCZX450K4TB84CL8I8XOERFI5PA3 --requester-feedback "Thank you very much for participating!"
+
+——————— Reject
+—————————————————
+mturk reject-assignment --assignment-id 3UWN2HHPU0MX8JETMTR7EZ32177NST --requester-feedback "Worker did not submit any data, our server shows no HIT-relevant activity whatsoever for this assignent. If this is an error, please contact ikon-research@imp.fu-berlin.de!"
+
+——————— Qualify
+—————————————————
+mturk associate-qualification-with-worker --qualification-type-id "35NJKTSSL2FPLT3PK2K4VLGHUQ8ZXV" --worker-id "A1VFRCYMWGWWCZ" --no-send-notification
+
+——————— Contact Workers
+—————————————————
+mturk notify-workers --subject "Regarding your submission for HIT 'What about this astronaut?'" --message-text "Dear MTurker, regarding your submission and your comments, it seems very likely to us that you did not have javascript enabled (a requirement as stated in our preview). Our server recorded no activity for your assignment. Could you please expand on your problem to help us solve this? Best regards, Jesse" --worker-ids "AVI7K876BV3QL" ""

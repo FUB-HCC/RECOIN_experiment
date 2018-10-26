@@ -673,7 +673,7 @@
     font-size: 0.875em;
 }
 
-#rv2addvalue {
+.rv2addvalue {
     padding-left: 10px;
     padding-top: 5px;
     color: #0645ad;
@@ -702,54 +702,165 @@
     font-size: 10px;
     color: black;
     /* font-weight: bold; */
-    padding-right: 3%
+    padding-right: 3%;
 }
+
+#comparator {
+    padding:.5em; 
+    border-radius: .5em; 
+    background-color: #389867; 
+    color:#fff; 
+    max-width: 70%; !important
+}
+
+#calculateButton {
+    color: #fff;
+    display: inline-table;
+}
+#calculateText {
+    font-weight: bold;
+    color: #fff;
+    display: inline-table;
+}
+
+.personalCompleteness {
+    font-size: 0.875em;
+}
+
 
 /* slidercontent */
 
-.ui-slider-horizontal .ui-slider-range {
-    height: 100%;
-    background-color: #66B3BA;
-    height: max-content;
-
-}
-
-/* slider border */
-
-.ui-widget.ui-widget-content {
-    height: 6px;
-    border: 1px solid #66B3BA;
-
-}
-
-/* slider  */
-.ui-slider-horizontal .ui-slider-handle {
-    top: -.3em;
-    margin-left: -.6em;
-    border-radius: 0;
-
-}
 
 #progressBarRecoinAccordionText {
-    padding: 0%;
-    margin-right: -3%;
-    margin-left: -1%;
-
+    padding: 0 .5em 0 0;
+    color: #004fbc;
 }
 
-#iconaccordionrecoin {
+#iconaccordionrecoin{
     padding: 0%;
-    /* margin-right: 35%; */
+}
+#progressBarRecoinAccordionBar{
+    padding-top: 0.5%;
+    /* margin-left: 2%; */
+    /* margin-left: -5%; */
+    color: #389867;
 }
 
-#progressBarRecoinAccordionBar {
-    padding: 0%;
-    padding-top: 4px;
-    margin-left: 2%;
-    width: 70%;
+#interactive {
+    cursor: pointer;
+}
+/* #tableüberschrift{
+    padding-bottom: 5px;
+    color: black;
+    font-family: sans-serif;
+font-weight: 400;
+font-size: 0.80em;
+} */
+
+#propertyprogressbar{
+    font-size: 0.9em; 
+    font-weight: 300;
+    text-align: left;
+    color: #929292;
+    font-family: sans-serif;
 }
 
-/* Add Statement Box Styling */
-.addStatementTextField {
-    max-width: 100%;
+/* pagination */
+/* .ui.secondary.pointing.menu .active.item {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-color: #5992ca;
+    font-weight: 400;
+    color: #5992ca;
+}
+
+.ui.secondary.pointing.menu .item {
+    border-bottom-color: transparent;
+    border-bottom-style: solid;
+    border-radius: 0;
+    -ms-flex-item-align: end;
+    align-self: flex-end;
+    margin: 0 0 -2px;
+    padding: .85714286em 1.14285714em;
+    border-bottom-width: 2px;
+    -webkit-transition: color .1s ease;
+    transition: color .1s ease;
+} */
+
+/* slider labels */
+
+#min-price {
+ font-size:0.8em; 
+ padding: 0.5em;
+}
+
+#max-price {
+ font-size:0.8em; 
+ padding: 0.5em;
+}
+
+/*slider test */
+.selector .price-slider {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.selector #slider-range {
+    width: 100%;
+    margin-bottom: 2px;
+    margin-top: 10px;
+    border: none;
+    background: lightgray;
+    /*height: 4px;*/
+    margin-left: 8px;
+    margin-right: 8px
+}
+
+.selector .ui-slider-handle {
+    border-radius: 30%;
+    background-color: #ffffff;
+    border: none;
+    top: -4px;
+    width: 5px;
+    height: 5px;
+    outline: none
+}
+
+@media (min-width: 768px) {
+    .selector .ui-slider-handle {
+        top:-4px;
+        width: 5px;
+        height: 5px
+    }
+}
+
+.selector .ui-slider-range {
+    background-color: #8BBD9B
+}
+
+.slider .ui-slider-range-min .ui-slider-handle {
+    border-radius: 50%;
+}
+
+.selector .slider-price {
+    padding: 0px;
+    line-height: 0px;
+    text-align: center
+}
+
+/*Pagination meu*/
+.ui.pagination.menu {
+    font-size: 0.8em;
+
+}
+/*search*/
+input {
+    font-family: sans-serif;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+    border: solid 1px lightgray;
 }
