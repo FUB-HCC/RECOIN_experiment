@@ -108,9 +108,10 @@ function gradeEdits() {
 
 //DOM manipulation
 function recoinRender(condition) {
+    condition = parseInt(condition);
     switch (condition) {
         case 1:
-            return
+            return;
             break;
         case 2:
             renderRecoinOriginal(condition);
@@ -142,6 +143,7 @@ function renderRecoinOriginal(c) {
 
     $('#recoinProgressbar').html("<a href='https://www.wikidata.org/wiki/Wikidata:Recoin' target='_blank'><img src='https://tools.wmflabs.org/recoin/progressbar/" + completeness.level + ".png' id='progressbarImg' title='This page provides a " + completeness.text + " amount of information.'></a>");
 
+    console.log(c);
     if (c == 5) {
         generateRecoinExplanation();
     }

@@ -10,6 +10,12 @@
             font-size: 12px;
         }
     </style>
+    {{^preview}}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="/js/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+    {{/preview}}
 </head>
 <body>
 <h1></h1>
@@ -29,11 +35,11 @@
     <div class="three wide column"></div>
     <div class="ten wide column" style="font-size: 18px;">
         <h1>Data Entry Study</h1>
-        <h2><strong>Please note:</strong></h2>
-        <p><strong>1. This HIT requires JavaScript to be enabled, and MTurk Scripts disabled!</strong></p>
+        <h2><strong>Please note</strong></h2>
+        <p><strong>1. This HIT requires JavaScript to be enabled!</strong></p>
         <p><strong>2. Please accept this HIT only if you are sure that you can commit your full attention for
             the next 20 minutes.</strong></p>
-    </p>
+        </p>
         <h2>Task</h2>
         <p>In this HIT, you will have 10 minutes add the most relevant data to a page, followed by a questionnaire.</p>
         <ul>
@@ -53,6 +59,19 @@
 </div>
 <div class="ui grid">
     <div class="three wide column"></div>
+    <div class="ten wide column" style="font-size: 18px;">
+        <h1>Technical Requirements</h1>
+        <p>Due to strange errors with this HIT in the past, we build a component that checks if the programming runs
+            correctly. Please click the check the button below. If nothing happens, please consider returning the HIT or
+            contact us for troubleshooting.</p>
+        <ul id="checkRequirementsOutput">
+            <li id="checkNotStartedListEntry">Check not started</li>
+        </ul>
+    </div>
+    <div class="three wide column"></div>
+</div>
+<div class="ui grid">
+    <div class="three wide column"></div>
     <div class="ten wide column">
         <nav>
             {{#preview}}
@@ -65,16 +84,88 @@
                 </a>
             {{/preview}}
             {{^preview}}
-                <a href="{{hit-start-url}}">
-                    <div style="float:right;">
-                        <button class="ui button primary">
-                            Proceed
-                        </button>
-                    </div>
-                </a>
+                <div id="checkRequirementsButtonContainer" style="float:right;">
+                    <input type="hidden" id="onSuccessfulCheckLink" value="{{hit-start-url}}">
+                    <button id="checkRequirementsButton" class="ui button yellow"
+                            onclick="checkRequirements(event)">
+                        Check
+                    </button>
+                </div>
             {{/preview}}
         </nav>
     </div>
 </div>
+<script>
+    function addErrorToList(step, error) {
+        let vanillaJsInput = document.getElementById("checkRequirementsOutput");
+        let check = document.createElement('li');
+        check.innerHTML = step + " failed: " + error;
+        vanillaJsInput.appendChild(check);
+    }
+
+    function checkPlainJSWorks() {
+        try {
+            let checkStart = document.getElementById("checkNotStartedListEntry");
+            checkStart.remove();
+            let vanillaJsInput = document.getElementById("checkRequirementsOutput");
+            let check = document.createElement('li');
+            check.innerHTML = "javascript works";
+            vanillaJsInput.appendChild(check);
+        } catch (err) {
+            alert("Check failed! Error was: " + error);
+        }
+    }
+
+    function checkJqueryWorks() {
+        try {
+            let jqueryInput = $("#checkRequirementsOutput");
+            if (!jqueryInput.length) {
+                throw "jQuery Element not found on site";
+            }
+            jqueryInput.append("<li>jQuery Works</li>")
+        } catch (err) {
+            addErrorToList("jquery", err);
+            throw err;
+        }
+    }
+
+    function renderCheckComplete() {
+        let submitButton = $("#checkRequirementsButton");
+        submitButton.remove();
+        let buttonContainer = $("#checkRequirementsButtonContainer");
+        buttonContainer.prepend('<a class="ui button green" href="' + $("#onSuccessfulCheckLink").val() + '">Proceed</a>');
+    }
+
+    function checkLocalStorageWorks() {
+        localStorage.setItem("test","complete");
+        let test = localStorage.getItem("test");
+        if(test != "complete") {
+            addErrorToList("localStorage", err);
+            throw "Local Storage check does not work!";
+        } else {
+            localStorage.removeItem("test");
+            let jqueryInput = $("#checkRequirementsOutput");
+            jqueryInput.append("<li>Local Storage Works</li>")
+        }
+    }
+
+    function checkRequirements(event) {
+        try {
+            checkPlainJSWorks();
+            checkJqueryWorks();
+            checkLocalStorageWorks();
+            //checkWikidataWorks();
+            //checkTrackingWorks();
+            //checkAutocompleteWorks();
+            renderCheckComplete();
+            event.preventDefault();
+            return false;
+        } catch (err) {
+            addErrorToList("Sorry, some checks ", err);
+            event.preventDefault();
+            return false;
+        }
+    }
+</script>
 </body>
 </html>
