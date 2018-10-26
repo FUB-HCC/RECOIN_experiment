@@ -235,37 +235,7 @@ function renderRecoinRedesign() {
     $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + completeness.text + `</span> by comparison.`);
 
     //progress bar accordion
-    $("#progressBarRecoinAccordionBar").append(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.level + `0% ;background-color: #8BBD9B;"></div>`);
-
-    $("#slider-range").slider({
-        classes: {
-            "ui-slider-range": "ui-corner-all ui-widget-header"
-        },
-        range: true, 
-        min: 0,
-        max: 819,
-        step: 1,
-        values:[0,819],
-        slide: function( event, ui ) {
-            var table = document.getElementById("recoinv2table");
-            for (var i = 1, row; row = table.rows[i]; i++) {
-               for (var j = 0, col; col = row.cells[j]; j++) {
-                   if (j == 3) {             // if progressbar column
-                        var currentRow = $(row.cells[j]).children();
-                        var tinyProgressbar = $(currentRow).children()[1];
-                        var value = $(tinyProgressbar).attr("value");
-                        if (value >= ui.values[ 0 ] && value <= ui.values[ 1 ]) {
-                           $(row).show();
-                        } else {
-                           $(row).hide();
-                        }
-                    }
-                }  
-            }
-            $("#min-price").html(ui.values[0]);
-            $("#max-price").html(ui.values[1]);
-        }
-    });
+    $("#progressBarRecoinAccordionBar").append(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.percentage + `% ;background-color: #8BBD9B;"></div>`);
 
     function paging(itemPerPage) {
             if ($(".ui.pagination.menu").length == 0)
@@ -295,6 +265,38 @@ function renderRecoinRedesign() {
 
             });
     }
+
+    $("#slider-range").slider({
+        classes: {
+            "ui-slider-range": "ui-corner-all ui-widget-header"
+        },
+        range: true, 
+        min: 0,
+        max: 819,
+        step: 1,
+        values:[0,819],
+        slide: function( event, ui ) {
+            var table = document.getElementById("recoinv2table");
+            for (var i = 1, row; row = table.rows[i]; i++) {
+               for (var j = 0, col; col = row.cells[j]; j++) {
+                   if (j == 3) {             // if progressbar column
+                        var currentRow = $(row.cells[j]).children();
+                        var tinyProgressbar = $(currentRow).children()[1];
+                        var value = $(tinyProgressbar).attr("value");
+                        if (value >= ui.values[0] && value <= ui.values[1]) {
+                           $(row).show();
+                        } else if (value >= ui.values[0] && value <= ui.values[1] && $(row).is(":hidden")) {
+                           $(row).show();
+                        } else {
+                           $(row).hide();
+                        }
+                    }
+                }  
+            }
+            $("#min-price").html(ui.values[0]);
+            $("#max-price").html(ui.values[1]);
+        }
+    });
     
     paging(10);
 }
@@ -304,6 +306,7 @@ function calculateFromRedesign() {
         var personalCompletenessPackage;
 
         if (result.length > 0) { //min eine checkbox checked
+            console.log(result.length);
             var resultRelevance = 0;
             result.each(function () {
                 resultRelevance += parseFloat($(this).val()) //addiert alle relevancen der gewählten properties
@@ -313,13 +316,18 @@ function calculateFromRedesign() {
 
             personalCompletenessPackage = determineCompletenessLevelRedesign(perslevel); //ruft completeness auf und bestimmt den text
             console.log(personalCompletenessPackage);
+        } else if (result.length == 0) {
+            personalCompletenessPackage = {
+                "percentage": 100,
+                "text": "not being assessed"
+            };
         } else {
             $('#divResult').html("No Property selected"); //ausgabe falls button gedrückt aber nichts ausgewählt/checked
         }
 
         $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + personalCompletenessPackage.text + `</span> by comparison.`);
 
-        $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + personalCompletenessPackage.level + `0% ;background-color: #8BBD9B;"></div>`);
+        $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + personalCompletenessPackage.percentage + `% ;background-color: #8BBD9B;"></div>`);
 }
 
 
@@ -377,14 +385,13 @@ function recoinRedesignValue(obj) {
                 $("#"+ findThis + "Field").html(addedValue);
                 var newStatement = '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">' + addedValue + '</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
 
-                
                 $(newStatement).insertBefore($("#addStatementBox"));
 
                 //progress bar accordion
                 $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + completeness.text + `</span> by comparison.`);
 
                 //progress bar accordion
-                $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.level + `0% ;background-color: #8BBD9B;"></div>`);
+                $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + completeness.percentage + `% ;background-color: #8BBD9B;"></div>`);
             },
             function (response) {
                 alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");

@@ -28,7 +28,7 @@ Recoin Explanation
 /api/exportSummaries
 /api/exportTrackingEvents
 
-http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3B9XR6P1WFC0LN8D677I6JGZJCHBJK  
+http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3QHITW7OYPQCO07YVJRV898FFPWQA3  
 
 —————————————————
 ——————— aws-shell commands 
@@ -36,7 +36,7 @@ http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3B9XR6P1WFC0LN8D67
 
 ——————— Current Get Hit
 —————————————————
-mturk get-hit --hit-id 3QHITW7OYPQCO07YVJRV898FFPWQA3 
+mturk get-hit --hit-id 3QREJ3J434E79G07F5WOL1CHAWQLKD    
 
 ——————— List Assignments
 —————————————————
@@ -44,15 +44,15 @@ mturk list-assignments-for-hit --hit-id 3QHITW7OYPQCO07YVJRV898FFPWQA3
 
 ——————— Approve
 —————————————————
-mturk approve-assignment --assignment-id 3GNCZX450K4TB84CL8I8XOERFI5PA3 --requester-feedback "Thank you very much for participating!"
+mturk approve-assignment --assignment-id 336KAV9KYS9YFJ19ZGLC4XO5719Y2W --requester-feedback "Thank you very much for participating!"
+
+——————— Qualify
+—————————————————
+mturk associate-qualification-with-worker --qualification-type-id "35NJKTSSL2FPLT3PK2K4VLGHUQ8ZXV" --worker-id "A2XCSFZKU13WMY" --no-send-notification
 
 ——————— Reject
 —————————————————
 mturk reject-assignment --assignment-id 3UWN2HHPU0MX8JETMTR7EZ32177NST --requester-feedback "Worker did not submit any data, our server shows no HIT-relevant activity whatsoever for this assignent. If this is an error, please contact ikon-research@imp.fu-berlin.de!"
-
-——————— Qualify
-—————————————————
-mturk associate-qualification-with-worker --qualification-type-id "35NJKTSSL2FPLT3PK2K4VLGHUQ8ZXV" --worker-id "A1VFRCYMWGWWCZ" --no-send-notification
 
 ——————— Contact Workers
 —————————————————
