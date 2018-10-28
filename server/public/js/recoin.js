@@ -283,8 +283,6 @@ function renderRecoinRedesign() {
                         var value = $(tinyProgressbar).attr("value");
                         if (value >= ui.values[0] && value <= ui.values[1]) {
                            $(row).show();
-                        } else if (value >= ui.values[0] && value <= ui.values[1] && $(row).is(":hidden")) {
-                           $(row).show();
                         } else {
                            $(row).hide();
                         }
@@ -295,8 +293,11 @@ function renderRecoinRedesign() {
             $("#max-price").html(ui.values[1]);
         }
     });
-    
-    paging(10);
+
+     $( "#slider-range").slider( "option", "values", [110, 819] );
+     $("#slider-range").data("uiSlider")._slide();
+    // $('#slider-range').change();
+    //paging(10);
 }
 
 function calculateFromRedesign() {
