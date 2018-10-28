@@ -206,7 +206,7 @@ function renderRecoinRedesign() {
            
             <td style="width: 40%" id="` + obj.name.replace(/\s/g, "-") +  `Field"><div style="min-width:66%;" class="ui input" >
             <input type="text" id="` + obj.name.replace(/\s/g, "-") +  `Input" oninput="recoinRedesignInput(this)">
-            <div class="tableAddValue" id="` + obj.name.replace(/\s/g, "-") +  `" data-prop="` + obj.name + `" style="cursor:pointer; font-size:0.8em; padding: 0.5em;"onclick="recoinRedesignValue(this)">add value</div>
+            <div class="tableAddValue" id="` + obj.name.replace(/\s/g, "-") +  `" data-prop="` + obj.name + `" style="cursor:pointer; font-size:0.8em; padding: 0.5em; color:#0645ad;"onclick="recoinRedesignValue(this)">+ add value</div>
         </div></td>
            <td style="width: 35%">
                 <div class="ui tiny progress" style="background: white">
@@ -362,55 +362,60 @@ function recoinRedesignValue(obj) {
     let findThis = obj.id;
     let property = obj.dataset.prop;
     let addedValue = $(obj).parents().find("#" + findThis + "Input").val();
-    var row = $(obj).parents()[2];
-    var thisCheckBox = $(row).closest('td').siblings()[0];
-    var personalCompletenessPackage;
 
-    let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
-    if (propertyIndex >= 0) {
-        list_entity_edited[propertyIndex].presence = true;
-        let currentProperty = list_entity_edited[propertyIndex];
-        var data = {
-            type: "trackingEvent",
-            workerID: localStorage.getItem("workerID"),
-            hitID: localStorage.getItem("hitID"),
-            assignmentID: localStorage.getItem("assignmentID"),
-            condition: localStorage.getItem("condition"),
-            relevance: currentProperty.relevance,
-            timestamp: Date.now(),
-            value: addedValue,
-            property: property,
-            usedRecoin: true
-        };
+    if(addedValue.length > 0) { 
+        var row = $(obj).parents()[2];
+        var thisCheckBox = $(row).closest('td').siblings()[0];
+        var personalCompletenessPackage;
 
-        personalCompletenessPackage = determineCompletenessLevelRedesign(currentProperty.relevance);
-        //completeness = determineCompletenessLevel(list_entity_edited, threshold);
+        let propertyIndex = findWithAttribute(list_entity_edited, "name", property);
+        if (propertyIndex >= 0) {
+            list_entity_edited[propertyIndex].presence = true;
+            let currentProperty = list_entity_edited[propertyIndex];
+            var data = {
+                type: "trackingEvent",
+                workerID: localStorage.getItem("workerID"),
+                hitID: localStorage.getItem("hitID"),
+                assignmentID: localStorage.getItem("assignmentID"),
+                condition: localStorage.getItem("condition"),
+                relevance: currentProperty.relevance,
+                timestamp: Date.now(),
+                value: addedValue,
+                property: property,
+                usedRecoin: true
+            };
 
-        sendTrackingEvent(data, function (data) {
-                console.log("successfuly send things to the api: " + JSON.stringify(data));
-                $("#"+ findThis + "Field").html(addedValue);
-                var newStatement = '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">' + addedValue + '</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
+            personalCompletenessPackage = determineCompletenessLevelRedesign(currentProperty.relevance);
+            //completeness = determineCompletenessLevel(list_entity_edited, threshold);
 
-                $(newStatement).insertBefore($("#addStatementBox"));
+            sendTrackingEvent(data, function (data) {
+                    console.log("successfuly send things to the api: " + JSON.stringify(data));
+                    $("#"+ findThis + "Field").html(addedValue);
+                    var newStatement = '<div class="box statementBox"><div class="propertyBox">' + property + '</div><div class="valueBox">' + addedValue + '</div><div class="toolbarBox"><div class="addValue" onclick="generalAddValue(this)">+ add value</div></div></div>';
 
-                //$(thisCheckBox).html('');
-                //$(row).remove();
+                    $(newStatement).insertBefore($("#addStatementBox"));
 
-                //progress bar accordion
-                $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + personalCompletenessPackage.text + `</span> by comparison.`);
+                    //$(thisCheckBox).html('');
+                    //$(row).remove();
 
-                //progress bar accordion
-                $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + personalCompletenessPackage.percentage + `% ;background-color: #8BBD9B;"></div>`);
-            },
-            function (response) {
-                alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
-                console.log(response);
-            });
+                    //progress bar accordion
+                    $("#progressBarRecoinAccordionText").html(`This Astronaut is <span style="font-style:italic;color:#389867">` + personalCompletenessPackage.text + `</span> by comparison.`);
+
+                    //progress bar accordion
+                    $("#progressBarRecoinAccordionBar").html(`<div class="ui tiny progress" style="width: 100%"><div class="progress" style="background: white"></div> <div class="bar" style="width:` + personalCompletenessPackage.percentage + `% ;background-color: #8BBD9B;"></div>`);
+                },
+                function (response) {
+                    alert("We're sorry, there was a problem connecting to the server. If this continues, please contact us at ikon-research@inf.fu-berlin.de");
+                    console.log(response);
+                });
+        } else {
+            console.log("Couldn't find property in list_entity edited:" + property);
+            alert("We couldn't find the property you were trying to add.");
+        }
     } else {
-        console.log("Couldn't find property in list_entity edited:" + property);
-        alert("We couldn't find the property you were trying to add.");
+        console.log("No Input was given for" + property);
+        alert("No input found!");        
     }
-
 }
 
 
