@@ -28,7 +28,7 @@ Recoin Explanation
 /api/exportSummaries
 /api/exportTrackingEvents
 
-http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3D5G8J4N5BL9842ONICM91XFK8LVTG  
+http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3PA41K45VOL95M8LO30MYDGF9RB7PL  
 
 —————————————————
 ——————— aws-shell commands 
@@ -36,27 +36,27 @@ http://ikon-research.imp.fu-berlin.de/api/exportWorkers?hitID=3D5G8J4N5BL9842ONI
 
 ——————— Current Get Hit
 —————————————————
-mturk get-hit --hit-id 3D5G8J4N5BL9842ONICM91XFK8LVTG                     
+mturk get-hit --hit-id 3PA41K45VOL95M8LO30MYDGF9RB7PL                          
 
 ——————— List Assignments
 —————————————————
-mturk list-assignments-for-hit --hit-id 3D5G8J4N5BL9842ONICM91XFK8LVTG     
+mturk list-assignments-for-hit --hit-id 379OL9DBSTV7SJOFUNUPP00X8MDY9T                   
 
 ——————— Approve
 —————————————————
-mturk approve-assignment --assignment-id 3GU1KF0O4KIYUI94RMI4SZYXXA6PBY --requester-feedback "Thank you very much for participating!"
+mturk approve-assignment --assignment-id 3G2UL9A02FV3I0O9Z97FHXLKK8U67F --requester-feedback "Thank you very much for participating!"
 
 ——————— Qualify
 —————————————————
-mturk associate-qualification-with-worker --qualification-type-id "35NJKTSSL2FPLT3PK2K4VLGHUQ8ZXV" --worker-id "A32IRN8APZMCQ2" --no-send-notification
+mturk associate-qualification-with-worker --qualification-type-id "35NJKTSSL2FPLT3PK2K4VLGHUQ8ZXV" --worker-id "AU2NVT51E749C" --no-send-notification
 
 ——————— Reject
 —————————————————
-mturk reject-assignment --assignment-id 31LVTDXBL9RVJ4BVVRBNBXUHAO4LR9 --requester-feedback "Worker did not submit any data, our server shows no HIT-relevant activity whatsoever for this assigment. If this is an error, please contact ikon-research@imp.fu-berlin.de!"
+mturk reject-assignment --assignment-id 3XCC1ODXDNS6A1R8NWJJSJTBKZPRQC --requester-feedback "Worker did not submit any data, our server shows no HIT-relevant activity whatsoever for this assigment. If this is an error, please contact ikon-research@imp.fu-berlin.de!"
 
 ——————— Contact Workers
 —————————————————
-mturk notify-workers --subject "Regarding your submission for HIT 'What about this astronaut?'" --message-text "Dear MTurker, regarding your submission and your comments, we did not record any server activity, indicating technical difficulty. Could you please expand on your submission to help us solve this? Assignment will be approved accordingly. Best regards, Jesse" --worker-ids "A32IRN8APZMCQ2"
+mturk notify-workers --subject "Regarding your submission for HIT 'What about this astronaut?'" --message-text "Dear MTurker, regarding your submission and your comments, it seems you trusted Wikidata—however you gave it a 'Somewhat Distrust' rating of 5 (the scales are reversed!). Would you like us to correct this? Best regards, Jesse" --worker-ids "AU2NVT51E749C"
 
 group_by(my_data, condition)
 summarise(count = n(),

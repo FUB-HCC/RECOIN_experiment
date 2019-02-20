@@ -342,7 +342,7 @@ function recoinRedesignInput(obj) {
         minLength: 1,
         source: function (request, response) {
             var term = request.term;
-            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&limit=3&origin=*&search=' + term;
             var xhr = createCORSRequest('GET', url);
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
@@ -432,7 +432,7 @@ function recoinPlus(obj) {
         minLength: 1,
         source: function (request, response) {
             var term = request.term;
-            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&limit=3&origin=*&search=' + term;
             var xhr = createCORSRequest('GET', url);
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
@@ -619,7 +619,7 @@ function addValue(obj) {
         minLength: 1,
         source: function (request, response) {
             var term = request.term;
-            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&limit=3&origin=*&search=' + term;
             var xhr = createCORSRequest('GET', url);
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
@@ -696,7 +696,7 @@ function generalAddValue(obj) {
         minLength: 1,
         source: function (request, response) {
             var term = request.term;
-            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&origin=*&search=' + term;
+            var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&limit=3&origin=*&search=' + term;
             var xhr = createCORSRequest('GET', url);
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
