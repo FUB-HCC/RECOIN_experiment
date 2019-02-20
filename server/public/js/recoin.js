@@ -719,6 +719,10 @@ function generalAddValue(obj) {
 function createCORSRequest(method, url) {
     var xhr = new XMLHttpRequest();
     xhr.timeout = 400;
+    xhr.onreadystatechange = function() {
+        console.log(xhr.response);
+    }
+
     if ("withCredentials" in xhr) {
         // XHR for Chrome/Firefox/Opera/Safari.
         xhr.open(method, url, true);
